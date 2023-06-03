@@ -1,6 +1,9 @@
 {
   "cSpell.words": [
     "newsbase",
-    "typeorm"
+    "newsbases",
+    "newsitem",
+    "typeorm",
+    "wechat"
   ]
 }

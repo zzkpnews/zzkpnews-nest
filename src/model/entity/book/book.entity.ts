@@ -1,29 +1,68 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Creator } from '@/model/entity/creator/creator.entity';
-
-@Entity()
 export class Book {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  get id(): string {
+    return this._id;
+  }
 
-  @ManyToOne(() => Creator, (creator) => creator.books)
-  creator: Creator;
+  get creatorId(): string {
+    return this._creatorId;
+  }
 
-  @Column({ length: 100 })
-  title: string;
+  set creatorId(value: string) {
+    this._creatorId = value;
+  }
 
-  @Column({ length: 200 })
-  citation: string;
+  get title(): string {
+    return this._title;
+  }
 
-  @Column({ length: 100, nullable: true })
-  keywords: string;
+  set title(value: string) {
+    this._title = value;
+  }
 
-  @Column({ length: 2048, nullable: true })
-  coverImage: string;
+  get citation(): string | null {
+    return this._citation;
+  }
 
-  @Column('integer')
-  timestamp: number;
+  set citation(value: string | null) {
+    this._citation = value;
+  }
 
-  @Column({ default: false, nullable: true })
-  closed: boolean;
+  get keywords() {
+    return this._keywords;
+  }
+
+  set keywords(value: string | null) {
+    this._keywords = value;
+  }
+
+  get coverImage(): string | null {
+    return this._coverImage;
+  }
+
+  set coverImage(value: string | null) {
+    this._coverImage = value;
+  }
+
+  get timestamp(): number {
+    return this._timestamp;
+  }
+
+  get closed(): boolean {
+    return this._closed;
+  }
+
+  set closed(value: boolean) {
+    this._closed = value;
+  }
+
+  constructor(
+    private readonly _id: string,
+    private _creatorId: string,
+    private _title: string,
+    private _citation: string | null,
+    private _keywords: string | null,
+    private _coverImage: string | null,
+    private readonly _timestamp: number,
+    private _closed: boolean,
+  ) {}
 }

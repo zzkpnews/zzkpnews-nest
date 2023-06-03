@@ -1,9 +1,16 @@
 import { DatabaseModule } from '@/repository/database/database.module';
 import { Module } from '@nestjs/common';
-import { notificationProviders } from './notification.provider';
+import { NotificationRepository } from './notification.repository';
+import { DependenceFlags } from '@/constant/dep-flags';
 
 @Module({
   imports: [DatabaseModule],
-  providers: notificationProviders,
+  providers: [
+    Notification,
+    {
+      provide: DependenceFlags.NotificationRepository,
+      useClass: NotificationRepository,
+    },
+  ],
 })
 export class NotificationModule {}

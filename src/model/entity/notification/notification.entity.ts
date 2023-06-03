@@ -1,17 +1,25 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Creator } from '@/model/entity/creator/creator.entity';
-
-@Entity()
 export class Notification {
-  @PrimaryGeneratedColumn()
-  id: number;
+  constructor(
+    private readonly _id: string,
+    private readonly _timestamp: number,
+    private readonly _receiver: string,
+    private _read: boolean,
+  ) {}
 
-  @Column({ length: 12 })
-  timestamp: string;
+  get id(): string {
+    return this._id;
+  }
+  get timestamp(): number {
+    return this._timestamp;
+  }
+  get receiver(): string {
+    return this._receiver;
+  }
+  get read(): boolean {
+    return this._read;
+  }
 
-  @ManyToOne(() => Creator, (creator) => creator.notifications)
-  receiver: Creator;
-
-  @Column({ default: false })
-  read: boolean;
+  set read(value: boolean) {
+    this._read = value;
+  }
 }

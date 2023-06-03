@@ -1,9 +1,11 @@
 import { DatabaseModule } from '@/repository/database/database.module';
 import { Module } from '@nestjs/common';
-import { bookProviders } from './book.provider';
+import { Book } from './book.entity';
+import { BookRepository } from './book.repository';
 
 @Module({
   imports: [DatabaseModule],
-  providers: bookProviders,
+  providers: [Book, BookRepository],
+  exports: [Book, BookRepository],
 })
 export class BookModule {}

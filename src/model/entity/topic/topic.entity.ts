@@ -1,43 +1,60 @@
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { Article } from '@/model/entity/article/article.entity';
-import { Creator } from '@/model/entity/creator/creator.entity';
-import { Video } from '@/model/entity/video/video.entity';
-
-@Entity()
 export class Topic {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  constructor(
+    private readonly _id: string,
+    private _title: string,
+    private _logo: string,
+    private _coverImage: string,
+    private _description: string,
+    private _order: number,
+  ) {
+    this._id = _id;
+    this._title = _title;
+    this._logo = _logo;
+    this._coverImage = _coverImage;
+    this._description = _description;
+    this._order = _order;
+  }
+  get id(): string {
+    return this._id;
+  }
 
-  @Column({ length: 10 })
-  title: string;
+  get title(): string {
+    return this._title;
+  }
 
-  @Column({ length: 2038, nullable: true })
-  logo: string;
+  set title(value: string) {
+    this._title = value;
+  }
 
-  @Column({ length: 2048, nullable: true })
-  coverImage: string;
+  get logo(): string {
+    return this._logo;
+  }
 
-  @Column({ length: 500, nullable: true })
-  description: string;
+  set logo(value: string) {
+    this._logo = value;
+  }
 
-  @Column('integer')
-  order: number;
+  get coverImage(): string {
+    return this._coverImage;
+  }
 
-  @ManyToMany(() => Article, (article) => article.belongingTopic)
-  @JoinTable()
-  articles: Article[];
+  set coverImage(value: string) {
+    this._coverImage = value;
+  }
 
-  @ManyToMany(() => Video, (video) => video.belongingTopic)
-  @JoinTable()
-  videos: Video[];
+  get description(): string {
+    return this._description;
+  }
 
-  @ManyToMany(() => Creator, (creator) => creator.allowedTopics)
-  @JoinTable()
-  allowedCreators: Creator[];
+  set description(value: string) {
+    this._description = value;
+  }
+
+  get order(): number {
+    return this._order;
+  }
+
+  set order(value: number) {
+    this._order = value;
+  }
 }

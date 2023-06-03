@@ -1,21 +1,19 @@
-import { DependenceFlags } from '@/constants/dep-flags';
-import { DataSource } from 'typeorm';
+import { DependenceFlags } from '@/constant/dep-flags';
+import Knex from 'knex';
 
 export const DatabaseProviders = [
   {
     provide: DependenceFlags.DataSource,
-    useFactory: async () => {
-      const dataSource = new DataSource({
-        type: 'mysql',
+    useValue: Knex({
+      client: 'mysql',
+      connection: {
         host: 'localhost',
         port: 3306,
-        username: 'zzkpnews',
+        user: 'zzkpnews',
         password: 'zzkpnews',
         database: 'zzkpnews_data',
-        entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        synchronize: true,
-      });
-      return dataSource.initialize();
-    },
+        charset: 'utf8mb4',
+      },
+    }),
   },
 ];

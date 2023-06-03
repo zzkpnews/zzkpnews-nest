@@ -1,5 +1,5 @@
 import path from 'path';
-import fs from 'fs';
+import * as fs from 'fs';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -8,7 +8,7 @@ class ObjectStorage {
    * The directory position for object-storage
    * which contains some serialized objects.
    */
-  private objectStorageDir = '';
+  private objectStorageDir = './data';
 
   constructor() {
     if (!fs.existsSync(this.objectStorageDir)) {

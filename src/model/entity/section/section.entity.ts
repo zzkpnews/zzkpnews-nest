@@ -1,42 +1,41 @@
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-  PrimaryColumn,
-} from 'typeorm';
-import { Article } from '@/model/entity/article/article.entity';
-import { Creator } from '@/model/entity/creator/creator.entity';
-import { Group } from '@/model/entity/group/group.entity';
-import { Video } from '@/model/entity/video/video.entity';
-
-@Entity()
 export class Section {
-  @PrimaryColumn({ type: 'varchar', length: 100 })
-  id: string;
+  constructor(
+    private readonly _id: string,
+    private _title: string,
+    private _order: number,
+    private _belongingGroupId: string,
+  ) {
+    this._id = this._id;
+    this._title = this._title;
+    this._order = this._order;
+    this._belongingGroupId = this._belongingGroupId;
+  }
 
-  @Column({ length: 50 })
-  title: string;
+  get id(): string {
+    return this._id;
+  }
 
-  @Column('integer')
-  order: number;
+  get title(): string {
+    return this._title;
+  }
 
-  @ManyToOne(() => Group, (group) => group.sections)
-  belongingGroup: Group;
+  set title(value: string) {
+    this._title = value;
+  }
 
-  @OneToMany(() => Article, (article) => article.belongingSection, {
-    cascade: true,
-  })
-  articles: Article[];
+  get order(): number {
+    return this._order;
+  }
 
-  @OneToMany(() => Video, (video) => video.belongingSection, {
-    cascade: true,
-  })
-  videos: Video[];
+  set order(value: number) {
+    this._order = value;
+  }
 
-  @ManyToMany(() => Creator, (creator) => creator.allowedSections)
-  @JoinTable()
-  allowedCreators: Creator[];
+  get belongingGroupId(): string {
+    return this.belongingGroupId;
+  }
+
+  set belongingGroupId(value: string) {
+    this._belongingGroupId = value;
+  }
 }

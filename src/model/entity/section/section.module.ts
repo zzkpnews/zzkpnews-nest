@@ -1,9 +1,10 @@
 import { DatabaseModule } from '@/repository/database/database.module';
 import { Module } from '@nestjs/common';
-import { sectionProviders } from './section.provider';
+import { Section } from './section.entity';
+import { SectionRepository } from './section.repository';
 
 @Module({
   imports: [DatabaseModule],
-  providers: sectionProviders,
+  providers: [Section, SectionRepository],
 })
 export class SectionModule {}

@@ -1,19 +1,31 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
-import { Section } from '@/model/entity/section/section.entity';
-
-@Entity()
 export class Group {
-  @PrimaryColumn({ type: 'varchar', length: 100 })
-  id: string;
+  get id(): string {
+    return this._id;
+  }
 
-  @Column({ length: 50 })
-  title: string;
+  get title(): string {
+    return this._title;
+  }
 
-  @Column()
-  order: number;
+  set title(value: string) {
+    this._title = value;
+  }
 
-  @OneToMany(() => Section, (section) => section.belongingGroup, {
-    cascade: true,
-  })
-  sections: Section;
+  get order(): number {
+    return this._order;
+  }
+
+  set order(value: number) {
+    this._order = value;
+  }
+
+  constructor(
+    private readonly _id: string,
+    private _title: string,
+    private _order: number,
+  ) {
+    this._id = _id;
+    this._title = _title;
+    this._order = _order;
+  }
 }

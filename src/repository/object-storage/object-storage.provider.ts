@@ -1,6 +1,7 @@
 import { Provider } from '@nestjs/common';
 import { ObjectStorage } from './object-storage';
+import { DependenceFlags } from '@/constant/dep-flags';
 
 export const ObjectStorageProviders: Provider[] = [
-  { provide: 'OBJECT-STORAGE', useClass: ObjectStorage },
+  { provide: DependenceFlags.ObjectStorage, useClass: ObjectStorage },
 ];

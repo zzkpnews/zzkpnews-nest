@@ -1,9 +1,10 @@
 import { DatabaseModule } from '@/repository/database/database.module';
 import { Module } from '@nestjs/common';
-import { topicProviders } from './video.provider';
+import { Video } from './video.entity';
+import { VideoRepository } from './video.repository';
 
 @Module({
   imports: [DatabaseModule],
-  providers: topicProviders,
+  providers: [Video, VideoRepository],
 })
 export class VideoModule {}

@@ -1,87 +1,122 @@
-import { Article } from '@/model/entity/article/article.entity';
-import { Book } from '@/model/entity/book/book.entity';
-import { Notification } from '@/model/entity/notification/notification.entity';
-import { Section } from '@/model/entity/section/section.entity';
-import { Topic } from '@/model/entity/topic/topic.entity';
-import { Video } from '@/model/entity/video/video.entity';
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-  PrimaryColumn,
-} from 'typeorm';
-
-@Entity()
 export class Creator {
-  @PrimaryColumn({ type: 'varchar', length: 100 })
-  id: string;
+  constructor(
+    private readonly _id: string,
+    private _title: string,
+    private _phone: string,
+    private _email: string,
+    private _description: string | null,
+    private _address: string | null,
+    private _qq: string | null,
+    private _wechat: string | null,
+    private _weibo: string | null,
+    private _url: string | null,
+    private _logo: string | null,
+    private _salt: string,
+    private _passwordHash: string,
+    private _closed: boolean,
+  ) {}
 
-  @Column({ length: 50 })
-  title: string;
+  get id(): string {
+    return this._id;
+  }
 
-  @Column({ length: 20 })
-  phone: string;
+  get title(): string {
+    return this._title;
+  }
 
-  @Column({ length: 50 })
-  email: string;
+  set title(value: string) {
+    this._title = value;
+  }
 
-  @Column({ length: 500, nullable: true })
-  description: string;
+  get phone(): string {
+    return this._phone;
+  }
 
-  @Column({ length: 100, nullable: true })
-  address: string;
+  set phone(value: string) {
+    this._phone = value;
+  }
 
-  @Column({ length: 15, nullable: true })
-  qq: string;
+  get email(): string {
+    return this._email;
+  }
 
-  @Column({ length: 50, nullable: true })
-  wechat: string;
+  get description(): string {
+    return this._description;
+  }
 
-  @Column({ length: 50, nullable: true })
-  weibo: string;
+  set description(value: string | null) {
+    this._description = value;
+  }
 
-  @Column({ length: 2038, nullable: true })
-  url: string;
+  get address(): string {
+    return this._address;
+  }
 
-  @Column({ length: 2038, nullable: true })
-  logo: string;
+  set address(value: string | null) {
+    this._address = value;
+  }
 
-  @Column({ length: 40, nullable: true })
-  salt: string;
+  get qq(): string | null {
+    return this._qq;
+  }
 
-  @Column({ length: 130, nullable: true })
-  passwordHash: string;
+  set qq(value: string | null) {
+    this._qq = value;
+  }
 
-  @Column({ default: false })
-  closed: boolean;
+  get wechat(): string | null {
+    return this._wechat;
+  }
 
-  @OneToMany(() => Book, (book) => book.creator, {
-    cascade: true,
-  })
-  books: Book[];
+  set wechat(value: string | null) {
+    this._wechat = value;
+  }
 
-  @OneToMany(() => Article, (article) => article.creator, {
-    cascade: true,
-  })
-  articles: Article[];
+  get weibo(): string | null {
+    return this._weibo;
+  }
 
-  @OneToMany(() => Video, (video) => video.creator, {
-    cascade: true,
-  })
-  videos: Video[];
+  set weibo(value: string | null) {
+    this._weibo = value;
+  }
 
-  @ManyToMany(() => Section, (section) => section.allowedCreators)
-  @JoinTable()
-  allowedSections: Section[];
+  get url(): string | null {
+    return this._url;
+  }
 
-  @ManyToMany(() => Topic, (topic) => topic.allowedCreators)
-  @JoinTable()
-  allowedTopics: Topic[];
+  set url(value: string | null) {
+    this._url = value;
+  }
 
-  @OneToMany(() => Notification, (notification) => notification.receiver, {
-    cascade: true,
-  })
-  notifications: Notification[];
+  get logo(): string | null {
+    return this._logo;
+  }
+
+  set logo(value: string | null) {
+    this._logo = value;
+  }
+
+  get salt(): string {
+    return this._salt;
+  }
+
+  set salt(value: string) {
+    this._salt = value;
+  }
+
+  get passwordHash(): string {
+    return this._passwordHash;
+  }
+
+  set passwordHash(value: string) {
+    this._passwordHash = value;
+  }
+
+  get closed(): boolean {
+    return this._closed;
+  }
+
+  set closed(value: boolean) {
+    this._closed = value;
+  }
 }
