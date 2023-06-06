@@ -1,7 +1,7 @@
 import { PageTemplateUtils } from './utils';
 
 export interface GroupIndexPageTemplate extends PageTemplateUtils {
-  group_index: {
+  index: {
     group_id: string;
     group_title: string;
 

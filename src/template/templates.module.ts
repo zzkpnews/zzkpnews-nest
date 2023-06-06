@@ -16,6 +16,8 @@ import { SectionContentPageTemplateModule } from './section-content-page/section
 import { TopicContentPageTemplateModule } from './topic-content-page/topic-content-page-template.module';
 import { TopicIndexPageTemplateModule } from './topic-index-page/topic-index-page.module';
 import { VideoReaderPageTemplateModule } from './video-reader-page/video-reader-page-template.module';
+import { TemplatesController } from './templates.controller';
+import { GroupIndexPageTemplateModule } from './group-index-page/group-index-page.module';
 
 @Module({
   imports: [
@@ -28,6 +30,7 @@ import { VideoReaderPageTemplateModule } from './video-reader-page/video-reader-
     Error404PageTemplateModule,
     Error500PageTemplateModule,
     GroupContentPageTemplateModule,
+    GroupIndexPageTemplateModule,
     HomePageTemplateModule,
     SearchPageTemplateModule,
     SectionContentPageTemplateModule,
@@ -38,6 +41,6 @@ import { VideoReaderPageTemplateModule } from './video-reader-page/video-reader-
     ViewsModule,
     VideoReaderPageTemplateModule,
   ],
-  controllers: [],
+  controllers: [TemplatesController],
 })
 export class TemplatesModule {}

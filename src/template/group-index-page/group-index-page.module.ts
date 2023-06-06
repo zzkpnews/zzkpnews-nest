@@ -2,7 +2,7 @@ import { EntityModule } from '@/model/entity/entities.module';
 import { Module } from '@nestjs/common';
 import { NewsListModule } from '@/model/view/news-list-item/news-list-item.module';
 import { ObjectStorageModule } from '@/repository/object-storage/object-storage.module';
-import { SectionIndexPageTemplateService } from './section-index-page.service';
+import { GroupIndexPageTemplateService } from './group-index-page.service';
 import { TemplateUtilsModule } from '../utils/template-utils.module';
 
 @Module({
@@ -12,7 +12,8 @@ import { TemplateUtilsModule } from '../utils/template-utils.module';
     ObjectStorageModule,
     NewsListModule,
   ],
-  providers: [SectionIndexPageTemplateService],
-  exports: [SectionIndexPageTemplateService],
+
+  providers: [GroupIndexPageTemplateService],
+  exports: [GroupIndexPageTemplateService],
 })
-export class SectionIndexPageTemplateModule {}
+export class GroupIndexPageTemplateModule {}

@@ -1,4 +1,4 @@
-import { GetNewsListQueryDTO } from '@/apis/get-news-list/get-news-list.dto';
+import { GetNewsListQueryDTO } from '@/apis/news-list/get-news-list.dto';
 import { NewsList } from '@/interface/api/news-list';
 import { Controller, Get, Query } from '@nestjs/common';
 import { NewsListService } from './get-news-list.service';
