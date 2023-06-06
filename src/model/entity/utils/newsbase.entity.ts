@@ -1,4 +1,4 @@
-export interface Newsbase {
+export interface NewsBase {
   readonly id: string;
   readonly timestamp: number;
   title: string;

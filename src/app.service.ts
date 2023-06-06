@@ -1,18 +1,21 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { Article } from './model/entity/article/article.entity';
 import { DependenceFlags } from './constant/dep-flags';
-import { Creator } from './model/entity/creator/creator.entity';
+import { ArticleRepository } from './model/entity/article/article.repository';
+import { CreatorRepository } from './model/entity/creator/creator.repository';
 
 @Injectable()
 export class AppService {
   constructor(
     @Inject(DependenceFlags.ArticleRepository)
-    private articleRepository: Repository<Article>,
+    private articleRepository: ArticleRepository,
     @Inject(DependenceFlags.CreatorRepository)
-    private creatorRepository: Repository<Creator>,
+    private creatorRepository: CreatorRepository,
   ) {}
   async getHello() {
-    return await this.creatorRepository.find();
+    return await this.articleRepository.findNext(
+      'a058dfa5feb411ed9da2f8e4e3d2cedf',
+      0,
+      5,
+    );
   }
 }

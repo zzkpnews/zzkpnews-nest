@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { Notification } from './notification.entity';
 import uuid from 'uuid';
+import { NotificationTable } from '@/types/tables';
 
 @Injectable()
 export class NotificationRepository {
@@ -18,12 +19,15 @@ export class NotificationRepository {
   }
 
   async save(notification: Notification) {
-    await this.dataSource('notification').insert({
-      id: notification.id,
-      timestamp: notification.timestamp,
-      receiver: notification.receiver,
-      read: notification.read,
-    });
+    await this.dataSource('notification')
+      .insert({
+        id: notification.id,
+        timestamp: notification.timestamp,
+        receiver: notification.receiver,
+        read: notification.read,
+      })
+      .onConflict()
+      .merge();
   }
 
   async findByCreatorId(creatorId: string): Promise<Notification[]> {
@@ -37,10 +41,14 @@ export class NotificationRepository {
   }
 
   async deleteById(id: string) {
-    await this.dataSource('notification').where({ id }).del();
+    await this.dataSource<NotificationTable>('notification')
+      .where({ id })
+      .del();
   }
 
   async deleteByCreatorId(creatorId: string) {
-    await this.dataSource('notification').where({ receiver: creatorId }).del();
+    await this.dataSource<NotificationTable>('notification')
+      .where({ receiverId: creatorId })
+      .del();
   }
 }

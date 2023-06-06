@@ -1,4 +1,5 @@
 export class Carousel {
+  constructor(private readonly _id: string, private _order: number) {}
   get id(): string {
     return this._id;
   }
@@ -10,6 +11,4 @@ export class Carousel {
   set order(value: number) {
     this._order = value;
   }
-
-  constructor(private readonly _id: string, private _order: number) {}
 }

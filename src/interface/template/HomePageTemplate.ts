@@ -24,7 +24,7 @@ export interface HomePageTemplate extends PageTemplate {
     citation: string | null;
   };
 
-  carousels: {
+  carousels_list: {
     news_id: string;
     timestamp: number;
     type: 'article' | 'video';
@@ -43,7 +43,7 @@ export interface HomePageTemplate extends PageTemplate {
     logo: string;
   }[];
 
-  books: {
+  recent_books: {
     title: string;
     cover_image: string;
     id: string;
@@ -58,7 +58,7 @@ export interface HomePageTemplate extends PageTemplate {
     subtitle: string | null;
   }[];
 
-  news_list: {
+  recent_news_list: {
     news_id: string;
     timestamp: number;
     keywords: string | null;

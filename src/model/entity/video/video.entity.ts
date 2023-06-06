@@ -1,6 +1,6 @@
-import { Newsbase } from '../utils/newsbase.entity';
+import { NewsBase } from '../utils/newsbase.entity';
 
-export class Video implements Newsbase {
+export class Video implements NewsBase {
   constructor(
     private readonly _id: string,
     private readonly _timestamp: number,

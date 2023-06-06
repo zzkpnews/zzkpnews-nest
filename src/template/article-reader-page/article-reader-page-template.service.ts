@@ -1,68 +1,49 @@
 import { DependenceFlags } from '@/constant/dep-flags';
 import { ArticleReaderPageTemplate } from '@/interface/template/ArticleReaderPageTemplate';
-import { Article } from '@/model/entity/article/article.entity';
-import { Book } from '@/model/entity/book/book.entity';
-import { NewsbaseRepository } from '@/model/entity/utils/newsbase.entity';
-import { ObjectStorage } from '@/repository/object-storage/object-storage';
+import { ArticleRepository } from '@/model/entity/article/article.repository';
+import { CreatorRepository } from '@/model/entity/creator/creator.repository';
 import { Inject, Injectable } from '@nestjs/common';
-import { LessThan, Repository } from 'typeorm';
 import { TemplateUtilsService } from '../utils/template-utils.service';
 
 @Injectable()
 export class ArticleReaderPageTemplateService {
   constructor(
-    @Inject(DependenceFlags.ObjectStorage)
-    private readonly objectStorage: ObjectStorage,
-    @Inject(DependenceFlags.NewsBaseRepository)
-    private readonly newsbaseRepository: Repository<NewsbaseRepository>,
     @Inject(DependenceFlags.ArticleRepository)
-    private readonly articleRepository: Repository<Article>,
-    @Inject(DependenceFlags.BookRepository)
-    private readonly bookRepository: Repository<Book>,
+    private readonly articleRepository: ArticleRepository,
+    @Inject(DependenceFlags.CreatorRepository)
+    private readonly creatorRepository: CreatorRepository,
     private readonly templateUtils: TemplateUtilsService,
   ) {}
   async get(news_id: string): Promise<ArticleReaderPageTemplate> {
-    const newsbase = await this.newsbaseRepository.findOneBy({ id: news_id });
-
-    const article = await this.articleRepository
-      .findOneBy({
-        newsbase: newsbase.id,
-      })
-      .then((article) => ({
-        title: newsbase.title,
-        subtitle: newsbase.subtitle,
-        lead_title: newsbase.leadTitle,
-        cover_image: newsbase.coverImage,
-        citation: newsbase.citation,
-        timestamp: newsbase.timestamp,
-        author: article.author,
-        editor: article.editor,
-        creator_logo: newsbase.creator.logo,
-        creator_description: newsbase.creator.description,
-        creator_id: newsbase.creator.id,
-        creator_title: newsbase.creator.title,
-        content: '',
-        keywords: newsbase.keywords,
-      }));
-
+    const article = await this.articleRepository.findById(news_id);
+    const creator = await this.creatorRepository.findById(article.creatorId);
     const next_list = (
-      await this.newsbaseRepository.find({
-        where: {
-          timestamp: LessThan(newsbase.timestamp),
-        },
-        take: 7,
-      })
-    ).map((newsbase) => ({
-      news_id: newsbase.id,
-      title: newsbase.title,
-      lead_title: newsbase.leadTitle,
-      subtitle: newsbase.subtitle,
+      await this.articleRepository.findNext(article.id, 0, 7)
+    ).map((next_article) => ({
+      news_id: next_article.id,
+      title: next_article.title,
+      lead_title: next_article.leadTitle,
+      subtitle: next_article.subtitle,
     }));
 
     return {
-      article: article,
+      title: article.title,
+      subtitle: article.subtitle,
+      lead_title: article.leadTitle,
+      cover_image: article.coverImage,
+      citation: article.citation,
+      timestamp: article.timestamp,
+      author: article.author,
+      editor: article.editor,
+      creator_logo: creator.logo,
+      creator_description: creator.description,
+      creator_id: creator.id,
+      creator_title: creator.title,
+      content: '',
+      keywords: article.keywords,
 
       next_list: next_list,
+
       ...(await this.templateUtils.getTemplateUtils()),
     };
   }

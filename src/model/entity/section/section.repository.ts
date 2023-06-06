@@ -1,17 +1,73 @@
+import { SectionTable } from '@/types/tables';
 import { Knex } from 'knex';
+import { Section } from './section.entity';
+import { DependenceFlags } from '@/constant/dep-flags';
+import { Inject } from '@nestjs/common';
 
 export class SectionRepository {
-  constructor(private readonly dataSource: Knex) {}
+  constructor(
+    @Inject(DependenceFlags.DataSource) private readonly dataSource: Knex,
+  ) {}
 
-  async create() {}
+  async create(
+    id: string,
+    title: string,
+    order: number,
+    belongingGroupId: string,
+  ) {
+    return new Section(id, title, order, belongingGroupId);
+  }
 
-  async findAll() {}
+  async save(section: Section) {
+    await this.dataSource<SectionTable>('section')
+      .insert({
+        id: section.id,
+        title: section.title,
+        order: section.order,
+        belongingGroupId: section.belongingGroupId,
+      })
+      .onConflict()
+      .merge();
+  }
 
-  async findByGroupId() {}
+  async findAll(): Promise<Section[]> {
+    const result_fields = await this.dataSource<SectionTable>('section');
+    return result_fields.map(
+      (item) =>
+        new Section(item.id, item.title, item.order, item.belongingGroupId),
+    );
+  }
 
-  async findById() {}
+  async findByGroupId(groupId: string): Promise<Section[]> {
+    const result_fields = await this.dataSource<SectionTable>('section').where({
+      belongingGroupId: groupId,
+    });
+    return result_fields.map(
+      (item) =>
+        new Section(item.id, item.title, item.order, item.belongingGroupId),
+    );
+  }
 
-  async deleteByGroupId() {}
+  async findById(id: string): Promise<Section | null> {
+    const result_fields = await this.dataSource<SectionTable>('section').where({
+      id,
+    });
+    if (result_fields.length === 0) return null;
+    return new Section(
+      result_fields[0].id,
+      result_fields[0].title,
+      result_fields[0].order,
+      result_fields[0].belongingGroupId,
+    );
+  }
 
-  async deleteById() {}
+  async deleteByGroupId(groupId: string) {
+    await this.dataSource<SectionTable>('section')
+      .where({ belongingGroupId: groupId })
+      .del();
+  }
+
+  async deleteById(id: string) {
+    await this.dataSource<SectionTable>('section').where({ id }).del();
+  }
 }

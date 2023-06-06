@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import { Creator } from './creator.entity';
 import { getPasswordHash } from '@/libs/password';
+import { CreatorTable } from '@/types/tables';
 
 @Injectable()
 export class CreatorRepository {
@@ -12,7 +13,74 @@ export class CreatorRepository {
   ) {}
 
   async findById(id: string): Promise<Creator | null> {
-    return null;
+    const result_fields = await this.dataSource<CreatorTable>('creator').where({
+      id,
+    });
+    if (result_fields.length === 0) return null;
+    return new Creator(
+      result_fields[0].id,
+      result_fields[0].title,
+      result_fields[0].phone,
+      result_fields[0].email,
+      result_fields[0].description,
+      result_fields[0].address,
+      result_fields[0].qq,
+      result_fields[0].wechat,
+      result_fields[0].weibo,
+      result_fields[0].url,
+      result_fields[0].logo,
+      result_fields[0].salt,
+      result_fields[0].passwordHash,
+      result_fields[0].closed,
+    );
+  }
+
+  async findAll(): Promise<Creator[]> {
+    const result_fields = await this.dataSource<CreatorTable>('creator');
+    return result_fields.map(
+      (item) =>
+        new Creator(
+          item.id,
+          item.title,
+          item.phone,
+          item.email,
+          item.description,
+          item.address,
+          item.qq,
+          item.wechat,
+          item.weibo,
+          item.url,
+          item.logo,
+          item.salt,
+          item.passwordHash,
+          item.closed,
+        ),
+    );
+  }
+
+  async findClosed(): Promise<Creator[]> {
+    const result_fields = await this.dataSource<CreatorTable>('creator').where({
+      closed: true,
+    });
+    return result_fields.map(
+      (item) =>
+        new Creator(
+          item.id,
+          item.title,
+          item.phone,
+          item.email,
+          item.description,
+          item.address,
+          item.qq,
+          item.wechat,
+          item.weibo,
+          item.url,
+          item.logo,
+          item.salt,
+          item.passwordHash,
+          item.closed,
+        ),
+    );
   }
 
   async create(

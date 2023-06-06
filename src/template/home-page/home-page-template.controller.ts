@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { HomePageTemplateService } from './home-page-template.service';
 import { HomePageTemplate } from '@/interface/template/HomePageTemplate';
 
@@ -8,6 +8,7 @@ export class HomePageTemplateController {
     private readonly homePageTemplateService: HomePageTemplateService,
   ) {}
 
+  @Get()
   async get(): Promise<HomePageTemplate> {
     return await this.homePageTemplateService.get();
   }

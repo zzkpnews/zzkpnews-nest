@@ -1,98 +1,105 @@
+import { BookRepository } from '@/model/entity/book/book.repository';
+import { CarouselRepository } from '@/model/entity/carousel/carousel.repository';
 import { DependenceFlags } from '@/constant/dep-flags';
-import { HomePageTemplate } from '@/interface/template/HomePageTemplate';
-import { Book } from '@/model/entity/book/book.entity';
-import { NewsbaseRepository } from '@/model/entity/utils/newsbase.entity';
-import { Topic } from '@/model/entity/topic/topic.entity';
-import { CarouselNews } from '@/model/object/carousel-news/carousel-news.object';
 import { Headline } from '@/model/object/headline/headline.object';
+import { HomePageTemplate } from '@/interface/template/HomePageTemplate';
+import { Inject, Injectable } from '@nestjs/common';
+import { NewsListRepository } from '@/model/view/news-list-item/news-list-item.repository';
+import { ObjectStorage } from '@/repository/object-storage/object-storage';
 import { PictureNews } from '@/model/object/picture-news/picture-news.object';
 import { SpecialNews } from '@/model/object/special-news/special-news.object';
-import { ObjectStorage } from '@/repository/object-storage/object-storage';
-import { Inject, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
 import { TemplateUtilsService } from '../utils/template-utils.service';
+import { TopicRepository } from '@/model/entity/topic/topic.repository';
 
 @Injectable()
 export class HomePageTemplateService {
   constructor(
     @Inject(DependenceFlags.ObjectStorage)
     private readonly objectStorage: ObjectStorage,
-    @Inject(DependenceFlags.NewsBaseRepository)
-    private readonly newsbaseRepository: Repository<NewsbaseRepository>,
+    @Inject(DependenceFlags.NewsListRepository)
+    private readonly newsListRepository: NewsListRepository,
     @Inject(DependenceFlags.TopicRepository)
-    private readonly topicRepository: Repository<Topic>,
+    private readonly topicRepository: TopicRepository,
+    @Inject(DependenceFlags.CarouselRepository)
+    private readonly carouselRepository: CarouselRepository,
     @Inject(DependenceFlags.BookRepository)
-    private readonly bookRepository: Repository<Book>,
+    private readonly bookRepository: BookRepository,
     private readonly templateUtils: TemplateUtilsService,
   ) {}
   async get(): Promise<HomePageTemplate> {
-    const picture_news1 = this.objectStorage.get<PictureNews>('picture-news1');
-    const picture_news2 = this.objectStorage.get<PictureNews>('picture-news2');
-    const picture_news3 = this.objectStorage.get<PictureNews>('picture-news3');
-
-    const headline = this.objectStorage.get<Headline>('headline');
-    const special_news = this.objectStorage.get<SpecialNews>('special-news');
-    const carousel_news = this.objectStorage.get<CarouselNews>('carousel-news');
-
-    const topics = (
-      await this.topicRepository.find({ order: { order: 'ASC' } })
-    ).map((item) => ({
-      id: item.id,
-      title: item.title,
-      logo: item.logo,
-    }));
-
-    const books = (
-      await this.bookRepository.find({ order: { timestamp: 'DESC' }, take: 5 })
-    ).map((book) => ({
-      id: book.id,
-      title: book.title,
-      cover_image: book.coverImage,
-      citation: book.citation,
-      timestamp: book.timestamp,
-    }));
-
-    const hot_list = (
-      await this.newsbaseRepository.find({
-        order: { timestamp: 'DESC' },
-        take: 7,
-      })
-    ).map((newsitem) => ({
-      news_id: newsitem.id,
-      type: newsitem.type,
-      title: newsitem.title,
-      subtitle: newsitem.subtitle,
-    }));
-
-    const news_list = (
-      await this.newsbaseRepository.find({
-        order: { timestamp: 'DESC' },
-        take: 10,
-      })
-    ).map((newsitem) => ({
-      news_id: newsitem.id,
-      timestamp: newsitem.timestamp,
-      keywords: newsitem.keywords,
-      type: newsitem.type,
-      title: newsitem.title,
-      lead_title: newsitem.leadTitle,
-      subtitle: newsitem.subtitle,
-      section_title: newsitem.belongingSection.title,
-      cover_image: newsitem.coverImage,
-      citation: newsitem.citation,
-    }));
-
     return {
-      picture1: picture_news1,
-      picture2: picture_news2,
-      picture3: picture_news3,
-      headline: headline,
-      special: special_news,
-      carousels: carousel_news,
-      topics: topics,
-      books: books,
-      hot_list: hot_list,
-      news_list: news_list,
+      picture1: this.objectStorage.get<PictureNews>('picture-news1'),
+
+      picture2: this.objectStorage.get<PictureNews>('picture-news2'),
+
+      picture3: this.objectStorage.get<PictureNews>('picture-news3'),
+
+      headline: this.objectStorage.get<Headline>('headline'),
+
+      special: this.objectStorage.get<SpecialNews>('special-news'),
+
+      carousels_list: await Promise.all(
+        (
+          await this.carouselRepository.findAll()
+        ).map(async (item) => {
+          const news_list_item = await this.newsListRepository.findById(
+            item.id,
+          );
+          return {
+            news_id: item.id,
+            timestamp: news_list_item.timestamp,
+            type: news_list_item.type,
+            title: news_list_item.title,
+            lead_title: news_list_item.leadTitle,
+            subtitle: news_list_item.subtitle,
+            cover_image: news_list_item.coverImage,
+            citation: news_list_item.citation,
+          };
+        }),
+      ),
+
+      topics: (await this.topicRepository.findAll()).map((item) => ({
+        id: item.id,
+        title: item.title,
+        logo: item.logo,
+      })),
+
+      recent_books: (await this.bookRepository.findNext(null, 0, 5)).map(
+        (book) => ({
+          id: book.id,
+          title: book.title,
+          cover_image: book.coverImage,
+          citation: book.citation,
+          timestamp: book.timestamp,
+        }),
+      ),
+
+      hot_list: (await this.newsListRepository.findHomeHot(7)).map(
+        (newsitem) => ({
+          news_id: newsitem.newsId,
+          type: newsitem.type,
+          title: newsitem.title,
+          subtitle: newsitem.subtitle,
+        }),
+      ),
+
+      recent_news_list: (await this.newsListRepository.find(10)).map(
+        (newsitem) => {
+          return {
+            news_id: newsitem.newsId,
+            timestamp: newsitem.timestamp,
+            keywords: newsitem.keywords,
+            type: newsitem.type,
+            title: newsitem.title,
+            lead_title: newsitem.leadTitle,
+            subtitle: newsitem.subtitle,
+            section_title: newsitem.sectionTitle,
+            cover_image: newsitem.coverImage,
+            citation: newsitem.citation,
+          };
+        },
+      ),
+
       ...(await this.templateUtils.getTemplateUtils()),
     };
   }

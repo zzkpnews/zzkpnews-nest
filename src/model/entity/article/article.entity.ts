@@ -1,6 +1,48 @@
-import { Newsbase } from '../utils/newsbase.entity';
+import { NewsBase } from '../utils/newsbase.entity';
 
-export class Article implements Newsbase {
+export class Article implements NewsBase {
+  constructor(
+    private readonly _id: string,
+    private readonly _timestamp: number,
+    private _title: string,
+    private _subtitle: string | null,
+    private _leadTitle: string | null,
+    private _citation: string | null,
+    private _coverImage: string | null,
+    private _keywords: string | null,
+    private _creatorId: string,
+    private _closed: boolean,
+    private _homeHotMark: boolean,
+    private _sectionHotMark: boolean,
+    private _creatorHotMark: boolean,
+    private _belongingSectionId: string,
+    private _belongingTopicId: string | null,
+    private _author: string | null,
+    private _editor: string | null,
+    private _origin: string | null,
+    private _originUrl: string | null,
+  ) {
+    this._id = _id;
+    this._timestamp = _timestamp;
+    this._title = _title;
+    this._subtitle = _subtitle;
+    this._leadTitle = _leadTitle;
+    this._citation = _citation;
+    this._coverImage = _coverImage;
+    this._keywords = _keywords;
+    this._creatorId = _creatorId;
+    this._closed = _closed;
+    this._homeHotMark = _homeHotMark;
+    this._sectionHotMark = _sectionHotMark;
+    this._creatorHotMark = _creatorHotMark;
+    this._belongingSectionId = _belongingSectionId;
+    this._belongingTopicId = _belongingTopicId;
+    this._author = _author;
+    this._editor = _editor;
+    this._origin = _origin;
+    this._originUrl = _originUrl;
+  }
+
   get id(): string {
     return this._id;
   }
@@ -142,47 +184,5 @@ export class Article implements Newsbase {
 
   set originUrl(value: string | null) {
     this._originUrl = value;
-  }
-
-  constructor(
-    private readonly _id: string,
-    private readonly _timestamp: number,
-    private _title: string,
-    private _subtitle: string | null,
-    private _leadTitle: string | null,
-    private _citation: string | null,
-    private _coverImage: string | null,
-    private _keywords: string | null,
-    private _creatorId: string,
-    private _closed: boolean,
-    private _homeHotMark: boolean,
-    private _sectionHotMark: boolean,
-    private _creatorHotMark: boolean,
-    private _belongingSectionId: string,
-    private _belongingTopicId: string | null,
-    private _author: string | null,
-    private _editor: string | null,
-    private _origin: string | null,
-    private _originUrl: string | null,
-  ) {
-    this._id = _id;
-    this._timestamp = _timestamp;
-    this._title = _title;
-    this._subtitle = _subtitle;
-    this._leadTitle = _leadTitle;
-    this._citation = _citation;
-    this._coverImage = _coverImage;
-    this._keywords = _keywords;
-    this._creatorId = _creatorId;
-    this._closed = _closed;
-    this._homeHotMark = _homeHotMark;
-    this._sectionHotMark = _sectionHotMark;
-    this._creatorHotMark = _creatorHotMark;
-    this._belongingSectionId = _belongingSectionId;
-    this._belongingTopicId = _belongingTopicId;
-    this._author = _author;
-    this._editor = _editor;
-    this._origin = _origin;
-    this._originUrl = _originUrl;
   }
 }

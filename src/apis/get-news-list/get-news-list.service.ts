@@ -1,14 +1,13 @@
 import { DependenceFlags } from '@/constant/dep-flags';
 import { NewsList, NewsListItem } from '@/interface/api/news-list';
-import { NewsbaseRepository } from '@/model/entity/utils/newsbase.entity';
+import { NewsListRepository } from '@/model/view/news-list-item/news-list-item.repository';
 import { Inject, Injectable } from '@nestjs/common';
-import { LessThan, Repository } from 'typeorm';
 
 @Injectable()
 export class NewsListService {
   constructor(
-    @Inject(DependenceFlags.NewsBaseRepository)
-    private readonly newsbaseRepository: Repository<NewsbaseRepository>,
+    @Inject(DependenceFlags.NewsListRepository)
+    private readonly newsListRepository: NewsListRepository,
   ) {}
   async getList(
     sectionId?: string,
@@ -18,32 +17,20 @@ export class NewsListService {
     type?: 'article' | 'video',
     timestampOffset?: number,
   ): Promise<NewsList> {
-    const newsbases = await this.newsbaseRepository.find({
-      where: {
-        belongingSection: { id: sectionId, belongingGroup: { id: groupId } },
-        creator: { id: creatorId },
-        belongingTopic: { id: topicId },
-        type: type,
-        timestamp: LessThan(timestampOffset),
-      },
-      order: {
-        timestamp: 'DESC',
-      },
-      take: 10,
-    });
+    const newsbases = await this.newsListRepository.find(10);
     return {
       list: newsbases.map<NewsListItem>((item) => ({
-        news_id: item.id,
+        news_id: item.newsId,
         citation: item.citation,
         cover_image: item.coverImage,
-        creator_id: item.creator.id,
-        creator_title: item.creator.title,
-        group_id: item.belongingSection.belongingGroup.id,
-        group_title: item.belongingSection.belongingGroup.title,
+        creator_id: item.creatorId,
+        creator_title: item.creatorTitle,
+        group_id: item.groupId,
+        group_title: item.groupTitle,
         keywords: item.keywords,
         lead_title: item.leadTitle,
-        section_id: item.belongingSection.id,
-        section_title: item.belongingSection.title,
+        section_id: item.sectionId,
+        section_title: item.sectionTitle,
         subtitle: item.subtitle,
         timestamp: item.timestamp,
         title: item.title,

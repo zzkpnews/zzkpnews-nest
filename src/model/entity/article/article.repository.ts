@@ -1,5 +1,6 @@
 import { DependenceFlags } from '@/constant/dep-flags';
 import { Article } from '@/model/entity/article/article.entity';
+import { ArticleBaseTable, ArticleView, NewsBaseTable } from '@/types/tables';
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import uuid from 'uuid';
@@ -52,10 +53,10 @@ export class ArticleRepository {
 
   async save(article: Article): Promise<void> {
     this.dataSource.transaction((trx) => {
-      trx('newsbase')
+      trx<NewsBaseTable>('newsbase')
         .insert({
           id: article.id,
-          timestamp: article,
+          timestamp: article.timestamp,
           title: article.title,
           subtitle: article.subtitle,
           leadTitle: article.leadTitle,
@@ -72,7 +73,7 @@ export class ArticleRepository {
         .onConflict()
         .merge()
         .then(() => {
-          trx('article').insert({
+          trx<ArticleBaseTable>('articlebase').insert({
             author: article.author,
             editor: article.editor,
             origin: article.origin,
@@ -85,14 +86,10 @@ export class ArticleRepository {
     });
   }
 
-  async existById(id: string): Promise<boolean> {
-    return (await this.findById(id)) == null;
-  }
-
   async findById(id: string): Promise<Article | null> {
-    const result_fields = await this.dataSource
-      .select('article_list')
-      .where({ id });
+    const result_fields = await this.dataSource<ArticleView>(
+      'article_list',
+    ).where({ id });
     if (result_fields.length === 0) return null;
     return new Article(
       result_fields[0].id,
@@ -117,7 +114,43 @@ export class ArticleRepository {
     );
   }
 
+  async findNext(
+    id: string,
+    offset: number,
+    count: number,
+  ): Promise<Article[]> {
+    const result_fields = await this.dataSource<ArticleView>('article_view')
+      .where({ newsId: id })
+      .orderBy('timestamp', 'desc')
+      .offset(offset)
+      .limit(count);
+    return result_fields.map(
+      (item) =>
+        new Article(
+          item.newsId,
+          item.timestamp,
+          item.title,
+          item.subtitle,
+          item.leadTitle,
+          item.citation,
+          item.coverImage,
+          item.keywords,
+          item.creatorId,
+          item.closed,
+          item.homeHotMark,
+          item.sectionHotMark,
+          item.creatorHotMark,
+          item.belongingSectionId,
+          item.belongingTopicId,
+          item.author,
+          item.editor,
+          item.origin,
+          item.originUrl,
+        ),
+    );
+  }
+
   async deleteById(id: string): Promise<void> {
-    await this.dataSource('newsbase').where({ id }).del();
+    await this.dataSource<NewsBaseTable>('newsbase').where({ id }).del();
   }
 }

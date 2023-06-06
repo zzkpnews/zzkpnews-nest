@@ -5,7 +5,7 @@ export const DatabaseProviders = [
   {
     provide: DependenceFlags.DataSource,
     useValue: Knex({
-      client: 'mysql',
+      client: 'mysql2',
       connection: {
         host: 'localhost',
         port: 3306,

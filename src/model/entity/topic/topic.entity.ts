@@ -2,9 +2,9 @@ export class Topic {
   constructor(
     private readonly _id: string,
     private _title: string,
-    private _logo: string,
-    private _coverImage: string,
-    private _description: string,
+    private _logo: string | null,
+    private _coverImage: string | null,
+    private _description: string | null,
     private _order: number,
   ) {
     this._id = _id;

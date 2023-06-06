@@ -1,11 +1,11 @@
 import { DatabaseModule } from '@/repository/database/database.module';
 import { Module } from '@nestjs/common';
-import { GroupRepository } from './group.repository';
 import { Group } from './group.entity';
+import { GroupProviders } from './group.providers';
 
 @Module({
   imports: [DatabaseModule],
-  providers: [Group, GroupRepository],
-  exports: [Group, GroupRepository],
+  providers: [Group, ...GroupProviders],
+  exports: [Group, ...GroupProviders],
 })
 export class GroupModule {}

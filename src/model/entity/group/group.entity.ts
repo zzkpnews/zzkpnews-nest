@@ -1,4 +1,13 @@
 export class Group {
+  constructor(
+    private readonly _id: string,
+    private _title: string,
+    private _order: number,
+  ) {
+    this._id = _id;
+    this._title = _title;
+    this._order = _order;
+  }
   get id(): string {
     return this._id;
   }
@@ -17,15 +26,5 @@ export class Group {
 
   set order(value: number) {
     this._order = value;
-  }
-
-  constructor(
-    private readonly _id: string,
-    private _title: string,
-    private _order: number,
-  ) {
-    this._id = _id;
-    this._title = _title;
-    this._order = _order;
   }
 }
