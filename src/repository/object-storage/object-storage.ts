@@ -8,7 +8,7 @@ class ObjectStorage {
    * The directory position for object-storage
    * which contains some serialized objects.
    */
-  private objectStorageDir = './data';
+  private objectStorageDir = './data/objects';
 
   constructor() {
     if (!fs.existsSync(this.objectStorageDir)) {

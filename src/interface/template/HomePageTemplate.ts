@@ -1,6 +1,6 @@
-import { PageTemplate } from './utils';
+import { PageTemplateUtils } from './utils';
 
-export interface HomePageTemplate extends PageTemplate {
+export interface HomePageTemplate extends PageTemplateUtils {
   picture1: { image: string; href: string | null; description: string | null };
   picture2: { image: string; href: string | null; description: string | null };
   picture3: { image: string; href: string | null; description: string | null };

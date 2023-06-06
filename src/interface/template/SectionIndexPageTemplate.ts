@@ -1,11 +1,10 @@
-import { PageTemplate } from './utils';
+import { PageTemplateUtils } from './utils';
 
-export interface SectionIndexPageTemplate extends PageTemplate {
+export interface SectionIndexPageTemplate extends PageTemplateUtils {
   index: {
-    section: {
-      id: string;
-      title: string;
-    };
+    section_id: string;
+    section_title: string;
+
     recent_list: {
       news_id: string;
       timestamp: number;

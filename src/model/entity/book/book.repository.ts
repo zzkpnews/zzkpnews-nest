@@ -67,6 +67,7 @@ export class BookRepository {
     count: number,
   ): Promise<Book[]> {
     const result_fields = await this.dataSource<BookTable>('book')
+      .where({ id })
       .offset(offset)
       .limit(count)
       .orderBy('timestamp', 'desc');
@@ -85,10 +86,37 @@ export class BookRepository {
     );
   }
 
-  async findByCreatorId(creatorId: string): Promise<Book[]> {
-    const result_fields = await this.dataSource<BookTable>('book').where({
-      creatorId,
-    });
+  async findRecent(offset: number, count: number): Promise<Book[]> {
+    const result_fields = await this.dataSource<BookTable>('book')
+      .offset(offset)
+      .limit(count)
+      .orderBy('timestamp', 'desc');
+    return result_fields.map(
+      (book) =>
+        new Book(
+          book.id,
+          book.creatorId,
+          book.title,
+          book.citation,
+          book.keywords,
+          book.coverImage,
+          book.timestamp,
+          book.closed,
+        ),
+    );
+  }
+
+  async findByCreatorId(
+    creatorId: string,
+    offset: number,
+    count: number,
+  ): Promise<Book[]> {
+    const result_fields = await this.dataSource<BookTable>('book')
+      .where({
+        creatorId,
+      })
+      .offset(offset)
+      .limit(count);
     return result_fields.map(
       (item) =>
         new Book(

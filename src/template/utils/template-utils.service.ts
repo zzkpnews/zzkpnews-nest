@@ -1,5 +1,5 @@
 import { DependenceFlags } from '@/constant/dep-flags';
-import { PageTemplate } from '@/interface/template/utils';
+import { PageTemplateUtils } from '@/interface/template/utils';
 import { FriendRepository } from '@/model/entity/friend/friend.repository';
 import { GroupRepository } from '@/model/entity/group/group.repository';
 import { SectionRepository } from '@/model/entity/section/section.repository';
@@ -20,7 +20,7 @@ export class TemplateUtilsService {
     private readonly friendRepository: FriendRepository,
   ) {}
 
-  async getTemplateUtils(): Promise<PageTemplate> {
+  async getTemplateUtils(): Promise<PageTemplateUtils> {
     const site_meta = this.objectStorage.get<SiteMeta>('site-meta');
 
     const navigation = {
@@ -50,16 +50,21 @@ export class TemplateUtilsService {
     );
 
     return {
-      site_title: site_meta?.site_title ?? '',
-      site_description: site_meta?.site_description ?? '',
-      site_keywords: site_meta?.site_keywords ?? '',
-      official_contact: site_meta?.official_contact,
+      site_title: site_meta?.site_title,
+      site_description: site_meta?.site_description,
+      site_keywords: site_meta?.site_keywords,
+      contact_address: site_meta?.contact_address ?? null,
+      contact_email: site_meta?.contact_email,
+      contact_phone: site_meta?.contact_phone,
+      contact_wechat: site_meta?.contact_wechat,
       friend_links: friend_links,
-      technology_support: site_meta?.technology_support ?? '',
-      icp_license: site_meta?.icp_license ?? '',
-      security_license: site_meta?.security_license ?? '',
-      institution: site_meta?.institution ?? '',
-      enable_memory_mode: site_meta?.enable_memory_mode ?? false,
+      info_technology_support: site_meta?.info_technology_support,
+      info_icp_license: site_meta?.info_icp_license,
+      info_security_license: site_meta?.info_security_license,
+      info_institution: site_meta?.info_institution,
+      setting_enable_memory_mode:
+        site_meta?.setting_enable_memory_mode ?? false,
+      setting_maintaining_mode: false,
       navigation: navigation,
     };
   }

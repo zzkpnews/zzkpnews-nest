@@ -1,20 +1,18 @@
-import { PageTemplate } from './utils';
+import { PageTemplateUtils } from './utils';
 
-export interface CreatorProfilePageTemplate extends PageTemplate {
-  creator: {
-    id: string;
-    title: string;
-    phone: string;
-    email: string;
-    cover_image: string | null;
-    description: string | null;
-    qq: string | null;
-    wechat: string | null;
-    url: string | null;
-    avatar: string | null;
-  };
+export interface CreatorProfilePageTemplate extends PageTemplateUtils {
+  creator_id: string;
+  creator_title: string;
+  creator_phone: string;
+  creator_email: string;
+  creator_cover_image: string | null;
+  creator_description: string | null;
+  creator_qq: string | null;
+  creator_wechat: string | null;
+  creator_url: string | null;
+  creator_avatar: string | null;
 
-  recent_news: {
+  recent_list: {
     news_id: string;
     timestamp: number;
     type: 'article' | 'video';
@@ -26,37 +24,37 @@ export interface CreatorProfilePageTemplate extends PageTemplate {
     citation: string | null;
   }[];
 
-  articles: {
+  articles_list: {
     news_id: string;
-    timestamp: number;
-    title: string;
-    lead_title: string | null;
-    subtitle: string | null;
-    section_title: string;
-    cover_image: string | null;
-    citation: string | null;
+    article_timestamp: number;
+    article_title: string;
+    article_lead_title: string | null;
+    article_subtitle: string | null;
+    article_section_title: string;
+    article_cover_image: string | null;
+    article_citation: string | null;
   }[];
 
-  videos: {
+  videos_list: {
     news_id: string;
-    timestamp: number;
-    title: string;
-    lead_title: string | null;
-    subtitle: string | null;
-    section_title: string;
-    cover_image: string | null;
-    citation: string | null;
+    video_timestamp: number;
+    video_title: string;
+    video_lead_title: string | null;
+    video_subtitle: string | null;
+    video_section_title: string;
+    video_cover_image: string | null;
+    video_citation: string | null;
   }[];
 
-  books: {
-    title: string;
-    cover_image: string;
-    id: string;
-    citation: string | null;
-    timestamp: number;
+  books_list: {
+    book_title: string;
+    book_cover_image: string;
+    book_id: string;
+    book_citation: string | null;
+    book_timestamp: number;
   }[];
 
-  hot_news: {
+  hot_list: {
     news_id: string;
     type: 'article' | 'video';
     title: string;

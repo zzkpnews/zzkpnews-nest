@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { NewsListRepository } from '../view/news-list-item/news-list-item.repository';
+import { NewsListItemRepository } from '../view/news-list-item/news-list-item.repository';
 import { ArticleModule } from './article/article.module';
 import { BookModule } from './book/book.module';
 import { CreatorModule } from './creator/creator.module';

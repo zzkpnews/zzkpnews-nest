@@ -34,6 +34,7 @@ export interface CreatorTable {
   logo: string | null;
   salt: string;
   passwordHash: string;
+  coverImage: string | null;
   closed: boolean;
 }
 

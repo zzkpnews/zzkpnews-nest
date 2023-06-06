@@ -1,3 +1,3 @@
-import { PageTemplate } from './utils';
+import { PageTemplateUtils } from './utils';
 
-export interface Error500PageTemplate extends PageTemplate {}
+export interface Error500PageTemplate extends PageTemplateUtils {}

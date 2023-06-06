@@ -3,9 +3,10 @@ import { Module } from '@nestjs/common';
 import { ArticleReaderPageTemplateController } from './article-reader-page-template.controller';
 import { ArticleReaderPageTemplateService } from './article-reader-page-template.service';
 import { TemplateUtilsModule } from '../utils/template-utils.module';
+import { ViewsModule } from '@/model/view/views.module';
 
 @Module({
-  imports: [EntityModule, TemplateUtilsModule],
+  imports: [EntityModule, ViewsModule, TemplateUtilsModule],
   controllers: [ArticleReaderPageTemplateController],
   providers: [ArticleReaderPageTemplateService],
   exports: [ArticleReaderPageTemplateService],

@@ -1,10 +1,10 @@
 import { DependenceFlags } from '@/constant/dep-flags';
 import { Provider } from '@nestjs/common';
-import { NewsListRepository } from './news-list-item.repository';
+import { NewsListItemRepository } from './news-list-item.repository';
 
-export const NewsListProviders: Provider[] = [
+export const NewsListItemProviders: Provider[] = [
   {
-    provide: DependenceFlags.NewsListRepository,
-    useClass: NewsListRepository,
+    provide: DependenceFlags.NewsListItemRepository,
+    useClass: NewsListItemRepository,
   },
 ];

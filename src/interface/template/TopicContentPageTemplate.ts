@@ -1,12 +1,10 @@
-import { PageTemplate } from './utils';
+import { PageTemplateUtils } from './utils';
 
-export interface TopicContentPageTemplate extends PageTemplate {
-  topic: {
-    logo: string;
-    description: string;
-    title: string;
-    cover_image: string;
-  };
+export interface TopicContentPageTemplate extends PageTemplateUtils {
+  topic_logo: string;
+  topic_description: string;
+  topic_title: string;
+  topic_cover_image: string;
 
   news_list: {
     news_id: string;

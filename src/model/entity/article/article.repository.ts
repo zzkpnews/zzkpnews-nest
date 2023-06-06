@@ -86,13 +86,13 @@ export class ArticleRepository {
     });
   }
 
-  async findById(id: string): Promise<Article | null> {
+  async findById(newsId: string): Promise<Article | null> {
     const result_fields = await this.dataSource<ArticleView>(
-      'article_list',
-    ).where({ id });
+      'article_view',
+    ).where({ newsId });
     if (result_fields.length === 0) return null;
     return new Article(
-      result_fields[0].id,
+      result_fields[0].newsId,
       result_fields[0].timestamp,
       result_fields[0].title,
       result_fields[0].subtitle,
@@ -115,15 +115,16 @@ export class ArticleRepository {
   }
 
   async findNext(
-    id: string,
+    timestamp: number,
     offset: number,
     count: number,
   ): Promise<Article[]> {
     const result_fields = await this.dataSource<ArticleView>('article_view')
-      .where({ newsId: id })
+      .where('timestamp', '>', timestamp)
       .orderBy('timestamp', 'desc')
       .offset(offset)
       .limit(count);
+
     return result_fields.map(
       (item) =>
         new Article(

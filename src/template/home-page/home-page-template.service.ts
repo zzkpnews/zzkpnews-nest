@@ -4,7 +4,7 @@ import { DependenceFlags } from '@/constant/dep-flags';
 import { Headline } from '@/model/object/headline/headline.object';
 import { HomePageTemplate } from '@/interface/template/HomePageTemplate';
 import { Inject, Injectable } from '@nestjs/common';
-import { NewsListRepository } from '@/model/view/news-list-item/news-list-item.repository';
+import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
 import { ObjectStorage } from '@/repository/object-storage/object-storage';
 import { PictureNews } from '@/model/object/picture-news/picture-news.object';
 import { SpecialNews } from '@/model/object/special-news/special-news.object';
@@ -16,8 +16,8 @@ export class HomePageTemplateService {
   constructor(
     @Inject(DependenceFlags.ObjectStorage)
     private readonly objectStorage: ObjectStorage,
-    @Inject(DependenceFlags.NewsListRepository)
-    private readonly newsListRepository: NewsListRepository,
+    @Inject(DependenceFlags.NewsListItemRepository)
+    private readonly newsListRepository: NewsListItemRepository,
     @Inject(DependenceFlags.TopicRepository)
     private readonly topicRepository: TopicRepository,
     @Inject(DependenceFlags.CarouselRepository)

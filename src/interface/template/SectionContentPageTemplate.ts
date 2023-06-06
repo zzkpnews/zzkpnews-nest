@@ -1,9 +1,7 @@
-import { PageTemplate } from './utils';
+import { PageTemplateUtils } from './utils';
 
-export interface SectionPageTemplate extends PageTemplate {
-  section: {
-    title: string;
-  };
+export interface SectionContentPageTemplate extends PageTemplateUtils {
+  section_title: string;
 
   hot_list: {
     news_id: string;
@@ -15,19 +13,19 @@ export interface SectionPageTemplate extends PageTemplate {
     cover_image: string | null;
   }[];
 
-  articles: {
+  articles_list: {
     news_id: string;
-    title: string;
-    lead_title: string | null;
-    subtitle: string | null;
-    cover_image: string | null;
-    citation: string | null;
+    article_title: string;
+    article_lead_title: string | null;
+    article_subtitle: string | null;
+    article_cover_image: string | null;
+    article_citation: string | null;
   }[];
 
-  videos: {
+  videos_list: {
     news_id: string;
-    title: string;
-    cover_image: string | null;
-    citation: string | null;
+    video_title: string;
+    video_cover_image: string | null;
+    video_citation: string | null;
   }[];
 }

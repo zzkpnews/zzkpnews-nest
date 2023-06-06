@@ -89,13 +89,13 @@ export class VideoRepository {
     });
   }
 
-  async findById(id: string): Promise<Video | null> {
+  async findById(newsId: string): Promise<Video | null> {
     const result_fields = await this.dataSource<VideoView>('video_view').where({
-      id,
+      newsId,
     });
     if (result_fields.length === 0) return null;
     return new Video(
-      result_fields[0].id,
+      result_fields[0].newsId,
       result_fields[0].timestamp,
       result_fields[0].title,
       result_fields[0].subtitle,
@@ -115,6 +115,44 @@ export class VideoRepository {
       result_fields[0].editor,
       result_fields[0].origin,
       result_fields[0].originUrl,
+    );
+  }
+
+  async findNext(
+    timestamp: number,
+    offset: number,
+    count: number,
+  ): Promise<Video[]> {
+    const result_fields = await this.dataSource<VideoView>('video_view')
+      .where('timestamp', '>', timestamp)
+      .orderBy('timestamp', 'desc')
+      .offset(offset)
+      .limit(count);
+
+    return result_fields.map(
+      (item) =>
+        new Video(
+          item.newsId,
+          item.timestamp,
+          item.title,
+          item.subtitle,
+          item.leadTitle,
+          item.citation,
+          item.coverImage,
+          item.keywords,
+          item.creatorId,
+          item.closed,
+          item.homeHotMark,
+          item.sectionHotMark,
+          item.creatorHotMark,
+          item.belongingSectionId,
+          item.belongingTopicId,
+          item.videoUrl,
+          item.author,
+          item.editor,
+          item.originUrl,
+          item.origin,
+        ),
     );
   }
 

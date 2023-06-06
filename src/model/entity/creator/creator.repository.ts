@@ -32,6 +32,7 @@ export class CreatorRepository {
       result_fields[0].salt,
       result_fields[0].passwordHash,
       result_fields[0].closed,
+      result_fields[0].coverImage,
     );
   }
 
@@ -54,6 +55,7 @@ export class CreatorRepository {
           item.salt,
           item.passwordHash,
           item.closed,
+          item.coverImage,
         ),
     );
   }
@@ -79,6 +81,7 @@ export class CreatorRepository {
           item.salt,
           item.passwordHash,
           item.closed,
+          item.coverImage,
         ),
     );
   }
@@ -96,6 +99,7 @@ export class CreatorRepository {
     url: string | null,
     logo: string | null,
     password: string,
+    coverImage: string | null,
   ): Promise<Creator> {
     const { salt, hash } = getPasswordHash(password);
     return new Creator(
@@ -113,6 +117,7 @@ export class CreatorRepository {
       salt,
       hash,
       false,
+      coverImage,
     );
   }
 

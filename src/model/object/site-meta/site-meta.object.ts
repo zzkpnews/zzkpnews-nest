@@ -3,17 +3,16 @@ export interface SiteMeta {
   site_description: string | null;
   site_keywords: string | null;
 
-  official_contact: {
-    address: string | null;
-    email: string | null;
-    phone: string[] | null;
-    wechat: string | null;
-  };
+  contact_address: string | null;
+  contact_email: string | null;
+  contact_phone: string[] | null;
+  contact_wechat: string | null;
 
-  technology_support: string | null;
-  icp_license: string | null;
-  security_license: string | null;
-  institution: string | null;
+  info_technology_support: string | null;
+  info_icp_license: string | null;
+  info_security_license: string | null;
+  info_institution: string | null;
 
-  enable_memory_mode: boolean;
+  setting_enable_memory_mode: boolean;
+  setting_maintaining_mode: boolean;
 }

@@ -1,13 +1,13 @@
 import { DependenceFlags } from '@/constant/dep-flags';
 import { NewsList, NewsListItem } from '@/interface/api/news-list';
-import { NewsListRepository } from '@/model/view/news-list-item/news-list-item.repository';
+import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
 import { Inject, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class NewsListService {
   constructor(
-    @Inject(DependenceFlags.NewsListRepository)
-    private readonly newsListRepository: NewsListRepository,
+    @Inject(DependenceFlags.NewsListItemRepository)
+    private readonly newsListRepository: NewsListItemRepository,
   ) {}
   async getList(
     sectionId?: string,

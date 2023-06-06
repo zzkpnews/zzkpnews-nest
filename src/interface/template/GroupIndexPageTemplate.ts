@@ -1,22 +1,22 @@
-import { PageTemplate } from './utils';
+import { PageTemplateUtils } from './utils';
 
-export interface GroupIndexPageTemplate extends PageTemplate {
+export interface GroupIndexPageTemplate extends PageTemplateUtils {
   group_index: {
-    group: {
-      id: string;
-      title: string;
-    };
-    articles: {
+    group_id: string;
+    group_title: string;
+
+    articles_list: {
       news_id: string;
-      title: string;
-      subtitle: string | null;
-      cover_image: string | null;
+      article_title: string;
+      article_subtitle: string | null;
+      article_cover_image: string | null;
     }[];
-    videos: {
+
+    videos_list: {
       news_id: string;
-      title: string;
-      subtitle: string | null;
-      cover_image: string | null;
+      video_title: string;
+      video_subtitle: string | null;
+      video_cover_image: string | null;
     }[];
   }[];
 }

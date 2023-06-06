@@ -1,24 +1,15 @@
 import { DependenceFlags } from '@/constant/dep-flags';
 import { SectionIndexPageTemplate } from '@/interface/template/SectionIndexPageTemplate';
-import { CarouselRepository } from '@/model/entity/carousel/carousel.repository';
 import { SectionRepository } from '@/model/entity/section/section.repository';
-import { TopicRepository } from '@/model/entity/topic/topic.repository';
-import { NewsListRepository } from '@/model/view/news-list-item/news-list-item.repository';
-import { ObjectStorage } from '@/repository/object-storage/object-storage';
+import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { TemplateUtilsService } from '../utils/template-utils.service';
 
 @Injectable()
 export class SectionIndexPageTemplateService {
   constructor(
-    @Inject(DependenceFlags.ObjectStorage)
-    private readonly objectStorage: ObjectStorage,
-    @Inject(DependenceFlags.NewsListRepository)
-    private readonly newsListRepository: NewsListRepository,
-    @Inject(DependenceFlags.TopicRepository)
-    private readonly topicRepository: TopicRepository,
-    @Inject(DependenceFlags.CarouselRepository)
-    private readonly carouselRepository: CarouselRepository,
+    @Inject(DependenceFlags.NewsListItemRepository)
+    private readonly newsListRepository: NewsListItemRepository,
     @Inject(DependenceFlags.SectionRepository)
     private readonly sectionRepository: SectionRepository,
     private readonly templateUtils: TemplateUtilsService,
@@ -39,7 +30,8 @@ export class SectionIndexPageTemplateService {
     );
 
     const index = sections.map((section, index) => ({
-      section: { id: section.id, title: section.title },
+      section_id: section.id,
+      section_title: section.title,
       recent_list: recent_lists[index].map((item) => ({
         news_id: item.newsId,
         timestamp: item.timestamp,

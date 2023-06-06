@@ -1,3 +1,3 @@
-import { PageTemplate } from './utils';
+import { PageTemplateUtils } from './utils';
 
-export interface SearchPageTemplate extends PageTemplate {}
+export interface SearchPageTemplate extends PageTemplateUtils {}

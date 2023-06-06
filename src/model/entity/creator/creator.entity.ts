@@ -14,6 +14,7 @@ export class Creator {
     private _salt: string,
     private _passwordHash: string,
     private _closed: boolean,
+    private _coverImage: string | null,
   ) {}
 
   get id(): string {
@@ -94,6 +95,14 @@ export class Creator {
 
   set logo(value: string | null) {
     this._logo = value;
+  }
+
+  get coverImage(): string | null {
+    return this._coverImage;
+  }
+
+  set coverImage(value: string | null) {
+    this._coverImage = value;
   }
 
   get salt(): string {

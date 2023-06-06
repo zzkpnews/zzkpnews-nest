@@ -1,11 +1,10 @@
-import { PageTemplate } from './utils';
+import { PageTemplateUtils } from './utils';
 
-export interface TopicIndexPageTemplate extends PageTemplate {
+export interface TopicIndexPageTemplate extends PageTemplateUtils {
   index: {
-    topic: {
-      id: string;
-      title: string;
-    };
+    topic_id: string;
+    topic_title: string;
+
     news_list: {
       news_id: string;
       timestamp: number;

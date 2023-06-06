@@ -1,25 +1,25 @@
-import { PageTemplate } from './utils';
+import { PageTemplateUtils } from './utils';
 
-export interface ArticleReaderPageTemplate extends PageTemplate {
-  title: string;
-  subtitle: string | null;
-  lead_title: string | null;
-  cover_image: string | null;
-  citation: string | null;
-  timestamp: number;
-  author: string | null;
-  editor: string | null;
-  creator_logo: string | null;
-  creator_description: string | null;
-  creator_id: string;
-  creator_title: string;
-  content: string;
-  keywords: string | null;
+export interface ArticleReaderPageTemplate extends PageTemplateUtils {
+  article_title: string;
+  article_subtitle: string | null;
+  article_lead_title: string | null;
+  article_cover_image: string | null;
+  article_citation: string | null;
+  article_timestamp: number;
+  article_author: string | null;
+  article_editor: string | null;
+  article_creator_logo: string | null;
+  article_creator_description: string | null;
+  article_creator_id: string;
+  article_creator_title: string;
+  article_content: string;
+  article_keywords: string | null;
 
   next_list: {
     news_id: string;
-    title: string;
-    lead_title: string | null;
-    subtitle: string | null;
+    article_title: string;
+    article_lead_title: string | null;
+    article_subtitle: string | null;
   }[];
 }

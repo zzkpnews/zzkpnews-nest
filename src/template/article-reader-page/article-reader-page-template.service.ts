@@ -16,31 +16,33 @@ export class ArticleReaderPageTemplateService {
   ) {}
   async get(news_id: string): Promise<ArticleReaderPageTemplate> {
     const article = await this.articleRepository.findById(news_id);
+
     const creator = await this.creatorRepository.findById(article.creatorId);
+
     const next_list = (
-      await this.articleRepository.findNext(article.id, 0, 7)
+      await this.articleRepository.findNext(article.timestamp, 0, 7)
     ).map((next_article) => ({
       news_id: next_article.id,
-      title: next_article.title,
-      lead_title: next_article.leadTitle,
-      subtitle: next_article.subtitle,
+      article_title: next_article.title,
+      article_lead_title: next_article.leadTitle,
+      article_subtitle: next_article.subtitle,
     }));
 
     return {
-      title: article.title,
-      subtitle: article.subtitle,
-      lead_title: article.leadTitle,
-      cover_image: article.coverImage,
-      citation: article.citation,
-      timestamp: article.timestamp,
-      author: article.author,
-      editor: article.editor,
-      creator_logo: creator.logo,
-      creator_description: creator.description,
-      creator_id: creator.id,
-      creator_title: creator.title,
-      content: '',
-      keywords: article.keywords,
+      article_title: article.title,
+      article_subtitle: article.subtitle,
+      article_lead_title: article.leadTitle,
+      article_cover_image: article.coverImage,
+      article_citation: article.citation,
+      article_timestamp: article.timestamp,
+      article_author: article.author,
+      article_editor: article.editor,
+      article_creator_logo: creator.logo,
+      article_creator_description: creator.description,
+      article_creator_id: creator.id,
+      article_creator_title: creator.title,
+      article_content: '',
+      article_keywords: article.keywords,
 
       next_list: next_list,
 

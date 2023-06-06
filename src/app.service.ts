@@ -12,10 +12,6 @@ export class AppService {
     private creatorRepository: CreatorRepository,
   ) {}
   async getHello() {
-    return await this.articleRepository.findNext(
-      'a058dfa5feb411ed9da2f8e4e3d2cedf',
-      0,
-      5,
-    );
+    return {};
   }
 }
