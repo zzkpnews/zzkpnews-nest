@@ -12,8 +12,12 @@ export class SearchService {
 
   async makeSearch(
     searchWord: string,
-    offset = 0,
+    timestamp_offset?: number,
   ): Promise<SearchResultItem[]> {
-    return await this.searchResultItemRepository.find(searchWord, offset, 10);
+    return await this.searchResultItemRepository.find(
+      searchWord,
+      10,
+      timestamp_offset,
+    );
   }
 }

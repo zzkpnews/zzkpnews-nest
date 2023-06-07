@@ -60,7 +60,7 @@ export class TemplatesController {
     return await this.articleReaderPageTemplateService.get(news_id);
   }
 
-  @Get()
+  @Get('/book-index')
   async getBookIndexPage(): Promise<BookIndexPageTemplate> {
     return await this.bookIndexPageTemplateService.get();
   }

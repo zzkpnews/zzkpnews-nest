@@ -6,4 +6,7 @@ export interface BookReaderPageTemplate extends PageTemplateUtils {
   book_cover_image: string;
   book_citation: string | null;
   book_timestamp: number;
+
+  creator_title: string;
+  creator_logo: string;
 }

@@ -12,8 +12,8 @@ export class SearchResultItemRepository {
 
   async find(
     searchWord: string,
-    timestamp_offset: number,
     count: number,
+    timestamp_offset?: number,
   ): Promise<SearchResultItem[]> {
     const search_words = `%${mysql
       .escape(searchWord)
@@ -53,10 +53,14 @@ export class SearchResultItemRepository {
           })
           .as('books'),
       )
-      .as('result')
-      .where('timestamp', '<', timestamp_offset)
-      .orderBy('timestamp', 'desc')
-      .limit(count);
+      .as('result');
+
+    if (timestamp_offset) {
+      query.where('timestamp', '<', timestamp_offset);
+    }
+
+    query.orderBy('timestamp', 'desc').limit(count);
+
     console.log(query.toSQL());
     const result_fields = await query;
     return result_fields.map((item) => ({

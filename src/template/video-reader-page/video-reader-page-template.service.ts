@@ -24,6 +24,7 @@ export class VideoReaderPageTemplateService {
 
     const next_list = (
       await this.newsListItemRepository.find({
+        type: 'video',
         timestamp_offset: video.timestamp,
         count: 7,
       })

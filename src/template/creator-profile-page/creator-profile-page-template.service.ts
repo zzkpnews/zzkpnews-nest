@@ -106,7 +106,7 @@ export class CreatorProfilePageTemplateService {
       creator_qq: creator.qq,
       creator_wechat: creator.wechat,
       creator_url: creator.url,
-      creator_avatar: creator.logo,
+      creator_logo: creator.logo,
 
       recent_list: recent_list,
       articles_list: articles_list,

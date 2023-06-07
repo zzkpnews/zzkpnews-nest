@@ -24,6 +24,7 @@ export class ArticleReaderPageTemplateService {
 
     const next_list = (
       await this.newsListItemRepository.find({
+        type: 'article',
         timestamp_offset: article.timestamp,
         count: 7,
       })

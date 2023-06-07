@@ -10,7 +10,7 @@ export interface CreatorProfilePageTemplate extends PageTemplateUtils {
   creator_qq: string | null;
   creator_wechat: string | null;
   creator_url: string | null;
-  creator_avatar: string | null;
+  creator_logo: string | null;
 
   recent_list: {
     news_id: string;
