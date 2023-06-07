@@ -54,7 +54,7 @@ export class GroupIndexPageTemplateService {
             false,
             false,
             0,
-            10,
+            9,
           )
         ).map((item) => ({
           news_id: item.newsId,

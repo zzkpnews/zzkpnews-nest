@@ -8,4 +8,4 @@ import { NewsListItem } from './news-list-item.view';
   providers: [NewsListItem, ...NewsListItemProviders],
   exports: [NewsListItem, ...NewsListItemProviders],
 })
-export class NewsListModule {}
+export class NewsListItemModule {}

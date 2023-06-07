@@ -25,6 +25,12 @@ import { TopicIndexPageTemplateService } from './topic-index-page/topic-index-pa
 import { TopicIndexPageTemplate } from '@/interface/template/TopicIndexPageTemplate';
 import { VideoReaderPageTemplateService } from './video-reader-page/video-reader-page-template.service';
 import { VideoReaderPageTemplate } from '@/interface/template/VideoReaderPageTemplate';
+import { Error403PageTemplateService } from './error-403-page/error-403-page-template.service';
+import { Error404PageTemplateService } from './error-404-page/error-404-page-template.service';
+import { Error500PageTemplateService } from './error-500-page/error-500-page-template.service';
+import { Error403PageTemplate } from '@/interface/template/Error403PageTemplate';
+import { Error404PageTemplate } from '@/interface/template/Error404PageTemplate';
+import { Error500PageTemplate } from '@/interface/template/Error500PageTemplate';
 
 @Controller('templates')
 export class TemplatesController {
@@ -42,6 +48,9 @@ export class TemplatesController {
     private readonly topicContentPageTemplateService: TopicContentPageTemplateService,
     private readonly topicIndexPageTemplateService: TopicIndexPageTemplateService,
     private readonly videoReaderPageTemplateService: VideoReaderPageTemplateService,
+    private readonly Error403PageTemplateService: Error403PageTemplateService,
+    private readonly Error404PageTemplateService: Error404PageTemplateService,
+    private readonly Error500PageTemplateService: Error500PageTemplateService,
   ) {}
 
   @Get('/article-reader/:news_id')
@@ -121,5 +130,20 @@ export class TemplatesController {
     @Param('news_id') news_id: string,
   ): Promise<VideoReaderPageTemplate> {
     return await this.videoReaderPageTemplateService.get(news_id);
+  }
+
+  @Get('error-403')
+  async getError403Page(): Promise<Error403PageTemplate> {
+    return await this.Error403PageTemplateService.get();
+  }
+
+  @Get('error-404')
+  async getError404Page(): Promise<Error404PageTemplate> {
+    return await this.Error404PageTemplateService.get();
+  }
+
+  @Get('error-500')
+  async getError500Page(): Promise<Error500PageTemplate> {
+    return await this.Error500PageTemplateService.get();
   }
 }

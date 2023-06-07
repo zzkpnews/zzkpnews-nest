@@ -64,7 +64,7 @@ export class HomePageTemplateService {
         logo: item.logo,
       })),
 
-      recent_books: (await this.bookRepository.findNext(null, 0, 5)).map(
+      recent_books: (await this.bookRepository.findRecent(0, 5)).map(
         (book) => ({
           id: book.id,
           title: book.title,

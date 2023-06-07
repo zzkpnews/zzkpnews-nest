@@ -12,5 +12,7 @@ export const DependenceFlags = {
   SectionRepository: Symbol('section repository'),
   TopicRepository: Symbol('topic repository'),
   VideoRepository: Symbol('video repository'),
-  NewsListItemRepository: Symbol('newslist repository'),
+
+  NewsListItemRepository: Symbol('news-list-item repository'),
+  SearchResultItemRepository: Symbol('search-result-item repository'),
 };

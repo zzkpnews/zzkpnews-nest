@@ -24,7 +24,6 @@ export class ArticleReaderPageTemplateService {
     ).map((next_article) => ({
       news_id: next_article.id,
       article_title: next_article.title,
-      article_lead_title: next_article.leadTitle,
       article_subtitle: next_article.subtitle,
     }));
 

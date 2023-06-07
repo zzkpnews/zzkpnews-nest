@@ -19,7 +19,6 @@ export interface ArticleReaderPageTemplate extends PageTemplateUtils {
   next_list: {
     news_id: string;
     article_title: string;
-    article_lead_title: string | null;
     article_subtitle: string | null;
   }[];
 }
