@@ -19,4 +19,5 @@ export class NewsListItem {
   sectionHotMark: boolean;
   creatorHotMark: boolean;
   type: 'article' | 'video';
+  closed: boolean;
 }

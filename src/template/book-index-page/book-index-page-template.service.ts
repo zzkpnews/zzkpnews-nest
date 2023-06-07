@@ -12,7 +12,7 @@ export class BookIndexPageTemplateService {
     private readonly templateUtils: TemplateUtilsService,
   ) {}
   async get(): Promise<BookIndexPageTemplate> {
-    const book_list = (await this.bookRepository.findRecent(0, 10)).map(
+    const book_list = (await this.bookRepository.find({ count: 10 })).map(
       (book) => ({
         book_id: book.id,
         book_title: book.title,

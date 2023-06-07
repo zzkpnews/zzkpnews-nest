@@ -18,18 +18,11 @@ export class SectionContentPageTemplateService {
     const section = await this.sectionRepository.findById(section_id);
 
     const hot_list = (
-      await this.newsListItemRepository.filterFind(
-        'all',
-        null,
-        section_id,
-        null,
-        null,
-        false,
-        false,
-        true,
-        0,
-        10,
-      )
+      await this.newsListItemRepository.find({
+        onlySectionHot: true,
+        sectionId: section_id,
+        count: 10,
+      })
     ).map((item) => ({
       news_id: item.newsId,
       type: item.type,
@@ -41,18 +34,11 @@ export class SectionContentPageTemplateService {
     }));
 
     const articles_list = (
-      await this.newsListItemRepository.filterFind(
-        'article',
-        null,
-        section_id,
-        null,
-        null,
-        false,
-        false,
-        false,
-        0,
-        10,
-      )
+      await this.newsListItemRepository.find({
+        type: 'article',
+        sectionId: section_id,
+        count: 10,
+      })
     ).map((item) => ({
       news_id: item.newsId,
       article_title: item.title,
@@ -63,18 +49,11 @@ export class SectionContentPageTemplateService {
     }));
 
     const videos_list = (
-      await this.newsListItemRepository.filterFind(
-        'video',
-        null,
-        section_id,
-        null,
-        null,
-        false,
-        false,
-        false,
-        0,
-        10,
-      )
+      await this.newsListItemRepository.find({
+        type: 'video',
+        sectionId: section_id,
+        count: 10,
+      })
     ).map((item) => ({
       news_id: item.newsId,
       video_title: item.title,

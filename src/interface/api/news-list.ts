@@ -15,7 +15,3 @@ export type NewsListItem = {
   cover_image: string | null;
   keywords: string | null;
 };
-
-export type NewsList = {
-  list: NewsListItem[];
-};

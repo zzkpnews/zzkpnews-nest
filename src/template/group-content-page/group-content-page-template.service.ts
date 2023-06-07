@@ -17,18 +17,7 @@ export class GroupContentPageTemplateService {
   async get(group_id: string): Promise<GroupContentPageTemplate> {
     const group = await this.groupRepository.findById(group_id);
     const hot_list = (
-      await this.newsListItemRepository.filterFind(
-        'all',
-        null,
-        null,
-        group_id,
-        null,
-        false,
-        false,
-        true,
-        0,
-        10,
-      )
+      await this.newsListItemRepository.find({ groupId: group_id, count: 10 })
     ).map((item) => ({
       news_id: item.newsId,
       type: item.type,
@@ -39,18 +28,11 @@ export class GroupContentPageTemplateService {
     }));
 
     const articles_list = (
-      await this.newsListItemRepository.filterFind(
-        'article',
-        null,
-        null,
-        group_id,
-        null,
-        false,
-        false,
-        false,
-        0,
-        10,
-      )
+      await this.newsListItemRepository.find({
+        type: 'article',
+        groupId: group_id,
+        count: 10,
+      })
     ).map((item) => ({
       news_id: item.newsId,
       article_title: item.title,
@@ -60,18 +42,11 @@ export class GroupContentPageTemplateService {
     }));
 
     const videos_list = (
-      await this.newsListItemRepository.filterFind(
-        'video',
-        null,
-        null,
-        group_id,
-        null,
-        false,
-        false,
-        false,
-        0,
-        10,
-      )
+      await this.newsListItemRepository.find({
+        type: 'video',
+        groupId: group_id,
+        count: 10,
+      })
     ).map((item) => ({
       news_id: item.newsId,
       video_title: item.title,

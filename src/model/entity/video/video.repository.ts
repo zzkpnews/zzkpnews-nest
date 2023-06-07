@@ -118,44 +118,6 @@ export class VideoRepository {
     );
   }
 
-  async findNext(
-    timestamp: number,
-    offset: number,
-    count: number,
-  ): Promise<Video[]> {
-    const result_fields = await this.dataSource<VideoView>('video_view')
-      .where('timestamp', '>', timestamp)
-      .orderBy('timestamp', 'desc')
-      .offset(offset)
-      .limit(count);
-
-    return result_fields.map(
-      (item) =>
-        new Video(
-          item.newsId,
-          item.timestamp,
-          item.title,
-          item.subtitle,
-          item.leadTitle,
-          item.citation,
-          item.coverImage,
-          item.keywords,
-          item.creatorId,
-          item.closed,
-          item.homeHotMark,
-          item.sectionHotMark,
-          item.creatorHotMark,
-          item.belongingSectionId,
-          item.belongingTopicId,
-          item.videoUrl,
-          item.author,
-          item.editor,
-          item.originUrl,
-          item.origin,
-        ),
-    );
-  }
-
   async deleteById(id: string): Promise<void> {
     await this.dataSource<NewsBaseTable>('newsbase').where({ id }).del();
   }

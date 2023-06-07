@@ -9,35 +9,35 @@ export class NewsListItemRepository {
     @Inject(DependenceFlags.DataSource) private readonly dataSource: Knex,
   ) {}
 
-  async find(count: number): Promise<NewsListItem[]> {
-    const result_fields = await this.dataSource<NewsListItem>('news_list')
-      .orderBy('timestamp', 'desc')
-      .limit(count);
-    return result_fields;
-  }
-
-  async findByCreatorId(creatorId: string, offset: number, count: number) {
-    const result_fields = await this.dataSource<NewsListItem>('news_list')
-      .where({ creatorId })
-      .orderBy('timestamp', 'desc')
-      .offset(offset)
-      .limit(count);
-    return result_fields;
-  }
-
-  async filterFind(
-    type: 'article' | 'video' | 'all',
-    creatorId: string | null,
-    sectionId: string | null,
-    groupId: string | null,
-    topicId: string | null,
-    isHomeHot: boolean | null,
-    isCreatorHot: boolean | null,
-    isSectionHot: boolean | null,
-    offset: number,
-    count: number,
-  ): Promise<NewsListItem[]> {
+  async find(filterOptions: {
+    type?: 'article' | 'video' | 'all';
+    count?: number | null;
+    timestamp_offset?: number | null;
+    creatorId?: string | null;
+    sectionId?: string | null;
+    groupId?: string | null;
+    topicId?: string | null;
+    onlyHomeHot?: boolean;
+    onlyCreatorHot?: boolean;
+    onlySectionHot?: boolean;
+    closed?: boolean;
+  }): Promise<NewsListItem[]> {
     const query = this.dataSource<NewsListItem>('news_list');
+
+    const {
+      type,
+      count,
+      timestamp_offset,
+      creatorId,
+      sectionId,
+      groupId,
+      topicId,
+      onlyHomeHot,
+      onlyCreatorHot,
+      onlySectionHot,
+      closed,
+    } = filterOptions;
+
     if (creatorId) {
       query.where({ creatorId });
     }
@@ -50,41 +50,28 @@ export class NewsListItemRepository {
     if (topicId) {
       query.where({ topicId });
     }
-    if (isHomeHot) {
+    if (onlyHomeHot) {
       query.where({ homeHotMark: true });
     }
-    if (isSectionHot) {
+    if (onlySectionHot) {
       query.where({ sectionHotMark: true });
     }
-    if (isCreatorHot) {
+    if (onlyCreatorHot) {
       query.where({ creatorHotMark: true });
     }
-    if (type !== 'all') {
+    if (type === 'article' || type === 'video') {
       query.where({ type });
     }
+    if (timestamp_offset) {
+      query.where('timestamp', '<', timestamp_offset);
+    }
+    if (!closed) {
+      query.where({ closed: false });
+    }
+
     const result_fields = await query
       .orderBy('timestamp', 'desc')
-      .offset(offset)
-      .limit(count);
-    return result_fields;
-  }
-
-  async findBySectionId(
-    sectionId: string,
-    count: number,
-  ): Promise<NewsListItem[]> {
-    const result_fields = await this.dataSource<NewsListItem>('news_list')
-      .where({ sectionId: sectionId })
-      .orderBy('timestamp', 'desc')
-      .limit(count);
-    return result_fields;
-  }
-
-  async findByTopicId(topicId: string, count: number): Promise<NewsListItem[]> {
-    const result_fields = await this.dataSource<NewsListItem>('news_list')
-      .where({ topicId: topicId })
-      .orderBy('timestamp', 'desc')
-      .limit(count);
+      .limit(count ?? 10);
     return result_fields;
   }
 
@@ -93,24 +80,5 @@ export class NewsListItemRepository {
       'news_list',
     ).where({ newsId });
     return result_fields.length === 0 ? null : result_fields[0];
-  }
-
-  async findHomeHot(count: number): Promise<NewsListItem[]> {
-    const result_fields = await this.dataSource<NewsListItem>('news_list')
-      .where({ homeHotMark: true })
-      .orderBy('timestamp', 'desc')
-      .limit(count);
-    return result_fields;
-  }
-
-  async findSectionHot(
-    sectionId: string,
-    count: number,
-  ): Promise<NewsListItem[]> {
-    const result_fields = await this.dataSource<NewsListItem>('news_list')
-      .where({ sectionHotMark: true, sectionId: sectionId })
-      .orderBy('timestamp', 'desc')
-      .limit(count);
-    return result_fields;
   }
 }

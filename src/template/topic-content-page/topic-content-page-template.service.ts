@@ -17,18 +17,11 @@ export class TopicContentPageTemplateService {
   async get(topic_id: string): Promise<TopicContentPageTemplate> {
     const topic = await this.topicRepository.findById(topic_id);
     const news_list = (
-      await this.newsListItemRepository.filterFind(
-        'all',
-        null,
-        null,
-        null,
-        topic_id,
-        false,
-        false,
-        false,
-        0,
-        10,
-      )
+      await this.newsListItemRepository.find({
+        type: 'article',
+        topicId: topic_id,
+        count: 10,
+      })
     ).map((item) => ({
       news_id: item.newsId,
       timestamp: item.timestamp,

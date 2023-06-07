@@ -19,13 +19,17 @@ export class SectionIndexPageTemplateService {
 
     const recent_lists = await Promise.all(
       sections.map((section) =>
-        this.newsListRepository.findBySectionId(section.id, 10),
+        this.newsListRepository.find({ sectionId: section.id, count: 10 }),
       ),
     );
 
     const hot_lists = await Promise.all(
       sections.map((section) =>
-        this.newsListRepository.findSectionHot(section.id, 10),
+        this.newsListRepository.find({
+          onlySectionHot: true,
+          sectionId: section.id,
+          count: 10,
+        }),
       ),
     );
 

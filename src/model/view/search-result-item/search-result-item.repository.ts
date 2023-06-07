@@ -12,44 +12,50 @@ export class SearchResultItemRepository {
 
   async find(
     searchWord: string,
-    offset: number,
+    timestamp_offset: number,
     count: number,
   ): Promise<SearchResultItem[]> {
     const search_words = `%${mysql
       .escape(searchWord)
       .replace(/'/g, '')
-      .replace(/ /g, '%')}`;
+      .replace(/ /g, '%')}%`;
     const query = this.dataSource
-      .select(
-        'newsbase.id',
-        'title',
-        'newsbase.citation as description',
-        'newsbase.type',
-        'newsbase.coverImage',
-        'timestamp',
-      )
-      .from('newsbase')
-      .whereRaw(
-        "CONCAT_WS('', newsbase.title, newsbase.subtitle, newsbase.leadTitle, newsbase.citation) LIKE ?",
-        [search_words],
-      )
-      .union((trx) => {
-        trx
+      .select('*')
+      .from((unx) =>
+        unx
           .select(
-            'id',
+            'newsbase.id',
             'title',
-            'book.citation as description',
-            this.dataSource.raw("'book' as type"),
-            'book.coverImage',
+            'newsbase.citation as description',
+            'newsbase.type',
+            'newsbase.coverImage',
             'timestamp',
           )
-          .from('book')
-          .whereRaw("CONCAT_WS('', book.title, book.citation) LIKE ?", [
-            search_words,
-          ]);
-      })
+          .from('newsbase')
+          .whereRaw(
+            "CONCAT_WS('', newsbase.title, newsbase.subtitle, newsbase.leadTitle, newsbase.citation) LIKE ?",
+            [search_words],
+          )
+          .union((trx) => {
+            trx
+              .select(
+                'id',
+                'title',
+                'book.citation as description',
+                this.dataSource.raw("'book' as type"),
+                'book.coverImage',
+                'timestamp',
+              )
+              .from('book')
+              .whereRaw("CONCAT_WS('', book.title, book.citation) LIKE ?", [
+                search_words,
+              ]);
+          })
+          .as('books'),
+      )
+      .as('result')
+      .where('timestamp', '<', timestamp_offset)
       .orderBy('timestamp', 'desc')
-      .offset(offset)
       .limit(count);
     console.log(query.toSQL());
     const result_fields = await query;

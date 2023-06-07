@@ -21,18 +21,10 @@ export class CreatorProfilePageTemplateService {
     const creator = await this.creatorRepository.findById(creator_id);
 
     const recent_list = (
-      await this.newsListItemRepository.filterFind(
-        'all',
-        creator_id,
-        null,
-        null,
-        null,
-        false,
-        false,
-        false,
-        0,
-        10,
-      )
+      await this.newsListItemRepository.find({
+        creatorId: creator_id,
+        count: 10,
+      })
     ).map((news_item) => ({
       news_id: news_item.newsId,
       timestamp: news_item.timestamp,
@@ -46,18 +38,11 @@ export class CreatorProfilePageTemplateService {
     }));
 
     const articles_list = (
-      await this.newsListItemRepository.filterFind(
-        'article',
-        creator_id,
-        null,
-        null,
-        null,
-        false,
-        false,
-        false,
-        0,
-        10,
-      )
+      await this.newsListItemRepository.find({
+        type: 'article',
+        creatorId: creator_id,
+        count: 10,
+      })
     ).map((news_item) => ({
       news_id: news_item.newsId,
       article_timestamp: news_item.timestamp,
@@ -71,18 +56,11 @@ export class CreatorProfilePageTemplateService {
     }));
 
     const videos_list = (
-      await this.newsListItemRepository.filterFind(
-        'video',
-        creator_id,
-        null,
-        null,
-        null,
-        false,
-        false,
-        false,
-        0,
-        10,
-      )
+      await this.newsListItemRepository.find({
+        type: 'video',
+        creatorId: creator_id,
+        count: 10,
+      })
     ).map((news_item) => ({
       news_id: news_item.newsId,
       video_timestamp: news_item.timestamp,
@@ -96,7 +74,7 @@ export class CreatorProfilePageTemplateService {
     }));
 
     const books_list = (
-      await this.bookRepository.findByCreatorId(creator_id, 0, 10)
+      await this.bookRepository.find({ creatorId: creator_id, count: 5 })
     ).map((book) => ({
       book_title: book.title,
       book_cover_image: book.coverImage,
@@ -106,18 +84,11 @@ export class CreatorProfilePageTemplateService {
     }));
 
     const hot_list = (
-      await this.newsListItemRepository.filterFind(
-        'all',
-        creator_id,
-        null,
-        null,
-        null,
-        false,
-        true,
-        false,
-        0,
-        10,
-      )
+      await this.newsListItemRepository.find({
+        creatorId: creator_id,
+        count: 10,
+        onlyCreatorHot: true,
+      })
     ).map((item) => ({
       news_id: item.newsId,
       type: item.type,

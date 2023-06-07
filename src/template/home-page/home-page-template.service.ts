@@ -64,7 +64,7 @@ export class HomePageTemplateService {
         logo: item.logo,
       })),
 
-      recent_books: (await this.bookRepository.findRecent(0, 5)).map(
+      recent_books: (await this.bookRepository.find({ count: 5 })).map(
         (book) => ({
           id: book.id,
           title: book.title,
@@ -74,31 +74,36 @@ export class HomePageTemplateService {
         }),
       ),
 
-      hot_list: (await this.newsListRepository.findHomeHot(7)).map(
-        (newsitem) => ({
+      hot_list: (
+        await this.newsListRepository.find({
+          count: 10,
+          onlyHomeHot: true,
+        })
+      ).map((newsitem) => ({
+        news_id: newsitem.newsId,
+        type: newsitem.type,
+        title: newsitem.title,
+        subtitle: newsitem.subtitle,
+      })),
+
+      recent_news_list: (
+        await this.newsListRepository.find({
+          count: 10,
+        })
+      ).map((newsitem) => {
+        return {
           news_id: newsitem.newsId,
+          timestamp: newsitem.timestamp,
+          keywords: newsitem.keywords,
           type: newsitem.type,
           title: newsitem.title,
+          lead_title: newsitem.leadTitle,
           subtitle: newsitem.subtitle,
-        }),
-      ),
-
-      recent_news_list: (await this.newsListRepository.find(10)).map(
-        (newsitem) => {
-          return {
-            news_id: newsitem.newsId,
-            timestamp: newsitem.timestamp,
-            keywords: newsitem.keywords,
-            type: newsitem.type,
-            title: newsitem.title,
-            lead_title: newsitem.leadTitle,
-            subtitle: newsitem.subtitle,
-            section_title: newsitem.sectionTitle,
-            cover_image: newsitem.coverImage,
-            citation: newsitem.citation,
-          };
-        },
-      ),
+          section_title: newsitem.sectionTitle,
+          cover_image: newsitem.coverImage,
+          citation: newsitem.citation,
+        };
+      }),
 
       ...(await this.templateUtils.getTemplateUtils()),
     };

@@ -61,16 +61,22 @@ export class BookRepository {
     );
   }
 
-  async findNext(
-    id: string | null,
-    offset: number,
-    count: number,
-  ): Promise<Book[]> {
-    const result_fields = await this.dataSource<BookTable>('book')
-      .where({ id })
-      .offset(offset)
-      .limit(count)
-      .orderBy('timestamp', 'desc');
+  async find(filterOptions: {
+    timestamp_offset?: number;
+    count?: number;
+    creatorId?: string;
+  }): Promise<Book[]> {
+    const query = this.dataSource<BookTable>('book');
+    const { timestamp_offset, count, creatorId } = filterOptions;
+    if (timestamp_offset) {
+      query.where('timestamp', '<', timestamp_offset);
+    }
+    if (creatorId) {
+      query.where({ creatorId });
+    }
+    const result_fields = await query
+      .orderBy('timestamp', 'desc')
+      .limit(count ?? 10);
     return result_fields.map(
       (book) =>
         new Book(
@@ -82,52 +88,6 @@ export class BookRepository {
           book.coverImage,
           book.timestamp,
           book.closed,
-        ),
-    );
-  }
-
-  async findRecent(offset: number, count: number): Promise<Book[]> {
-    const result_fields = await this.dataSource<BookTable>('book')
-      .offset(offset)
-      .limit(count)
-      .orderBy('timestamp', 'desc');
-    return result_fields.map(
-      (book) =>
-        new Book(
-          book.id,
-          book.creatorId,
-          book.title,
-          book.citation,
-          book.keywords,
-          book.coverImage,
-          book.timestamp,
-          book.closed,
-        ),
-    );
-  }
-
-  async findByCreatorId(
-    creatorId: string,
-    offset: number,
-    count: number,
-  ): Promise<Book[]> {
-    const result_fields = await this.dataSource<BookTable>('book')
-      .where({
-        creatorId,
-      })
-      .offset(offset)
-      .limit(count);
-    return result_fields.map(
-      (item) =>
-        new Book(
-          item.id,
-          item.creatorId,
-          item.title,
-          item.citation,
-          item.keywords,
-          item.coverImage,
-          item.timestamp,
-          item.closed,
         ),
     );
   }

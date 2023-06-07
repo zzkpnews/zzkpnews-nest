@@ -1,4 +1,5 @@
 import { Controller, Get, Header, Query } from '@nestjs/common';
+import { SearchQueries } from './search.dto';
 import { SearchService } from './search.service';
 
 @Controller('api/search')
@@ -8,9 +9,12 @@ export class SearchController {
   @Get()
   @Header('Access-Control-Allow-Origin', '*')
   async search(
-    @Query('search_word') search_word: string,
-    @Query('offset') offset: number,
+    @Query()
+    searchQueries: SearchQueries,
   ) {
-    return await this.searchService.makeSearch(search_word, offset);
+    return await this.searchService.makeSearch(
+      searchQueries.search_word,
+      searchQueries.timestamp_offset,
+    );
   }
 }

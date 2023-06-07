@@ -4,12 +4,15 @@ import { ArticleRepository } from '@/model/entity/article/article.repository';
 import { CreatorRepository } from '@/model/entity/creator/creator.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { TemplateUtilsService } from '../utils/template-utils.service';
+import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
 
 @Injectable()
 export class ArticleReaderPageTemplateService {
   constructor(
     @Inject(DependenceFlags.ArticleRepository)
     private readonly articleRepository: ArticleRepository,
+    @Inject(DependenceFlags.NewsListItemRepository)
+    private readonly newsListItemRepository: NewsListItemRepository,
     @Inject(DependenceFlags.CreatorRepository)
     private readonly creatorRepository: CreatorRepository,
     private readonly templateUtils: TemplateUtilsService,
@@ -20,9 +23,12 @@ export class ArticleReaderPageTemplateService {
     const creator = await this.creatorRepository.findById(article.creatorId);
 
     const next_list = (
-      await this.articleRepository.findNext(article.timestamp, 0, 7)
+      await this.newsListItemRepository.find({
+        timestamp_offset: article.timestamp,
+        count: 7,
+      })
     ).map((next_article) => ({
-      news_id: next_article.id,
+      news_id: next_article.newsId,
       article_title: next_article.title,
       article_subtitle: next_article.subtitle,
     }));

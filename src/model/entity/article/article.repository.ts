@@ -114,43 +114,6 @@ export class ArticleRepository {
     );
   }
 
-  async findNext(
-    timestamp: number,
-    offset: number,
-    count: number,
-  ): Promise<Article[]> {
-    const result_fields = await this.dataSource<ArticleView>('article_view')
-      .where('timestamp', '>', timestamp)
-      .orderBy('timestamp', 'desc')
-      .offset(offset)
-      .limit(count);
-
-    return result_fields.map(
-      (item) =>
-        new Article(
-          item.newsId,
-          item.timestamp,
-          item.title,
-          item.subtitle,
-          item.leadTitle,
-          item.citation,
-          item.coverImage,
-          item.keywords,
-          item.creatorId,
-          item.closed,
-          item.homeHotMark,
-          item.sectionHotMark,
-          item.creatorHotMark,
-          item.belongingSectionId,
-          item.belongingTopicId,
-          item.author,
-          item.editor,
-          item.origin,
-          item.originUrl,
-        ),
-    );
-  }
-
   async deleteById(id: string): Promise<void> {
     await this.dataSource<NewsBaseTable>('newsbase').where({ id }).del();
   }

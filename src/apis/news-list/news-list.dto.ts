@@ -1,7 +1,7 @@
 import { Optional } from '@nestjs/common';
 import { IsIn, IsInt, IsOptional, IsString } from 'class-validator';
 
-export class GetNewsListQueryDTO {
+export class GetNewsListQueries {
   @IsString()
   @IsOptional()
   section_id?: string;
@@ -19,8 +19,8 @@ export class GetNewsListQueryDTO {
   topic_id?: string;
 
   @Optional()
-  @IsIn(['article', 'video'])
-  type?: 'article' | 'video';
+  @IsIn(['article', 'video', 'all'])
+  type?: 'article' | 'video' | 'all';
 
   @IsInt()
   @IsOptional()

@@ -4,12 +4,15 @@ import { CreatorRepository } from '@/model/entity/creator/creator.repository';
 import { VideoRepository } from '@/model/entity/video/video.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { TemplateUtilsService } from '../utils/template-utils.service';
+import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
 
 @Injectable()
 export class VideoReaderPageTemplateService {
   constructor(
     @Inject(DependenceFlags.VideoRepository)
     private readonly videoRepository: VideoRepository,
+    @Inject(DependenceFlags.NewsListItemRepository)
+    private readonly newsListItemRepository: NewsListItemRepository,
     @Inject(DependenceFlags.CreatorRepository)
     private readonly creatorRepository: CreatorRepository,
     private readonly templateUtils: TemplateUtilsService,
@@ -20,9 +23,12 @@ export class VideoReaderPageTemplateService {
     const creator = await this.creatorRepository.findById(video.creatorId);
 
     const next_list = (
-      await this.videoRepository.findNext(video.timestamp, 0, 7)
+      await this.newsListItemRepository.find({
+        timestamp_offset: video.timestamp,
+        count: 7,
+      })
     ).map((next_video) => ({
-      news_id: next_video.id,
+      news_id: next_video.newsId,
       video_title: next_video.title,
       video_subtitle: next_video.subtitle,
       video_cover_image: next_video.coverImage,
