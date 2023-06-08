@@ -1,9 +1,9 @@
-import { DependenceFlags } from '@/constant/dep-flags';
-import { Inject } from '@nestjs/common';
-import { Knex } from 'knex';
 import uuid from 'uuid';
 import { Book } from './book.entity';
 import { BookTable } from '@/types/tables';
+import { DependenceFlags } from '@/constant/dep-flags';
+import { Inject } from '@nestjs/common';
+import { Knex } from 'knex';
 
 export class BookRepository {
   constructor(
@@ -90,6 +90,22 @@ export class BookRepository {
           book.closed,
         ),
     );
+  }
+
+  async count(filterOptions: {
+    timestamp_offset?: number;
+    creatorId?: string;
+  }): Promise<number> {
+    const query = this.dataSource<BookTable>('book');
+    const { timestamp_offset, creatorId } = filterOptions;
+    if (timestamp_offset) {
+      query.where('timestamp', '<', timestamp_offset);
+    }
+    if (creatorId) {
+      query.where({ creatorId });
+    }
+    const result_fields = await query.count();
+    return Number(result_fields[0]['count(*)']);
   }
 
   async deleteByCreatorId(creatorId: string) {

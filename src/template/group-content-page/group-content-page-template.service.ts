@@ -16,51 +16,80 @@ export class GroupContentPageTemplateService {
   ) {}
   async get(group_id: string): Promise<GroupContentPageTemplate> {
     const group = await this.groupRepository.findById(group_id);
+    const hot_list_news_count = 8;
+    const articles_list_news_count_per_page = 8;
+    const videos_list_news_count_per_page = 8;
+
     const hot_list = (
-      await this.newsListItemRepository.find({ groupId: group_id, count: 10 })
+      await this.newsListItemRepository.find({
+        groupId: group_id,
+        count: hot_list_news_count,
+      })
     ).map((item) => ({
-      news_id: item.newsId,
-      type: item.type,
-      title: item.title,
-      subtitle: item.subtitle,
-      cover_image: item.coverImage,
-      citation: item.citation,
+      newsId: item.newsId,
+      newsType: item.type,
+      newsTitle: item.title,
+      newsSubtitle: item.subtitle,
+      newsCoverImage: item.coverImage,
+      newsCitation: item.citation,
     }));
 
-    const articles_list = (
+    const articles_list_content = (
       await this.newsListItemRepository.find({
         type: 'article',
         groupId: group_id,
-        count: 10,
+        count: articles_list_news_count_per_page,
       })
     ).map((item) => ({
-      news_id: item.newsId,
-      article_title: item.title,
-      article_subtitle: item.subtitle,
-      article_cover_image: item.coverImage,
-      article_citation: item.citation,
+      newsId: item.newsId,
+      articleTitle: item.title,
+      articleSubtitle: item.subtitle,
+      articleCoverImage: item.coverImage,
+      articleCitation: item.citation,
     }));
+    const articles_total_by_group = await this.newsListItemRepository.count({
+      type: 'article',
+      groupId: group_id,
+    });
 
-    const videos_list = (
+    const videos_list_content = (
       await this.newsListItemRepository.find({
         type: 'video',
         groupId: group_id,
-        count: 10,
+        count: videos_list_news_count_per_page,
       })
     ).map((item) => ({
-      news_id: item.newsId,
-      video_title: item.title,
-      video_subtitle: item.subtitle,
-      video_cover_image: item.coverImage,
-      video_citation: item.citation,
+      newsId: item.newsId,
+      videoTitle: item.title,
+      videoSubtitle: item.subtitle,
+      videoCoverImage: item.coverImage,
+      videoCitation: item.citation,
     }));
+    const videos_total_by_group = await this.newsListItemRepository.count({
+      type: 'video',
+      groupId: group_id,
+    });
+
+    const articles_list_page_total = Math.ceil(
+      articles_total_by_group / articles_list_news_count_per_page,
+    );
+
+    const videos_list_page_total = Math.ceil(
+      videos_total_by_group / videos_list_news_count_per_page,
+    );
 
     return {
       group_id: group.id,
       group_title: group.title,
-      hot_list: hot_list,
-      articles_list: articles_list,
-      videos_list: videos_list,
+      hotList: hot_list,
+      articlesList: {
+        content: articles_list_content,
+        pageTotal: articles_list_page_total,
+      },
+      videosList: {
+        content: videos_list_content,
+        pageTotal: videos_list_page_total,
+      },
       ...(await this.templateUtils.getTemplateUtils()),
     };
   }

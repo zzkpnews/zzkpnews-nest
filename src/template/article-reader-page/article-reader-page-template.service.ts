@@ -29,28 +29,28 @@ export class ArticleReaderPageTemplateService {
         count: 7,
       })
     ).map((next_article) => ({
-      news_id: next_article.newsId,
-      article_title: next_article.title,
-      article_subtitle: next_article.subtitle,
+      newsId: next_article.newsId,
+      articleTitle: next_article.title,
+      articleSubtitle: next_article.subtitle,
     }));
 
     return {
-      article_title: article.title,
-      article_subtitle: article.subtitle,
-      article_lead_title: article.leadTitle,
-      article_cover_image: article.coverImage,
-      article_citation: article.citation,
-      article_timestamp: article.timestamp,
-      article_author: article.author,
-      article_editor: article.editor,
-      article_creator_logo: creator.logo,
-      article_creator_description: creator.description,
-      article_creator_id: creator.id,
-      article_creator_title: creator.title,
-      article_content: '',
-      article_keywords: article.keywords,
+      articleTitle: article.title,
+      articleSubtitle: article.subtitle,
+      articleLeadTitle: article.leadTitle,
+      articleCoverImage: article.coverImage,
+      articleCitation: article.citation,
+      articleTimestamp: article.timestamp,
+      articleAuthor: article.author,
+      articleEditor: article.editor,
+      creatorLogo: creator.logo,
+      creatorDescription: creator.description,
+      creatorId: creator.id,
+      creatorTitle: creator.title,
+      articleContent: '',
+      articleKeywords: article.keywords,
 
-      next_list: next_list,
+      nextList: next_list,
 
       ...(await this.templateUtils.getTemplateUtils()),
     };

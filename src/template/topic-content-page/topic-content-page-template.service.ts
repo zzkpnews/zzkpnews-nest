@@ -23,24 +23,24 @@ export class TopicContentPageTemplateService {
         count: 10,
       })
     ).map((item) => ({
-      news_id: item.newsId,
-      timestamp: item.timestamp,
-      type: item.type,
-      title: item.title,
-      lead_title: item.leadTitle,
-      subtitle: item.subtitle,
-      section_title: item.sectionTitle,
-      cover_image: item.coverImage,
-      citation: item.citation,
+      newsId: item.newsId,
+      newsTimestamp: item.timestamp,
+      newsType: item.type,
+      newsTitle: item.title,
+      newsLeadTitle: item.leadTitle,
+      newsSubtitle: item.subtitle,
+      sectionTitle: item.sectionTitle,
+      newsCoverImage: item.coverImage,
+      newsCitation: item.citation,
     }));
 
     return {
-      topic_logo: topic.logo,
-      topic_description: topic.description,
-      topic_title: topic.title,
-      topic_cover_image: topic.coverImage,
+      topicLogo: topic.logo,
+      topicDescription: topic.description,
+      topicTitle: topic.title,
+      topicCoverImage: topic.coverImage,
 
-      news_list: news_list,
+      newsList: news_list,
       ...(await this.templateUtils.getTemplateUtils()),
     };
   }

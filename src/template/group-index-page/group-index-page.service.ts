@@ -26,10 +26,10 @@ export class GroupIndexPageTemplateService {
             count: 10,
           })
         ).map((item) => ({
-          news_id: item.newsId,
-          article_title: item.title,
-          article_subtitle: item.subtitle,
-          article_cover_image: item.coverImage,
+          newsId: item.newsId,
+          articleTitle: item.title,
+          articleSubtitle: item.subtitle,
+          articleCoverImage: item.coverImage,
         })),
       ),
     );
@@ -43,19 +43,19 @@ export class GroupIndexPageTemplateService {
             count: 9,
           })
         ).map((item) => ({
-          news_id: item.newsId,
-          video_title: item.title,
-          video_subtitle: item.subtitle,
-          video_cover_image: item.coverImage,
+          newsId: item.newsId,
+          videoTitle: item.title,
+          videoSubtitle: item.subtitle,
+          videoCoverImage: item.coverImage,
         })),
       ),
     );
 
     const index = groups.map((group, index) => ({
-      group_id: group.id,
-      group_title: group.title,
-      articles_list: articles_lists[index],
-      videos_list: videos_lists[index],
+      groupId: group.id,
+      groupTitle: group.title,
+      articlesList: articles_lists[index],
+      videosList: videos_lists[index],
     }));
 
     return {

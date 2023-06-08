@@ -1,36 +1,36 @@
 import { ArticleReaderPageTemplate } from '@/interface/template/ArticleReaderPageTemplate';
-import { BookIndexPageTemplate } from '@/interface/template/BookIndexPageTemplate';
-import { BookReaderPageTemplate } from '@/interface/template/BookReaderPageTemplate';
-import { CreatorProfilePageTemplate } from '@/interface/template/CreatorProfilePageTemplate';
-import { GroupContentPageTemplate } from '@/interface/template/GroupContentPageTemplate';
-import { GroupIndexPageTemplate } from '@/interface/template/GroupIndexPageTemplate';
-import { HomePageTemplate } from '@/interface/template/HomePageTemplate';
-import { SearchPageTemplate } from '@/interface/template/SearchPageTemplate';
-import { SectionContentPageTemplate } from '@/interface/template/SectionContentPageTemplate';
-import { SectionIndexPageTemplate } from '@/interface/template/SectionIndexPageTemplate';
-import { Controller, Get, Param } from '@nestjs/common';
 import { ArticleReaderPageTemplateService } from './article-reader-page/article-reader-page-template.service';
+import { BookIndexPageTemplate } from '@/interface/template/BookIndexPageTemplate';
 import { BookIndexPageTemplateService } from './book-index-page/book-index-page-template.service';
+import { BookReaderPageTemplate } from '@/interface/template/BookReaderPageTemplate';
 import { BookReaderPageTemplateService } from './book-reader-page/book-reader-page-template.service';
+import { Controller, Get, Param } from '@nestjs/common';
+import { CreatorProfilePageTemplate } from '@/interface/template/CreatorProfilePageTemplate';
 import { CreatorProfilePageTemplateService } from './creator-profile-page/creator-profile-page-template.service';
-import { GroupContentPageTemplateService } from './group-content-page/group-content-page-template.service';
-import { GroupIndexPageTemplateService } from './group-index-page/group-index-page.service';
-import { HomePageTemplateService } from './home-page/home-page-template.service';
-import { SearchPageTemplateService } from './search-page/search-page-template.service';
-import { SectionContentPageTemplateService } from './section-content-page/section-content-page-template.service';
-import { SectionIndexPageTemplateService } from './section-index-page/section-index-page.service';
-import { TopicContentPageTemplateService } from './topic-content-page/topic-content-page-template.service';
-import { TopicContentPageTemplate } from '@/interface/template/TopicContentPageTemplate';
-import { TopicIndexPageTemplateService } from './topic-index-page/topic-index-page.service';
-import { TopicIndexPageTemplate } from '@/interface/template/TopicIndexPageTemplate';
-import { VideoReaderPageTemplateService } from './video-reader-page/video-reader-page-template.service';
-import { VideoReaderPageTemplate } from '@/interface/template/VideoReaderPageTemplate';
-import { Error403PageTemplateService } from './error-403-page/error-403-page-template.service';
-import { Error404PageTemplateService } from './error-404-page/error-404-page-template.service';
-import { Error500PageTemplateService } from './error-500-page/error-500-page-template.service';
 import { Error403PageTemplate } from '@/interface/template/Error403PageTemplate';
+import { Error403PageTemplateService } from './error-403-page/error-403-page-template.service';
 import { Error404PageTemplate } from '@/interface/template/Error404PageTemplate';
+import { Error404PageTemplateService } from './error-404-page/error-404-page-template.service';
 import { Error500PageTemplate } from '@/interface/template/Error500PageTemplate';
+import { Error500PageTemplateService } from './error-500-page/error-500-page-template.service';
+import { GroupContentPageTemplate } from '@/interface/template/GroupContentPageTemplate';
+import { GroupContentPageTemplateService } from './group-content-page/group-content-page-template.service';
+import { GroupIndexPageTemplate } from '@/interface/template/GroupIndexPageTemplate';
+import { GroupIndexPageTemplateService } from './group-index-page/group-index-page.service';
+import { HomePageTemplate } from '@/interface/template/HomePageTemplate';
+import { HomePageTemplateService } from './home-page/home-page-template.service';
+import { SearchPageTemplate } from '@/interface/template/SearchPageTemplate';
+import { SearchPageTemplateService } from './search-page/search-page-template.service';
+import { SectionContentPageTemplate } from '@/interface/template/SectionContentPageTemplate';
+import { SectionContentPageTemplateService } from './section-content-page/section-content-page-template.service';
+import { SectionIndexPageTemplate } from '@/interface/template/SectionIndexPageTemplate';
+import { SectionIndexPageTemplateService } from './section-index-page/section-index-page.service';
+import { TopicContentPageTemplate } from '@/interface/template/TopicContentPageTemplate';
+import { TopicContentPageTemplateService } from './topic-content-page/topic-content-page-template.service';
+import { TopicIndexPageTemplate } from '@/interface/template/TopicIndexPageTemplate';
+import { TopicIndexPageTemplateService } from './topic-index-page/topic-index-page.service';
+import { VideoReaderPageTemplate } from '@/interface/template/VideoReaderPageTemplate';
+import { VideoReaderPageTemplateService } from './video-reader-page/video-reader-page-template.service';
 
 @Controller('templates')
 export class TemplatesController {
@@ -48,9 +48,9 @@ export class TemplatesController {
     private readonly topicContentPageTemplateService: TopicContentPageTemplateService,
     private readonly topicIndexPageTemplateService: TopicIndexPageTemplateService,
     private readonly videoReaderPageTemplateService: VideoReaderPageTemplateService,
-    private readonly Error403PageTemplateService: Error403PageTemplateService,
-    private readonly Error404PageTemplateService: Error404PageTemplateService,
-    private readonly Error500PageTemplateService: Error500PageTemplateService,
+    private readonly error403PageTemplateService: Error403PageTemplateService,
+    private readonly error404PageTemplateService: Error404PageTemplateService,
+    private readonly error500PageTemplateService: Error500PageTemplateService,
   ) {}
 
   @Get('/article-reader/:news_id')
@@ -134,16 +134,16 @@ export class TemplatesController {
 
   @Get('error-403')
   async getError403Page(): Promise<Error403PageTemplate> {
-    return await this.Error403PageTemplateService.get();
+    return await this.error403PageTemplateService.get();
   }
 
   @Get('error-404')
   async getError404Page(): Promise<Error404PageTemplate> {
-    return await this.Error404PageTemplateService.get();
+    return await this.error404PageTemplateService.get();
   }
 
   @Get('error-500')
   async getError500Page(): Promise<Error500PageTemplate> {
-    return await this.Error500PageTemplateService.get();
+    return await this.error500PageTemplateService.get();
   }
 }

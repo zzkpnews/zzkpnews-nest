@@ -2,32 +2,32 @@ import { PageTemplateUtils } from './utils';
 
 export interface SectionIndexPageTemplate extends PageTemplateUtils {
   index: {
-    section_id: string;
-    section_title: string;
+    sectionId: string;
+    sectionTitle: string;
 
-    recent_list: {
-      news_id: string;
-      timestamp: number;
-      keywords: string | null;
-      type: 'article' | 'video';
-      title: string;
-      lead_title: string | null;
-      subtitle: string | null;
-      section_title: string;
-      cover_image: string | null;
-      citation: string | null;
+    recentList: {
+      newsId: string;
+      newsTimestamp: number;
+      newsKeywords: string | null;
+      newsType: 'article' | 'video';
+      newsTitle: string;
+      newsLeadTitle: string | null;
+      newsSubtitle: string | null;
+      sectionTitle: string;
+      newsCoverImage: string | null;
+      newsCitation: string | null;
     }[];
-    hot_list: {
-      news_id: string;
-      timestamp: number;
-      keywords: string | null;
-      type: 'article' | 'video';
-      title: string;
-      lead_title: string | null;
-      subtitle: string | null;
-      section_title: string;
-      cover_image: string | null;
-      citation: string | null;
+    hotList: {
+      newsId: string;
+      newsTimestamp: number;
+      newsKeywords: string | null;
+      newsType: 'article' | 'video';
+      newsTitle: string;
+      newsLeadTitle: string | null;
+      newsSubtitle: string | null;
+      sectionTitle: string;
+      newsCoverImage: string | null;
+      newsCitation: string | null;
     }[];
   }[];
 }

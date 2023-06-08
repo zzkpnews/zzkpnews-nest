@@ -20,99 +20,151 @@ export class CreatorProfilePageTemplateService {
   async get(creator_id: string): Promise<CreatorProfilePageTemplate> {
     const creator = await this.creatorRepository.findById(creator_id);
 
-    const recent_list = (
+    const recent_list_news_count_per_page = 10;
+    const articles_list_news_count_per_page = 10;
+    const videos_list_news_count_per_page = 10;
+    const books_list_news_count_per_page = 5;
+    const hot_list_news_count = 10;
+
+    const recent_list_content = (
       await this.newsListItemRepository.find({
         creatorId: creator_id,
-        count: 10,
+        count: recent_list_news_count_per_page,
       })
     ).map((news_item) => ({
-      news_id: news_item.newsId,
-      timestamp: news_item.timestamp,
-      type: news_item.type,
-      title: news_item.title,
-      lead_title: news_item.leadTitle,
-      subtitle: news_item.subtitle,
-      section_title: news_item.sectionTitle,
-      cover_image: news_item.coverImage,
-      citation: news_item.citation,
+      newsId: news_item.newsId,
+      newsTimestamp: news_item.timestamp,
+      newsType: news_item.type,
+      newsTitle: news_item.title,
+      newsLeadTitle: news_item.leadTitle,
+      newsSubtitle: news_item.subtitle,
+      sectionTitle: news_item.sectionTitle,
+      newsCoverImage: news_item.coverImage,
+      newsCitation: news_item.citation,
     }));
 
-    const articles_list = (
+    const articles_list_content = (
       await this.newsListItemRepository.find({
-        type: 'article',
+        type: 'article' as 'article' | 'video' | 'all',
         creatorId: creator_id,
-        count: 10,
+        count: articles_list_news_count_per_page,
       })
     ).map((news_item) => ({
-      news_id: news_item.newsId,
-      article_timestamp: news_item.timestamp,
-      article_type: news_item.type,
-      article_title: news_item.title,
-      article_lead_title: news_item.leadTitle,
-      article_subtitle: news_item.subtitle,
-      article_section_title: news_item.sectionTitle,
-      article_cover_image: news_item.coverImage,
-      article_citation: news_item.citation,
+      newsId: news_item.newsId,
+      articleTimestamp: news_item.timestamp,
+      articleType: news_item.type,
+      articleTitle: news_item.title,
+      articleLeadTitle: news_item.leadTitle,
+      articleSubtitle: news_item.subtitle,
+      sectionTitle: news_item.sectionTitle,
+      articleCoverImage: news_item.coverImage,
+      articleCitation: news_item.citation,
     }));
 
-    const videos_list = (
+    const videos_list_content = (
       await this.newsListItemRepository.find({
-        type: 'video',
+        type: 'video' as 'article' | 'video' | 'all',
         creatorId: creator_id,
-        count: 10,
+        count: videos_list_news_count_per_page,
       })
     ).map((news_item) => ({
-      news_id: news_item.newsId,
-      video_timestamp: news_item.timestamp,
-      video_type: news_item.type,
-      video_title: news_item.title,
-      video_lead_title: news_item.leadTitle,
-      video_subtitle: news_item.subtitle,
-      video_section_title: news_item.sectionTitle,
-      video_cover_image: news_item.coverImage,
-      video_citation: news_item.citation,
+      newsId: news_item.newsId,
+      videoTimestamp: news_item.timestamp,
+      videoType: news_item.type,
+      videoTitle: news_item.title,
+      videoLeadTitle: news_item.leadTitle,
+      videoSubtitle: news_item.subtitle,
+      sectionTitle: news_item.sectionTitle,
+      videoCoverImage: news_item.coverImage,
+      videoCitation: news_item.citation,
     }));
 
-    const books_list = (
-      await this.bookRepository.find({ creatorId: creator_id, count: 5 })
+    const books_list_content = (
+      await this.bookRepository.find({
+        creatorId: creator_id,
+        count: books_list_news_count_per_page,
+      })
     ).map((book) => ({
-      book_title: book.title,
-      book_cover_image: book.coverImage,
-      book_id: book.id,
-      book_citation: book.citation,
-      book_timestamp: book.timestamp,
+      bookTitle: book.title,
+      bookCoverImage: book.coverImage,
+      bookId: book.id,
+      bookCitation: book.citation,
+      bookTimestamp: book.timestamp,
     }));
 
     const hot_list = (
       await this.newsListItemRepository.find({
         creatorId: creator_id,
-        count: 10,
+        count: hot_list_news_count,
         onlyCreatorHot: true,
       })
     ).map((item) => ({
-      news_id: item.newsId,
-      type: item.type,
-      title: item.title,
-      subtitle: item.subtitle,
+      newsId: item.newsId,
+      newsType: item.type,
+      newsTitle: item.title,
+      newsSubtitle: item.subtitle,
     }));
 
-    return {
-      creator_id: creator.id,
-      creator_title: creator.title,
-      creator_phone: creator.phone,
-      creator_email: creator.email,
-      creator_cover_image: creator.coverImage,
-      creator_description: creator.description,
-      creator_qq: creator.qq,
-      creator_wechat: creator.wechat,
-      creator_url: creator.url,
-      creator_logo: creator.logo,
+    const news_total_by_creator = await this.newsListItemRepository.count({
+      creatorId: creator_id,
+    });
+    const recent_news_list_page_total = Math.ceil(
+      news_total_by_creator / recent_list_news_count_per_page,
+    );
 
-      recent_list: recent_list,
-      articles_list: articles_list,
-      videos_list: videos_list,
-      books_list: books_list,
-      hot_list: hot_list,
+    const articles_total_by_creator = await this.newsListItemRepository.count({
+      creatorId: creator_id,
+      type: 'article',
+    });
+    const articles_list_page_total = Math.ceil(
+      articles_total_by_creator / articles_list_news_count_per_page,
+    );
+
+    const videos_total_by_creator = await this.newsListItemRepository.count({
+      creatorId: creator_id,
+      type: 'video',
+    });
+    const videos_list_page_total = Math.ceil(
+      videos_total_by_creator / videos_list_news_count_per_page,
+    );
+
+    const books_total_by_creator = await this.bookRepository.count({
+      creatorId: creator_id,
+    });
+    const books_list_page_total = Math.ceil(
+      books_total_by_creator / books_list_news_count_per_page,
+    );
+
+    return {
+      creatorId: creator.id,
+      creatorTitle: creator.title,
+      creatorPhone: creator.phone,
+      creatorEmail: creator.email,
+      creatorCoverImage: creator.coverImage,
+      creatorDescription: creator.description,
+      creatorQq: creator.qq,
+      creatorWechat: creator.wechat,
+      creatorUrl: creator.url,
+      creatorLogo: creator.logo,
+      creatorAddress: creator.address,
+
+      recentList: {
+        content: recent_list_content,
+        pageTotal: recent_news_list_page_total,
+      },
+      articlesList: {
+        content: articles_list_content,
+        pageTotal: articles_list_page_total,
+      },
+      videosList: {
+        content: videos_list_content,
+        pageTotal: videos_list_page_total,
+      },
+      booksList: {
+        content: books_list_content,
+        pageTotal: books_list_page_total,
+      },
+      hotList: hot_list,
 
       ...(await this.templateUtils.getTemplateUtils()),
     };

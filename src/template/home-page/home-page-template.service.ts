@@ -38,7 +38,7 @@ export class HomePageTemplateService {
 
       special: this.objectStorage.get<SpecialNews>('special-news'),
 
-      carousels_list: await Promise.all(
+      carouselsList: await Promise.all(
         (
           await this.carouselRepository.findAll()
         ).map(async (item) => {
@@ -46,62 +46,62 @@ export class HomePageTemplateService {
             item.id,
           );
           return {
-            news_id: item.id,
-            timestamp: news_list_item.timestamp,
-            type: news_list_item.type,
-            title: news_list_item.title,
-            lead_title: news_list_item.leadTitle,
-            subtitle: news_list_item.subtitle,
-            cover_image: news_list_item.coverImage,
-            citation: news_list_item.citation,
+            newsId: item.id,
+            newsTimestamp: news_list_item.timestamp,
+            newsType: news_list_item.type,
+            newsTitle: news_list_item.title,
+            newsLeadTitle: news_list_item.leadTitle,
+            newsSubtitle: news_list_item.subtitle,
+            newsCoverImage: news_list_item.coverImage,
+            newsCitation: news_list_item.citation,
           };
         }),
       ),
 
       topics: (await this.topicRepository.findAll()).map((item) => ({
-        id: item.id,
-        title: item.title,
-        logo: item.logo,
+        topicId: item.id,
+        topicTitle: item.title,
+        topicLogo: item.logo,
       })),
 
-      recent_books: (await this.bookRepository.find({ count: 5 })).map(
+      recentBooks: (await this.bookRepository.find({ count: 5 })).map(
         (book) => ({
-          id: book.id,
-          title: book.title,
-          cover_image: book.coverImage,
-          citation: book.citation,
-          timestamp: book.timestamp,
+          bookId: book.id,
+          bookTitle: book.title,
+          bookCoverImage: book.coverImage,
+          bookCitation: book.citation,
+          bookTimestamp: book.timestamp,
         }),
       ),
 
-      hot_list: (
+      hotList: (
         await this.newsListRepository.find({
           count: 10,
           onlyHomeHot: true,
         })
       ).map((newsitem) => ({
-        news_id: newsitem.newsId,
-        type: newsitem.type,
-        title: newsitem.title,
-        subtitle: newsitem.subtitle,
+        newsId: newsitem.newsId,
+        newsType: newsitem.type,
+        newsTitle: newsitem.title,
+        newsSubtitle: newsitem.subtitle,
       })),
 
-      recent_news_list: (
+      recentNewsList: (
         await this.newsListRepository.find({
           count: 10,
         })
       ).map((newsitem) => {
         return {
-          news_id: newsitem.newsId,
-          timestamp: newsitem.timestamp,
-          keywords: newsitem.keywords,
-          type: newsitem.type,
-          title: newsitem.title,
-          lead_title: newsitem.leadTitle,
-          subtitle: newsitem.subtitle,
-          section_title: newsitem.sectionTitle,
-          cover_image: newsitem.coverImage,
-          citation: newsitem.citation,
+          newsId: newsitem.newsId,
+          newsTimestamp: newsitem.timestamp,
+          newsKeywords: newsitem.keywords,
+          newsType: newsitem.type,
+          newsTitle: newsitem.title,
+          newsLeadTitle: newsitem.leadTitle,
+          newsSubtitle: newsitem.subtitle,
+          sectionTitle: newsitem.sectionTitle,
+          newsCoverImage: newsitem.coverImage,
+          newsCitation: newsitem.citation,
         };
       }),
 

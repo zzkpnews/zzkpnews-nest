@@ -12,17 +12,20 @@ export class BookIndexPageTemplateService {
     private readonly templateUtils: TemplateUtilsService,
   ) {}
   async get(): Promise<BookIndexPageTemplate> {
-    const book_list = (await this.bookRepository.find({ count: 10 })).map(
-      (book) => ({
-        book_id: book.id,
-        book_title: book.title,
-        book_cover_image: book.coverImage,
-        book_citation: book.citation,
-        book_timestamp: book.timestamp,
-      }),
-    );
+    const book_count_per_page = 8;
+    const book_list_content = (
+      await this.bookRepository.find({ count: book_count_per_page })
+    ).map((book) => ({
+      bookId: book.id,
+      bookTitle: book.title,
+      bookCoverImage: book.coverImage,
+      bookCitation: book.citation,
+      bookTimestamp: book.timestamp,
+    }));
+    const book_total = await this.bookRepository.count({});
+    const page_total = Math.ceil(book_total / book_count_per_page);
     return {
-      books_list: book_list,
+      booksList: { content: book_list_content, pageTotal: page_total },
       ...(await this.templateUtils.getTemplateUtils()),
     };
   }

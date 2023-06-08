@@ -1,6 +1,6 @@
 export interface Headline {
-  title: string;
-  lead_title: string | null;
-  subtitle: string | null;
-  url: string;
+  headlineTitle: string;
+  headlineLeadTitle: string | null;
+  headlineSubtitle: string | null;
+  headlineUrl: string;
 }

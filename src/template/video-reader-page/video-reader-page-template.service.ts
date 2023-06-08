@@ -22,33 +22,33 @@ export class VideoReaderPageTemplateService {
 
     const creator = await this.creatorRepository.findById(video.creatorId);
 
-    const next_list = (
+    const play_list = (
       await this.newsListItemRepository.find({
         type: 'video',
         timestamp_offset: video.timestamp,
         count: 7,
       })
     ).map((next_video) => ({
-      news_id: next_video.newsId,
-      video_title: next_video.title,
-      video_subtitle: next_video.subtitle,
-      video_cover_image: next_video.coverImage,
+      newsId: next_video.newsId,
+      videoTitle: next_video.title,
+      videoSubtitle: next_video.subtitle,
+      videoCoverImage: next_video.coverImage,
     }));
 
     return {
-      video_title: video.title,
-      video_subtitle: video.subtitle,
-      video_lead_title: video.leadTitle,
-      video_timestamp: video.timestamp,
-      video_author: video.author,
-      video_editor: video.editor,
-      video_creator_logo: creator.logo,
-      video_creator_description: creator.description,
-      video_creator_id: creator.id,
-      video_creator_title: creator.title,
-      video_video_url: video.videoUrl,
+      videoTitle: video.title,
+      videoSubtitle: video.subtitle,
+      videoLeadTitle: video.leadTitle,
+      videoTimestamp: video.timestamp,
+      videoAuthor: video.author,
+      videoEditor: video.editor,
+      creatorLogo: creator.logo,
+      creatorDescription: creator.description,
+      creatorId: creator.id,
+      creatorTitle: creator.title,
+      videoUrl: video.videoUrl,
 
-      play_list: next_list,
+      playList: play_list,
 
       ...(await this.templateUtils.getTemplateUtils()),
     };

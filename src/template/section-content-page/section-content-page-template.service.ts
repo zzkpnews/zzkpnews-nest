@@ -17,55 +17,81 @@ export class SectionContentPageTemplateService {
   async get(section_id: string): Promise<SectionContentPageTemplate> {
     const section = await this.sectionRepository.findById(section_id);
 
+    const hot_list_news_count = 10;
+    const articles_list_news_count_per_page = 10;
+    const videos_list_news_count_per_page = 10;
+
     const hot_list = (
       await this.newsListItemRepository.find({
         onlySectionHot: true,
         sectionId: section_id,
-        count: 10,
+        count: hot_list_news_count,
       })
     ).map((item) => ({
-      news_id: item.newsId,
-      type: item.type,
-      title: item.title,
-      lead_title: item.leadTitle,
-      subtitle: item.subtitle,
-      citation: item.citation,
-      cover_image: item.coverImage,
+      newsId: item.newsId,
+      newsType: item.type,
+      newsTitle: item.title,
+      newsLeadTitle: item.leadTitle,
+      newsSubtitle: item.subtitle,
+      newsCitation: item.citation,
+      newsCoverImage: item.coverImage,
     }));
 
-    const articles_list = (
+    const articles_total_by_section = await this.newsListItemRepository.count({
+      type: 'article',
+      sectionId: section_id,
+    });
+    const articles_list_content = (
       await this.newsListItemRepository.find({
         type: 'article',
         sectionId: section_id,
         count: 10,
       })
     ).map((item) => ({
-      news_id: item.newsId,
-      article_title: item.title,
-      article_lead_title: item.leadTitle,
-      article_subtitle: item.subtitle,
-      article_citation: item.citation,
-      article_cover_image: item.coverImage,
+      newsId: item.newsId,
+      articleTitle: item.title,
+      articleLeadTitle: item.leadTitle,
+      articleSubtitle: item.subtitle,
+      articleCitation: item.citation,
+      articleCoverImage: item.coverImage,
     }));
 
-    const videos_list = (
+    const videos_total_by_section = await this.newsListItemRepository.count({
+      type: 'video',
+      sectionId: section_id,
+    });
+    const videos_list_content = (
       await this.newsListItemRepository.find({
         type: 'video',
         sectionId: section_id,
         count: 10,
       })
     ).map((item) => ({
-      news_id: item.newsId,
-      video_title: item.title,
-      video_citation: item.citation,
-      video_cover_image: item.coverImage,
+      newsId: item.newsId,
+      videoTitle: item.title,
+      videoCitation: item.citation,
+      videoCoverImage: item.coverImage,
     }));
 
+    const articles_list_page_total = Math.ceil(
+      articles_total_by_section / articles_list_news_count_per_page,
+    );
+
+    const videos_list_page_total = Math.ceil(
+      videos_total_by_section / videos_list_news_count_per_page,
+    );
+
     return {
-      section_title: section.title,
-      hot_list: hot_list,
-      articles_list: articles_list,
-      videos_list: videos_list,
+      sectionTitle: section.title,
+      hotList: hot_list,
+      articlesList: {
+        content: articles_list_content,
+        pageTotal: articles_list_page_total,
+      },
+      videosList: {
+        content: videos_list_content,
+        pageTotal: videos_list_page_total,
+      },
       ...(await this.templateUtils.getTemplateUtils()),
     };
   }

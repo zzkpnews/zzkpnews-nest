@@ -6,68 +6,64 @@ export interface HomePageTemplate extends PageTemplateUtils {
   picture3: { image: string; href: string | null; description: string | null };
 
   headline: {
-    title: string;
-    lead_title: string | null;
-    subtitle: string | null;
-    url: string;
+    headlineTitle: string;
+    headlineLeadTitle: string | null;
+    headlineSubtitle: string | null;
+    headlineUrl: string;
   };
 
   special: {
-    news_id: string;
-    type: 'article' | 'video';
-
-    title: string;
-    lead_title: string | null;
-    subtitle: string | null;
-
-    cover_image: string | null;
-    citation: string | null;
+    newsId: string;
+    newsType: 'article' | 'video';
+    newsTitle: string;
+    newsLeadTitle: string | null;
+    newsSubtitle: string | null;
+    newsCoverImage: string | null;
+    newsCitation: string | null;
   };
 
-  carousels_list: {
-    news_id: string;
-    timestamp: number;
-    type: 'article' | 'video';
-
-    title: string;
-    lead_title: string | null;
-    subtitle: string | null;
-
-    cover_image: string | null;
-    citation: string | null;
+  carouselsList: {
+    newsId: string;
+    newsTimestamp: number;
+    newsType: 'article' | 'video';
+    newsTitle: string;
+    newsLeadTitle: string | null;
+    newsSubtitle: string | null;
+    newsCoverImage: string | null;
+    newsCitation: string | null;
   }[];
 
   topics: {
-    id: string;
-    title: string;
-    logo: string;
+    topicId: string;
+    topicTitle: string;
+    topicLogo: string;
   }[];
 
-  recent_books: {
-    title: string;
-    cover_image: string;
-    id: string;
-    citation: string | null;
-    timestamp: number;
+  recentBooks: {
+    bookTitle: string;
+    bookCoverImage: string;
+    bookId: string;
+    bookCitation: string | null;
+    bookTimestamp: number;
   }[];
 
-  hot_list: {
-    news_id: string;
-    type: 'article' | 'video';
-    title: string;
-    subtitle: string | null;
+  hotList: {
+    newsId: string;
+    newsType: 'article' | 'video';
+    newsTitle: string;
+    newsSubtitle: string | null;
   }[];
 
-  recent_news_list: {
-    news_id: string;
-    timestamp: number;
-    keywords: string | null;
-    type: 'article' | 'video';
-    title: string;
-    lead_title: string | null;
-    subtitle: string | null;
-    section_title: string;
-    cover_image: string | null;
-    citation: string | null;
+  recentNewsList: {
+    newsId: string;
+    newsTimestamp: number;
+    newsKeywords: string | null;
+    newsType: 'article' | 'video';
+    newsTitle: string;
+    newsLeadTitle: string | null;
+    newsSubtitle: string | null;
+    sectionTitle: string;
+    newsCoverImage: string | null;
+    newsCitation: string | null;
   }[];
 }

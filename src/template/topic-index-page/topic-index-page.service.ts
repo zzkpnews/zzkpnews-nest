@@ -24,19 +24,19 @@ export class TopicIndexPageTemplateService {
     );
 
     const index = topics.map((topic, index) => ({
-      topic_id: topic.id,
-      topic_title: topic.title,
-      news_list: topic_news_list[index].map((item) => ({
-        news_id: item.newsId,
-        timestamp: item.timestamp,
-        keywords: item.keywords,
-        type: item.type,
-        title: item.title,
-        lead_title: item.leadTitle,
-        subtitle: item.subtitle,
-        section_title: item.sectionTitle,
-        cover_image: item.coverImage,
-        citation: item.citation,
+      topicId: topic.id,
+      topicTitle: topic.title,
+      newsList: topic_news_list[index].map((item) => ({
+        newsId: item.newsId,
+        newsTimestamp: item.timestamp,
+        newsKeywords: item.keywords,
+        newsType: item.type,
+        newsTitle: item.title,
+        newsLeadTitle: item.leadTitle,
+        newsSubtitle: item.subtitle,
+        sectionTitle: item.sectionTitle,
+        newsCoverImage: item.coverImage,
+        newsCitation: item.citation,
       })),
     }));
 

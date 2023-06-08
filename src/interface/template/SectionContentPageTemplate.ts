@@ -1,31 +1,37 @@
 import { PageTemplateUtils } from './utils';
 
 export interface SectionContentPageTemplate extends PageTemplateUtils {
-  section_title: string;
+  sectionTitle: string;
 
-  hot_list: {
-    news_id: string;
-    type: 'article' | 'video';
-    title: string;
-    lead_title: string | null;
-    subtitle: string | null;
-    citation: string | null;
-    cover_image: string | null;
+  hotList: {
+    newsId: string;
+    newsType: 'article' | 'video';
+    newsTitle: string;
+    newsLeadTitle: string | null;
+    newsSubtitle: string | null;
+    newsCitation: string | null;
+    newsCoverImage: string | null;
   }[];
 
-  articles_list: {
-    news_id: string;
-    article_title: string;
-    article_lead_title: string | null;
-    article_subtitle: string | null;
-    article_cover_image: string | null;
-    article_citation: string | null;
-  }[];
+  articlesList: {
+    content: {
+      newsId: string;
+      articleTitle: string;
+      articleLeadTitle: string | null;
+      articleSubtitle: string | null;
+      articleCoverImage: string | null;
+      articleCitation: string | null;
+    }[];
+    pageTotal: number;
+  };
 
-  videos_list: {
-    news_id: string;
-    video_title: string;
-    video_cover_image: string | null;
-    video_citation: string | null;
-  }[];
+  videosList: {
+    content: {
+      newsId: string;
+      videoTitle: string;
+      videoCoverImage: string | null;
+      videoCitation: string | null;
+    }[];
+    pageTotal: number;
+  };
 }
