@@ -1,7 +1,7 @@
 import { PageTemplateUtils } from './utils';
 
 export interface BookIndexPageTemplate extends PageTemplateUtils {
-  booksList: {
+  bookList: {
     content: {
       bookId: string;
       bookTitle: string;
@@ -9,6 +9,6 @@ export interface BookIndexPageTemplate extends PageTemplateUtils {
       bookCitation: string | null;
       bookTimestamp: number;
     }[];
-    pageTotal: number;
+    total: number;
   };
 }

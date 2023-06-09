@@ -17,9 +17,14 @@ export class TopicIndexPageTemplateService {
   async get(): Promise<TopicIndexPageTemplate> {
     const topics = await this.topicRepository.findAll();
 
+    const topic_news_list_size = 10;
+
     const topic_news_list = await Promise.all(
       topics.map((topic) =>
-        this.newsListRepository.find({ topicId: topic.id, count: 10 }),
+        this.newsListRepository.find({
+          topicId: topic.id,
+          pageSize: topic_news_list_size,
+        }),
       ),
     );
 

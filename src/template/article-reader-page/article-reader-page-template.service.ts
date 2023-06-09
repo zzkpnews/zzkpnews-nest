@@ -28,11 +28,13 @@ export class ArticleReaderPageTemplateService {
       'utf-8',
     );
 
+    const next_list_size = 7;
+
     const next_list = (
       await this.newsListItemRepository.find({
         type: 'article',
-        timestampOffset: article.timestamp,
-        count: 7,
+        timestampEnd: article.timestamp,
+        pageSize: next_list_size,
       })
     ).map((next_article) => ({
       newsId: next_article.newsId,

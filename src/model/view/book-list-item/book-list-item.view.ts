@@ -1,4 +1,4 @@
-export class BooksListItem {
+export class BookListItem {
   bookId: string;
   title: string;
   citation: string | null;

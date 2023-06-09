@@ -7,5 +7,17 @@ export class SearchQueries {
 
   @IsInt()
   @IsOptional()
-  timestamp_offset?: number;
+  timestamp_start?: number;
+
+  @IsInt()
+  @IsOptional()
+  timestamp_end?: number;
+
+  @IsInt()
+  @IsOptional()
+  page_size?: number;
+
+  @IsInt()
+  @IsOptional()
+  page_num?: number;
 }

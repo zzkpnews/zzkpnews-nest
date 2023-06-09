@@ -13,7 +13,7 @@ export interface SectionContentPageTemplate extends PageTemplateUtils {
     newsCoverImage: string | null;
   }[];
 
-  articlesList: {
+  articleList: {
     content: {
       newsId: string;
       articleTitle: string;
@@ -22,16 +22,16 @@ export interface SectionContentPageTemplate extends PageTemplateUtils {
       articleCoverImage: string | null;
       articleCitation: string | null;
     }[];
-    pageTotal: number;
+    total: number;
   };
 
-  videosList: {
+  videoList: {
     content: {
       newsId: string;
       videoTitle: string;
       videoCoverImage: string | null;
       videoCitation: string | null;
     }[];
-    pageTotal: number;
+    total: number;
   };
 }

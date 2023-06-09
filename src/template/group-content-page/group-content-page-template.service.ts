@@ -23,7 +23,7 @@ export class GroupContentPageTemplateService {
     const hot_list = (
       await this.newsListItemRepository.find({
         groupId: group_id,
-        count: hot_list_news_count,
+        pageSize: hot_list_news_count,
       })
     ).map((item) => ({
       newsId: item.newsId,
@@ -34,11 +34,11 @@ export class GroupContentPageTemplateService {
       newsCitation: item.citation,
     }));
 
-    const articles_list_content = (
+    const article_list_content = (
       await this.newsListItemRepository.find({
         type: 'article',
         groupId: group_id,
-        count: articles_list_page_size,
+        pageSize: articles_list_page_size,
       })
     ).map((item) => ({
       newsId: item.newsId,
@@ -47,16 +47,16 @@ export class GroupContentPageTemplateService {
       articleCoverImage: item.coverImage,
       articleCitation: item.citation,
     }));
-    const articles_total_by_group = await this.newsListItemRepository.count({
+    const article_total_by_group = await this.newsListItemRepository.count({
       type: 'article',
       groupId: group_id,
     });
 
-    const videos_list_content = (
+    const video_list_content = (
       await this.newsListItemRepository.find({
         type: 'video',
         groupId: group_id,
-        count: videos_list_page_size,
+        pageSize: videos_list_page_size,
       })
     ).map((item) => ({
       newsId: item.newsId,
@@ -65,30 +65,22 @@ export class GroupContentPageTemplateService {
       videoCoverImage: item.coverImage,
       videoCitation: item.citation,
     }));
-    const videos_total_by_group = await this.newsListItemRepository.count({
+    const video_total_by_group = await this.newsListItemRepository.count({
       type: 'video',
       groupId: group_id,
     });
-
-    const articles_list_page_total = Math.ceil(
-      articles_total_by_group / articles_list_page_size,
-    );
-
-    const videos_list_page_total = Math.ceil(
-      videos_total_by_group / videos_list_page_size,
-    );
 
     return {
       groupId: group.id,
       groupTitle: group.title,
       hotList: hot_list,
-      articlesList: {
-        content: articles_list_content,
-        pageTotal: articles_list_page_total,
+      articleList: {
+        content: article_list_content,
+        total: article_total_by_group,
       },
-      videosList: {
-        content: videos_list_content,
-        pageTotal: videos_list_page_total,
+      videoList: {
+        content: video_list_content,
+        total: video_total_by_group,
       },
       ...(await this.templateUtils.getTemplateUtils()),
     };

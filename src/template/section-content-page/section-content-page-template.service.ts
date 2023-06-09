@@ -18,14 +18,14 @@ export class SectionContentPageTemplateService {
     const section = await this.sectionRepository.findById(section_id);
 
     const hot_list_news_count = 10;
-    const articles_list_news_count_per_page = 10;
-    const videos_list_news_count_per_page = 10;
+    const articles_list_size = 10;
+    const videos_list_size = 10;
 
     const hot_list = (
       await this.newsListItemRepository.find({
         onlySectionHot: true,
         sectionId: section_id,
-        count: hot_list_news_count,
+        pageSize: hot_list_news_count,
       })
     ).map((item) => ({
       newsId: item.newsId,
@@ -45,7 +45,7 @@ export class SectionContentPageTemplateService {
       await this.newsListItemRepository.find({
         type: 'article',
         sectionId: section_id,
-        count: 10,
+        pageSize: articles_list_size,
       })
     ).map((item) => ({
       newsId: item.newsId,
@@ -64,7 +64,7 @@ export class SectionContentPageTemplateService {
       await this.newsListItemRepository.find({
         type: 'video',
         sectionId: section_id,
-        count: 10,
+        pageSize: videos_list_size,
       })
     ).map((item) => ({
       newsId: item.newsId,
@@ -73,24 +73,16 @@ export class SectionContentPageTemplateService {
       videoCoverImage: item.coverImage,
     }));
 
-    const articles_list_page_total = Math.ceil(
-      articles_total_by_section / articles_list_news_count_per_page,
-    );
-
-    const videos_list_page_total = Math.ceil(
-      videos_total_by_section / videos_list_news_count_per_page,
-    );
-
     return {
       sectionTitle: section.title,
       hotList: hot_list,
-      articlesList: {
+      articleList: {
         content: articles_list_content,
-        pageTotal: articles_list_page_total,
+        total: articles_total_by_section,
       },
-      videosList: {
+      videoList: {
         content: videos_list_content,
-        pageTotal: videos_list_page_total,
+        total: videos_total_by_section,
       },
       ...(await this.templateUtils.getTemplateUtils()),
     };

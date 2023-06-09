@@ -19,8 +19,10 @@ export class GetNewsListService {
     onlySectionHot?: boolean;
     onlyCreatorHot?: boolean;
     type?: 'article' | 'video' | 'all';
-    timestampOffset?: number;
-    count?: number;
+    timestampStart?: number;
+    timestampEnd?: number;
+    pageSize?: number;
+    pageNum?: number;
   }): Promise<GetNewsListItem[]> {
     const news_items = await this.newsListRepository.find({
       sectionId: options.sectionId,
@@ -28,8 +30,11 @@ export class GetNewsListService {
       groupId: options.groupId,
       topicId: options.topicId,
       type: options.type,
-      timestampOffset: options.timestampOffset,
-      count: options.count && options.count < 11 ? options.count : 10,
+      timestampStart: options.timestampStart,
+      timestampEnd: options.timestampEnd,
+      pageSize:
+        options.pageSize && options.pageSize < 11 ? options.pageSize : 10,
+      pageNum: options.pageNum,
       onlyHomeHot: options.onlyHomeHot,
       onlySectionHot: options.onlySectionHot,
       onlyCreatorHot: options.onlyCreatorHot,

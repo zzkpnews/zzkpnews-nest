@@ -1,4 +1,4 @@
-export type GetBooksListItem = {
+export type GetBookListItem = {
   bookId: string;
   bookTitle: string;
   bookCoverImage: string | null;

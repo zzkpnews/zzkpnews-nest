@@ -17,9 +17,15 @@ export class SectionIndexPageTemplateService {
   async get(): Promise<SectionIndexPageTemplate> {
     const sections = await this.sectionRepository.findAll();
 
+    const recent_list_size = 10;
+    const hot_list_size = 10;
+
     const recent_lists = await Promise.all(
       sections.map((section) =>
-        this.newsListRepository.find({ sectionId: section.id, count: 10 }),
+        this.newsListRepository.find({
+          sectionId: section.id,
+          pageSize: recent_list_size,
+        }),
       ),
     );
 
@@ -28,7 +34,7 @@ export class SectionIndexPageTemplateService {
         this.newsListRepository.find({
           onlySectionHot: true,
           sectionId: section.id,
-          count: 10,
+          pageSize: hot_list_size,
         }),
       ),
     );

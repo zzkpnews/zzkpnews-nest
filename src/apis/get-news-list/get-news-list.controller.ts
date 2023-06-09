@@ -18,11 +18,13 @@ export class GetNewsListAPIController {
       groupId: newsListQueries.group_id,
       topicId: newsListQueries.topic_id,
       type: newsListQueries.type,
-      timestampOffset: newsListQueries.timestamp_offset,
+      pageSize: newsListQueries.page_size,
+      pageNum: newsListQueries.page_num,
+      timestampStart: newsListQueries.timestamp_start,
+      timestampEnd: newsListQueries.timestamp_end,
       onlyHomeHot: newsListQueries.only_home_hot,
       onlyCreatorHot: newsListQueries.only_creator_hot,
       onlySectionHot: newsListQueries.only_section_hot,
-      count: newsListQueries.count,
     });
     return news_list;
   }

@@ -22,7 +22,7 @@ export interface HomePageTemplate extends PageTemplateUtils {
     newsCitation: string | null;
   };
 
-  carouselsList: {
+  carouselList: {
     newsId: string;
     newsTimestamp: number;
     newsType: 'article' | 'video';
@@ -54,7 +54,7 @@ export interface HomePageTemplate extends PageTemplateUtils {
     newsSubtitle: string | null;
   }[];
 
-  recentNewsList: {
+  recentList: {
     newsId: string;
     newsTimestamp: number;
     newsKeywords: string | null;

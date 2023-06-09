@@ -5,7 +5,7 @@ import { TopicRepository } from '@/model/entity/topic/topic.repository';
 import { Headline } from '@/model/object/headline/headline.object';
 import { PictureNews } from '@/model/object/picture-news/picture-news.object';
 import { SpecialNews } from '@/model/object/special-news/special-news.object';
-import { BooksListItemRepository } from '@/model/view/books-list-item/books-list-item.repository';
+import { BookListItemRepository } from '@/model/view/book-list-item/book-list-item.repository';
 import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
 import { ObjectStorage } from '@/repository/object-storage/object-storage';
 import { Inject, Injectable } from '@nestjs/common';
@@ -23,7 +23,7 @@ export class HomePageTemplateService {
     @Inject(DependenceFlags.CarouselRepository)
     private readonly carouselRepository: CarouselRepository,
     @Inject(DependenceFlags.BooksListItemRepository)
-    private readonly booksListItemRepository: BooksListItemRepository,
+    private readonly booksListItemRepository: BookListItemRepository,
     private readonly templateUtils: TemplateUtilsService,
   ) {}
   async get(): Promise<HomePageTemplate> {
@@ -38,7 +38,7 @@ export class HomePageTemplateService {
 
       special: this.objectStorage.get<SpecialNews>('special-news'),
 
-      carouselsList: await Promise.all(
+      carouselList: await Promise.all(
         (
           await this.carouselRepository.findAll()
         ).map(async (item) => {
@@ -64,19 +64,19 @@ export class HomePageTemplateService {
         topicLogo: item.logo,
       })),
 
-      recentBooks: (await this.booksListItemRepository.find({ count: 5 })).map(
-        (book) => ({
-          bookId: book.bookId,
-          bookTitle: book.title,
-          bookCoverImage: book.coverImage,
-          bookCitation: book.citation,
-          bookTimestamp: book.timestamp,
-        }),
-      ),
+      recentBooks: (
+        await this.booksListItemRepository.find({ pageSize: 5 })
+      ).map((book) => ({
+        bookId: book.bookId,
+        bookTitle: book.title,
+        bookCoverImage: book.coverImage,
+        bookCitation: book.citation,
+        bookTimestamp: book.timestamp,
+      })),
 
       hotList: (
         await this.newsListRepository.find({
-          count: 10,
+          pageSize: 10,
           onlyHomeHot: true,
         })
       ).map((newsitem) => ({
@@ -86,9 +86,9 @@ export class HomePageTemplateService {
         newsSubtitle: newsitem.subtitle,
       })),
 
-      recentNewsList: (
+      recentList: (
         await this.newsListRepository.find({
-          count: 10,
+          pageSize: 10,
         })
       ).map((newsitem) => {
         return {

@@ -11,8 +11,10 @@ export class NewsListItemRepository {
 
   async find(filterOptions: {
     type?: 'article' | 'video' | 'all';
-    count?: number | null;
-    timestampOffset?: number | null;
+    timestampStart?: number | null;
+    timestampEnd?: number | null;
+    pageSize?: number | null;
+    pageNum?: number | null;
     creatorId?: string | null;
     sectionId?: string | null;
     groupId?: string | null;
@@ -26,10 +28,12 @@ export class NewsListItemRepository {
 
     const {
       type,
-      count,
-      timestampOffset,
+      timestampStart,
+      timestampEnd,
       creatorId,
       sectionId,
+      pageNum,
+      pageSize,
       groupId,
       topicId,
       onlyHomeHot,
@@ -38,47 +42,31 @@ export class NewsListItemRepository {
       closed,
     } = filterOptions;
 
-    if (creatorId) {
-      query.where({ creatorId });
-    }
-    if (sectionId) {
-      query.where({ sectionId });
-    }
-    if (groupId) {
-      query.where({ groupId });
-    }
-    if (topicId) {
-      query.where({ topicId });
-    }
-    if (onlyHomeHot) {
-      query.where({ homeHotMark: true });
-    }
-    if (onlySectionHot) {
-      query.where({ sectionHotMark: true });
-    }
-    if (onlyCreatorHot) {
-      query.where({ creatorHotMark: true });
-    }
-    if (type === 'article' || type === 'video') {
-      query.where({ type });
-    }
-    if (timestampOffset) {
-      query.where('timestamp', '<', timestampOffset);
-    }
-    if (!closed) {
-      query.where({ closed: false });
-    }
+    if (creatorId) query.where({ creatorId });
+    if (sectionId) query.where({ sectionId });
+    if (groupId) query.where({ groupId });
+    if (topicId) query.where({ topicId });
+    if (onlyHomeHot) query.where({ homeHotMark: true });
+    if (onlySectionHot) query.where({ sectionHotMark: true });
+    if (onlyCreatorHot) query.where({ creatorHotMark: true });
+    if (type === 'article' || type === 'video') query.where({ type });
+    if (timestampEnd) query.where('timestamp', '<', timestampEnd);
+    if (timestampStart) query.where('timestamp', '>', timestampStart);
+    if (!closed) query.where({ closed: false });
 
-    const result_fields = await query
+    query
       .orderBy('timestamp', 'desc')
-      .limit(count ?? 10);
+      .limit(pageSize)
+      .offset(((pageNum ?? 1) - 1) * (pageSize ?? 10));
+
+    const result_fields = await query;
     return result_fields;
   }
 
   async count(filterOptions: {
     type?: 'article' | 'video' | 'all';
-    count?: number | null;
-    timestamp_offset?: number | null;
+    timestampStart?: number | null;
+    timestampEnd?: number | null;
     creatorId?: string | null;
     sectionId?: string | null;
     groupId?: string | null;
@@ -92,7 +80,8 @@ export class NewsListItemRepository {
 
     const {
       type,
-      timestamp_offset,
+      timestampEnd,
+      timestampStart,
       creatorId,
       sectionId,
       groupId,
@@ -103,36 +92,17 @@ export class NewsListItemRepository {
       closed,
     } = filterOptions;
 
-    if (creatorId) {
-      query.where({ creatorId });
-    }
-    if (sectionId) {
-      query.where({ sectionId });
-    }
-    if (groupId) {
-      query.where({ groupId });
-    }
-    if (topicId) {
-      query.where({ topicId });
-    }
-    if (onlyHomeHot) {
-      query.where({ homeHotMark: true });
-    }
-    if (onlySectionHot) {
-      query.where({ sectionHotMark: true });
-    }
-    if (onlyCreatorHot) {
-      query.where({ creatorHotMark: true });
-    }
-    if (type === 'article' || type === 'video') {
-      query.where({ type });
-    }
-    if (timestamp_offset) {
-      query.where('timestamp', '<', timestamp_offset);
-    }
-    if (!closed) {
-      query.where({ closed: false });
-    }
+    if (creatorId) query.where({ creatorId });
+    if (sectionId) query.where({ sectionId });
+    if (groupId) query.where({ groupId });
+    if (topicId) query.where({ topicId });
+    if (onlyHomeHot) query.where({ homeHotMark: true });
+    if (onlySectionHot) query.where({ sectionHotMark: true });
+    if (onlyCreatorHot) query.where({ creatorHotMark: true });
+    if (type === 'article' || type === 'video') query.where({ type });
+    if (timestampEnd) query.where('timestamp', '<', timestampEnd);
+    if (timestampStart) query.where('timestamp', '>', timestampStart);
+    if (!closed) query.where({ closed: false });
 
     const result_fields = await query.count();
     return Number(result_fields[0]['count(*)']);

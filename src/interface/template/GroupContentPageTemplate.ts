@@ -13,7 +13,7 @@ export interface GroupContentPageTemplate extends PageTemplateUtils {
     newsCitation: string | null;
   }[];
 
-  articlesList: {
+  articleList: {
     content: {
       newsId: string;
       articleTitle: string;
@@ -21,10 +21,10 @@ export interface GroupContentPageTemplate extends PageTemplateUtils {
       articleCoverImage: string | null;
       articleCitation: string | null;
     }[];
-    pageTotal: number;
+    total: number;
   };
 
-  videosList: {
+  videoList: {
     content: {
       newsId: string;
       videoTitle: string;
@@ -32,6 +32,6 @@ export interface GroupContentPageTemplate extends PageTemplateUtils {
       videoCoverImage: string | null;
       videoCitation: string | null;
     }[];
-    pageTotal: number;
+    total: number;
   };
 }

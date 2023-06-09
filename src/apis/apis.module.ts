@@ -1,13 +1,13 @@
 import { ViewsModule } from '@/model/view/views.module';
 import { Module } from '@nestjs/common';
-import { GetBooksListAPIModule } from './get-books-list/get-books-list.module';
+import { GetBooksListAPIModule } from './get-book-list/get-book-list.module';
 import { GetNewsListAPIModule } from './get-news-list/get-news-list.module';
-import { SearchModule } from './search/search.module';
+import { SearchResourceModule } from './search-resource/search-resource.module';
 
 @Module({
   imports: [
     ViewsModule,
-    SearchModule,
+    SearchResourceModule,
     GetNewsListAPIModule,
     GetBooksListAPIModule,
   ],

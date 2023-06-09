@@ -36,9 +36,17 @@ export class GetNewsListQueries {
 
   @IsInt()
   @IsOptional()
-  timestamp_offset?: number;
+  timestamp_end?: number;
 
   @IsInt()
   @IsOptional()
-  count?: number;
+  timestamp_start?: number;
+
+  @IsInt()
+  @IsOptional()
+  page_size?: number;
+
+  @IsInt()
+  @IsOptional()
+  page_num?: number;
 }

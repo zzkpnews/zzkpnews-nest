@@ -25,10 +25,10 @@ export interface CreatorProfilePageTemplate extends PageTemplateUtils {
       newsCoverImage: string | null;
       newsCitation: string | null;
     }[];
-    pageTotal: number;
+    total: number;
   };
 
-  articlesList: {
+  articleList: {
     content: {
       newsId: string;
       articleTimestamp: number;
@@ -39,10 +39,10 @@ export interface CreatorProfilePageTemplate extends PageTemplateUtils {
       articleCoverImage: string | null;
       articleCitation: string | null;
     }[];
-    pageTotal: number;
+    total: number;
   };
 
-  videosList: {
+  videoList: {
     content: {
       newsId: string;
       videoTimestamp: number;
@@ -53,10 +53,10 @@ export interface CreatorProfilePageTemplate extends PageTemplateUtils {
       videoCoverImage: string | null;
       videoCitation: string | null;
     }[];
-    pageTotal: number;
+    total: number;
   };
 
-  booksList: {
+  bookList: {
     content: {
       bookTitle: string;
       bookCoverImage: string;
@@ -64,7 +64,7 @@ export interface CreatorProfilePageTemplate extends PageTemplateUtils {
       bookCitation: string | null;
       bookTimestamp: number;
     }[];
-    pageTotal: number;
+    total: number;
   };
 
   hotList: {

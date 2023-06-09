@@ -1,7 +1,7 @@
 import { DependenceFlags } from '@/constant/dep-flags';
 import { CreatorProfilePageTemplate } from '@/interface/template/CreatorProfilePageTemplate';
 import { CreatorRepository } from '@/model/entity/creator/creator.repository';
-import { BooksListItemRepository } from '@/model/view/books-list-item/books-list-item.repository';
+import { BookListItemRepository } from '@/model/view/book-list-item/book-list-item.repository';
 import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { TemplateUtilsService } from '../utils/template-utils.service';
@@ -14,7 +14,7 @@ export class CreatorProfilePageTemplateService {
     @Inject(DependenceFlags.NewsListItemRepository)
     private readonly newsListItemRepository: NewsListItemRepository,
     @Inject(DependenceFlags.BooksListItemRepository)
-    private readonly booksListItemRepository: BooksListItemRepository,
+    private readonly booksListItemRepository: BookListItemRepository,
     private readonly templateUtils: TemplateUtilsService,
   ) {}
   async get(creator_id: string): Promise<CreatorProfilePageTemplate> {
@@ -24,12 +24,12 @@ export class CreatorProfilePageTemplateService {
     const articles_list_page_size = 10;
     const videos_list_page_size = 10;
     const books_list_page_size = 5;
-    const hot_list_news_count = 10;
+    const hot_list_news_size = 10;
 
     const recent_list_content = (
       await this.newsListItemRepository.find({
         creatorId: creator_id,
-        count: recent_list_page_size,
+        pageSize: recent_list_page_size,
       })
     ).map((news_item) => ({
       newsId: news_item.newsId,
@@ -43,11 +43,11 @@ export class CreatorProfilePageTemplateService {
       newsCitation: news_item.citation,
     }));
 
-    const articles_list_content = (
+    const article_list_content = (
       await this.newsListItemRepository.find({
         type: 'article' as 'article' | 'video' | 'all',
         creatorId: creator_id,
-        count: articles_list_page_size,
+        pageSize: articles_list_page_size,
       })
     ).map((news_item) => ({
       newsId: news_item.newsId,
@@ -61,11 +61,11 @@ export class CreatorProfilePageTemplateService {
       articleCitation: news_item.citation,
     }));
 
-    const videos_list_content = (
+    const video_list_content = (
       await this.newsListItemRepository.find({
         type: 'video' as 'article' | 'video' | 'all',
         creatorId: creator_id,
-        count: videos_list_page_size,
+        pageSize: videos_list_page_size,
       })
     ).map((news_item) => ({
       newsId: news_item.newsId,
@@ -79,10 +79,10 @@ export class CreatorProfilePageTemplateService {
       videoCitation: news_item.citation,
     }));
 
-    const books_list_content = (
+    const book_list_content = (
       await this.booksListItemRepository.find({
         creatorId: creator_id,
-        count: books_list_page_size,
+        pageSize: books_list_page_size,
       })
     ).map((book) => ({
       bookTitle: book.title,
@@ -95,7 +95,7 @@ export class CreatorProfilePageTemplateService {
     const hot_list = (
       await this.newsListItemRepository.find({
         creatorId: creator_id,
-        count: hot_list_news_count,
+        pageSize: hot_list_news_size,
         onlyCreatorHot: true,
       })
     ).map((item) => ({
@@ -108,32 +108,18 @@ export class CreatorProfilePageTemplateService {
     const news_total_by_creator = await this.newsListItemRepository.count({
       creatorId: creator_id,
     });
-    const recent_news_list_page_total = Math.ceil(
-      news_total_by_creator / recent_list_page_size,
-    );
-
-    const articles_total_by_creator = await this.newsListItemRepository.count({
+    const article_total_by_creator = await this.newsListItemRepository.count({
       creatorId: creator_id,
       type: 'article',
     });
-    const articles_list_page_total = Math.ceil(
-      articles_total_by_creator / articles_list_page_size,
-    );
 
-    const videos_total_by_creator = await this.newsListItemRepository.count({
+    const video_total_by_creator = await this.newsListItemRepository.count({
       creatorId: creator_id,
       type: 'video',
     });
-    const videos_list_page_total = Math.ceil(
-      videos_total_by_creator / videos_list_page_size,
-    );
-
-    const books_total_by_creator = await this.booksListItemRepository.count({
+    const book_total_by_creator = await this.booksListItemRepository.count({
       creatorId: creator_id,
     });
-    const books_list_page_total = Math.ceil(
-      books_total_by_creator / books_list_page_size,
-    );
 
     return {
       creatorId: creator.id,
@@ -150,19 +136,19 @@ export class CreatorProfilePageTemplateService {
 
       recentList: {
         content: recent_list_content,
-        pageTotal: recent_news_list_page_total,
+        total: news_total_by_creator,
       },
-      articlesList: {
-        content: articles_list_content,
-        pageTotal: articles_list_page_total,
+      articleList: {
+        content: article_list_content,
+        total: article_total_by_creator,
       },
-      videosList: {
-        content: videos_list_content,
-        pageTotal: videos_list_page_total,
+      videoList: {
+        content: video_list_content,
+        total: video_total_by_creator,
       },
-      booksList: {
-        content: books_list_content,
-        pageTotal: books_list_page_total,
+      bookList: {
+        content: book_list_content,
+        total: book_total_by_creator,
       },
       hotList: hot_list,
 

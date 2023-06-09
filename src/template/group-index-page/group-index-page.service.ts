@@ -17,13 +17,16 @@ export class GroupIndexPageTemplateService {
   async get(): Promise<GroupIndexPageTemplate> {
     const groups = await this.groupRepository.findAll();
 
-    const articles_lists = await Promise.all(
+    const articles_list_size = 10;
+    const videos_list_size = 9;
+
+    const article_lists = await Promise.all(
       groups.map(async (group) =>
         (
           await this.newsListRepository.find({
             type: 'article',
             groupId: group.id,
-            count: 10,
+            pageSize: articles_list_size,
           })
         ).map((item) => ({
           newsId: item.newsId,
@@ -34,13 +37,13 @@ export class GroupIndexPageTemplateService {
       ),
     );
 
-    const videos_lists = await Promise.all(
+    const video_lists = await Promise.all(
       groups.map(async (group) =>
         (
           await this.newsListRepository.find({
             type: 'video',
             groupId: group.id,
-            count: 9,
+            pageSize: videos_list_size,
           })
         ).map((item) => ({
           newsId: item.newsId,
@@ -54,8 +57,8 @@ export class GroupIndexPageTemplateService {
     const index = groups.map((group, index) => ({
       groupId: group.id,
       groupTitle: group.title,
-      articlesList: articles_lists[index],
-      videosList: videos_lists[index],
+      articleList: article_lists[index],
+      videoList: video_lists[index],
     }));
 
     return {

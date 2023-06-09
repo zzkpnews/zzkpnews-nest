@@ -2,21 +2,23 @@ import { DependenceFlags } from '@/constant/dep-flags';
 import { Inject, Injectable } from '@nestjs/common';
 import { Knex } from 'knex';
 import * as mysql from 'mysql2';
-import { SearchResultItem } from './search-result-item.view';
+import { SearchListItem } from './search-list-item.view';
 
 @Injectable()
-export class SearchResultItemRepository {
+export class SearchListItemRepository {
   constructor(
     @Inject(DependenceFlags.DataSource) private readonly dataSource: Knex,
   ) {}
 
-  async find(
-    searchWord: string,
-    count: number,
-    timestamp_offset?: number,
-  ): Promise<SearchResultItem[]> {
+  async find(options: {
+    searchWord: string;
+    pageSize?: number;
+    pageNum?: number;
+    timestampStart?: number;
+    timestampEnd?: number;
+  }): Promise<SearchListItem[]> {
     const search_words = `%${mysql
-      .escape(searchWord)
+      .escape(options.searchWord)
       .replace(/'/g, '')
       .replace(/ /g, '%')}%`;
     const query = this.dataSource
@@ -55,11 +57,19 @@ export class SearchResultItemRepository {
       )
       .as('result');
 
-    if (timestamp_offset) {
-      query.where('timestamp', '<', timestamp_offset);
+    if (options.timestampEnd) {
+      query.where('timestamp', '<', options.timestampEnd);
     }
 
-    query.orderBy('timestamp', 'desc').limit(count);
+    if (options.timestampStart) {
+      query.where('timestamp', '>', options.timestampStart);
+    }
+
+    query
+      .orderBy('timestamp', 'desc')
+      .orderBy('timestamp', 'desc')
+      .limit(options.pageSize)
+      .offset(((options.pageNum ?? 1) - 1) * (options.pageSize ?? 10));
 
     console.log(query.toSQL());
     const result_fields = await query;
@@ -67,7 +77,7 @@ export class SearchResultItemRepository {
       id: item.id,
       type: item.type,
       title: item.title,
-      cover_image: item.coverImage,
+      coverImage: item.coverImage,
       description: item.description,
       timestamp: item.timestamp,
     }));

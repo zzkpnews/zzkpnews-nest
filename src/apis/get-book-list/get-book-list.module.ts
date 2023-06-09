@@ -1,7 +1,7 @@
-import { BooksListItemModule } from '@/model/view/books-list-item/books-list-item.module';
+import { BooksListItemModule } from '@/model/view/book-list-item/book-list-item.module';
 import { Module } from '@nestjs/common';
-import { GetBooksListAPIController } from './get-books-list.controller';
-import { GetBooksListService } from './get-books-list.service';
+import { GetBooksListAPIController } from './get-book-list.controller';
+import { GetBooksListService } from './get-book-list.service';
 
 @Module({
   imports: [BooksListItemModule],

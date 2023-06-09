@@ -15,5 +15,5 @@ export const DependenceFlags = {
 
   NewsListItemRepository: Symbol('news-list-item repository'),
   BooksListItemRepository: Symbol('books-list-item repository'),
-  SearchResultItemRepository: Symbol('search-result-item repository'),
+  SearchListItemRepository: Symbol('search-result-item repository'),
 };

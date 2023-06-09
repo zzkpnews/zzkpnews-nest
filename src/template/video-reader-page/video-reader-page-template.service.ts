@@ -22,11 +22,13 @@ export class VideoReaderPageTemplateService {
 
     const creator = await this.creatorRepository.findById(video.creatorId);
 
+    const play_list_size = 7;
+
     const play_list = (
       await this.newsListItemRepository.find({
         type: 'video',
-        timestampOffset: video.timestamp,
-        count: 7,
+        timestampEnd: video.timestamp,
+        pageSize: play_list_size,
       })
     ).map((next_video) => ({
       newsId: next_video.newsId,

@@ -5,14 +5,14 @@ export interface GroupIndexPageTemplate extends PageTemplateUtils {
     groupId: string;
     groupTitle: string;
 
-    articlesList: {
+    articleList: {
       newsId: string;
       articleTitle: string;
       articleSubtitle: string | null;
       articleCoverImage: string | null;
     }[];
 
-    videosList: {
+    videoList: {
       newsId: string;
       videoTitle: string;
       videoSubtitle: string | null;

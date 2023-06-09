@@ -1,10 +1,10 @@
 import { DependenceFlags } from '@/constant/dep-flags';
 import { Provider } from '@nestjs/common';
-import { BooksListItemRepository } from './books-list-item.repository';
+import { BookListItemRepository } from './book-list-item.repository';
 
-export const BooksListItemProviders: Provider[] = [
+export const BookListItemProviders: Provider[] = [
   {
     provide: DependenceFlags.BooksListItemRepository,
-    useClass: BooksListItemRepository,
+    useClass: BookListItemRepository,
   },
 ];

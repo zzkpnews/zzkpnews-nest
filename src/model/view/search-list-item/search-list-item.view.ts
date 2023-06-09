@@ -1,8 +1,8 @@
-export class SearchResultItem {
+export class SearchListItem {
   type: 'article' | 'video' | 'book';
   id: string;
   title: string;
-  cover_image: string | null;
+  coverImage: string | null;
   description: string | null;
   timestamp: number;
 }
