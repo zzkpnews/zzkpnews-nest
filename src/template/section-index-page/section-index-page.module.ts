@@ -1,16 +1,16 @@
 import { EntityModule } from '@/model/entity/entities.module';
-import { Module } from '@nestjs/common';
-import { NewsListItemModule } from '@/model/view/news-list-item/news-list-item.module';
+import { ViewsModule } from '@/model/view/views.module';
 import { ObjectStorageModule } from '@/repository/object-storage/object-storage.module';
-import { SectionIndexPageTemplateService } from './section-index-page.service';
+import { Module } from '@nestjs/common';
 import { TemplateUtilsModule } from '../utils/template-utils.module';
+import { SectionIndexPageTemplateService } from './section-index-page.service';
 
 @Module({
   imports: [
     EntityModule,
     TemplateUtilsModule,
     ObjectStorageModule,
-    NewsListItemModule,
+    ViewsModule,
   ],
   providers: [SectionIndexPageTemplateService],
   exports: [SectionIndexPageTemplateService],

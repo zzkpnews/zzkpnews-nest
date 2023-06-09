@@ -12,6 +12,7 @@ export interface VideoReaderPageTemplate extends PageTemplateUtils {
   videoUrl: string;
   videoAuthor: string | null;
   videoEditor: string | null;
+  videoCitation: string | null;
 
   playList: {
     videoTitle: string;

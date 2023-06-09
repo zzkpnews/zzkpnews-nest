@@ -12,7 +12,7 @@ export class NewsListItemRepository {
   async find(filterOptions: {
     type?: 'article' | 'video' | 'all';
     count?: number | null;
-    timestamp_offset?: number | null;
+    timestampOffset?: number | null;
     creatorId?: string | null;
     sectionId?: string | null;
     groupId?: string | null;
@@ -27,7 +27,7 @@ export class NewsListItemRepository {
     const {
       type,
       count,
-      timestamp_offset,
+      timestampOffset,
       creatorId,
       sectionId,
       groupId,
@@ -62,8 +62,8 @@ export class NewsListItemRepository {
     if (type === 'article' || type === 'video') {
       query.where({ type });
     }
-    if (timestamp_offset) {
-      query.where('timestamp', '<', timestamp_offset);
+    if (timestampOffset) {
+      query.where('timestamp', '<', timestampOffset);
     }
     if (!closed) {
       query.where({ closed: false });

@@ -61,53 +61,6 @@ export class BookRepository {
     );
   }
 
-  async find(filterOptions: {
-    timestamp_offset?: number;
-    count?: number;
-    creatorId?: string;
-  }): Promise<Book[]> {
-    const query = this.dataSource<BookTable>('book');
-    const { timestamp_offset, count, creatorId } = filterOptions;
-    if (timestamp_offset) {
-      query.where('timestamp', '<', timestamp_offset);
-    }
-    if (creatorId) {
-      query.where({ creatorId });
-    }
-    const result_fields = await query
-      .orderBy('timestamp', 'desc')
-      .limit(count ?? 10);
-    return result_fields.map(
-      (book) =>
-        new Book(
-          book.id,
-          book.creatorId,
-          book.title,
-          book.citation,
-          book.keywords,
-          book.coverImage,
-          book.timestamp,
-          book.closed,
-        ),
-    );
-  }
-
-  async count(filterOptions: {
-    timestamp_offset?: number;
-    creatorId?: string;
-  }): Promise<number> {
-    const query = this.dataSource<BookTable>('book');
-    const { timestamp_offset, creatorId } = filterOptions;
-    if (timestamp_offset) {
-      query.where('timestamp', '<', timestamp_offset);
-    }
-    if (creatorId) {
-      query.where({ creatorId });
-    }
-    const result_fields = await query.count();
-    return Number(result_fields[0]['count(*)']);
-  }
-
   async deleteByCreatorId(creatorId: string) {
     await this.dataSource<BookTable>('book').where({ creatorId }).del();
   }

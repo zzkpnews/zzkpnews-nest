@@ -5,6 +5,7 @@ import { CreatorRepository } from '@/model/entity/creator/creator.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { TemplateUtilsService } from '../utils/template-utils.service';
 import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
+import * as fs from 'fs';
 
 @Injectable()
 export class ArticleReaderPageTemplateService {
@@ -22,10 +23,15 @@ export class ArticleReaderPageTemplateService {
 
     const creator = await this.creatorRepository.findById(article.creatorId);
 
+    const article_content = fs.readFileSync(
+      `./data/articles/${article.id}.html`,
+      'utf-8',
+    );
+
     const next_list = (
       await this.newsListItemRepository.find({
         type: 'article',
-        timestamp_offset: article.timestamp,
+        timestampOffset: article.timestamp,
         count: 7,
       })
     ).map((next_article) => ({
@@ -47,7 +53,7 @@ export class ArticleReaderPageTemplateService {
       creatorDescription: creator.description,
       creatorId: creator.id,
       creatorTitle: creator.title,
-      articleContent: '',
+      articleContent: article_content,
       articleKeywords: article.keywords,
 
       nextList: next_list,

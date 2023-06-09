@@ -14,5 +14,6 @@ export const DependenceFlags = {
   VideoRepository: Symbol('video repository'),
 
   NewsListItemRepository: Symbol('news-list-item repository'),
+  BooksListItemRepository: Symbol('books-list-item repository'),
   SearchResultItemRepository: Symbol('search-result-item repository'),
 };

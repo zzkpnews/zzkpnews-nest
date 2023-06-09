@@ -114,5 +114,17 @@ export interface BookTable {
   creatorId: string;
 }
 
+export class BooksListTable {
+  bookId: string;
+  title: string;
+  citation: string | null;
+  keywords: string | null;
+  coverImage: string | null;
+  creatorId: string;
+  creatorTitle: string;
+  timestamp: number;
+  closed: boolean;
+}
+
 export type ArticleView = readonly (NewsBaseTable & ArticleBaseTable);
 export type VideoView = readonly (NewsBaseTable & VideoBaseTable);

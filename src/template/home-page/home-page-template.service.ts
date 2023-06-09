@@ -1,15 +1,15 @@
-import { BookRepository } from '@/model/entity/book/book.repository';
-import { CarouselRepository } from '@/model/entity/carousel/carousel.repository';
 import { DependenceFlags } from '@/constant/dep-flags';
-import { Headline } from '@/model/object/headline/headline.object';
 import { HomePageTemplate } from '@/interface/template/HomePageTemplate';
-import { Inject, Injectable } from '@nestjs/common';
-import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
-import { ObjectStorage } from '@/repository/object-storage/object-storage';
+import { CarouselRepository } from '@/model/entity/carousel/carousel.repository';
+import { TopicRepository } from '@/model/entity/topic/topic.repository';
+import { Headline } from '@/model/object/headline/headline.object';
 import { PictureNews } from '@/model/object/picture-news/picture-news.object';
 import { SpecialNews } from '@/model/object/special-news/special-news.object';
+import { BooksListItemRepository } from '@/model/view/books-list-item/books-list-item.repository';
+import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
+import { ObjectStorage } from '@/repository/object-storage/object-storage';
+import { Inject, Injectable } from '@nestjs/common';
 import { TemplateUtilsService } from '../utils/template-utils.service';
-import { TopicRepository } from '@/model/entity/topic/topic.repository';
 
 @Injectable()
 export class HomePageTemplateService {
@@ -22,8 +22,8 @@ export class HomePageTemplateService {
     private readonly topicRepository: TopicRepository,
     @Inject(DependenceFlags.CarouselRepository)
     private readonly carouselRepository: CarouselRepository,
-    @Inject(DependenceFlags.BookRepository)
-    private readonly bookRepository: BookRepository,
+    @Inject(DependenceFlags.BooksListItemRepository)
+    private readonly booksListItemRepository: BooksListItemRepository,
     private readonly templateUtils: TemplateUtilsService,
   ) {}
   async get(): Promise<HomePageTemplate> {
@@ -64,9 +64,9 @@ export class HomePageTemplateService {
         topicLogo: item.logo,
       })),
 
-      recentBooks: (await this.bookRepository.find({ count: 5 })).map(
+      recentBooks: (await this.booksListItemRepository.find({ count: 5 })).map(
         (book) => ({
-          bookId: book.id,
+          bookId: book.bookId,
           bookTitle: book.title,
           bookCoverImage: book.coverImage,
           bookCitation: book.citation,

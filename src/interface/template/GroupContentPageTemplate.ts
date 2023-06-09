@@ -1,8 +1,8 @@
 import { PageTemplateUtils } from './utils';
 
 export interface GroupContentPageTemplate extends PageTemplateUtils {
-  group_id: string;
-  group_title: string;
+  groupId: string;
+  groupTitle: string;
 
   hotList: {
     newsId: string;

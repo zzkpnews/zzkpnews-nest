@@ -17,8 +17,8 @@ export class GroupContentPageTemplateService {
   async get(group_id: string): Promise<GroupContentPageTemplate> {
     const group = await this.groupRepository.findById(group_id);
     const hot_list_news_count = 8;
-    const articles_list_news_count_per_page = 8;
-    const videos_list_news_count_per_page = 8;
+    const articles_list_page_size = 8;
+    const videos_list_page_size = 8;
 
     const hot_list = (
       await this.newsListItemRepository.find({
@@ -38,7 +38,7 @@ export class GroupContentPageTemplateService {
       await this.newsListItemRepository.find({
         type: 'article',
         groupId: group_id,
-        count: articles_list_news_count_per_page,
+        count: articles_list_page_size,
       })
     ).map((item) => ({
       newsId: item.newsId,
@@ -56,7 +56,7 @@ export class GroupContentPageTemplateService {
       await this.newsListItemRepository.find({
         type: 'video',
         groupId: group_id,
-        count: videos_list_news_count_per_page,
+        count: videos_list_page_size,
       })
     ).map((item) => ({
       newsId: item.newsId,
@@ -71,16 +71,16 @@ export class GroupContentPageTemplateService {
     });
 
     const articles_list_page_total = Math.ceil(
-      articles_total_by_group / articles_list_news_count_per_page,
+      articles_total_by_group / articles_list_page_size,
     );
 
     const videos_list_page_total = Math.ceil(
-      videos_total_by_group / videos_list_news_count_per_page,
+      videos_total_by_group / videos_list_page_size,
     );
 
     return {
-      group_id: group.id,
-      group_title: group.title,
+      groupId: group.id,
+      groupTitle: group.title,
       hotList: hot_list,
       articlesList: {
         content: articles_list_content,

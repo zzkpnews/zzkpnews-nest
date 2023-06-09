@@ -25,7 +25,7 @@ export class VideoReaderPageTemplateService {
     const play_list = (
       await this.newsListItemRepository.find({
         type: 'video',
-        timestamp_offset: video.timestamp,
+        timestampOffset: video.timestamp,
         count: 7,
       })
     ).map((next_video) => ({
@@ -47,6 +47,7 @@ export class VideoReaderPageTemplateService {
       creatorId: creator.id,
       creatorTitle: creator.title,
       videoUrl: video.videoUrl,
+      videoCitation: video.citation,
 
       playList: play_list,
 

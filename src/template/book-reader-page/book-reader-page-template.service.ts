@@ -18,6 +18,7 @@ export class BookReaderPageTemplateService {
     const book = await this.bookRepository.findById(book_id);
     const creator = await this.creatorRepository.findById(book.creatorId);
     return {
+      bookId: book.id,
       bookTitle: book.title,
       bookKeywords: book.keywords,
       bookCoverImage: book.coverImage,

@@ -4,13 +4,14 @@ import { NewsListItemModule } from '@/model/view/news-list-item/news-list-item.m
 import { ObjectStorageModule } from '@/repository/object-storage/object-storage.module';
 import { GroupIndexPageTemplateService } from './group-index-page.service';
 import { TemplateUtilsModule } from '../utils/template-utils.module';
+import { ViewsModule } from '@/model/view/views.module';
 
 @Module({
   imports: [
     EntityModule,
     TemplateUtilsModule,
     ObjectStorageModule,
-    NewsListItemModule,
+    ViewsModule,
   ],
 
   providers: [GroupIndexPageTemplateService],

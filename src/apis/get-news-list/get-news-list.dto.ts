@@ -1,5 +1,5 @@
 import { Optional } from '@nestjs/common';
-import { IsIn, IsInt, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsIn, IsInt, IsOptional, IsString } from 'class-validator';
 
 export class GetNewsListQueries {
   @IsString()
@@ -14,6 +14,18 @@ export class GetNewsListQueries {
   @IsOptional()
   group_id?: string;
 
+  @IsBoolean()
+  @IsOptional()
+  only_home_hot?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  only_section_hot?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  only_creator_hot?: boolean;
+
   @IsString()
   @IsOptional()
   topic_id?: string;
@@ -25,4 +37,8 @@ export class GetNewsListQueries {
   @IsInt()
   @IsOptional()
   timestamp_offset?: number;
+
+  @IsInt()
+  @IsOptional()
+  count?: number;
 }

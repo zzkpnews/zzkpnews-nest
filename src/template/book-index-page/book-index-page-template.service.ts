@@ -1,29 +1,29 @@
 import { DependenceFlags } from '@/constant/dep-flags';
 import { BookIndexPageTemplate } from '@/interface/template/BookIndexPageTemplate';
-import { BookRepository } from '@/model/entity/book/book.repository';
+import { BooksListItemRepository } from '@/model/view/books-list-item/books-list-item.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { TemplateUtilsService } from '../utils/template-utils.service';
 
 @Injectable()
 export class BookIndexPageTemplateService {
   constructor(
-    @Inject(DependenceFlags.BookRepository)
-    private readonly bookRepository: BookRepository,
+    @Inject(DependenceFlags.BooksListItemRepository)
+    private readonly booksListItemRepository: BooksListItemRepository,
     private readonly templateUtils: TemplateUtilsService,
   ) {}
   async get(): Promise<BookIndexPageTemplate> {
-    const book_count_per_page = 8;
+    const page_size = 8;
     const book_list_content = (
-      await this.bookRepository.find({ count: book_count_per_page })
+      await this.booksListItemRepository.find({ count: page_size })
     ).map((book) => ({
-      bookId: book.id,
+      bookId: book.bookId,
       bookTitle: book.title,
       bookCoverImage: book.coverImage,
       bookCitation: book.citation,
       bookTimestamp: book.timestamp,
     }));
-    const book_total = await this.bookRepository.count({});
-    const page_total = Math.ceil(book_total / book_count_per_page);
+    const book_total = await this.booksListItemRepository.count({});
+    const page_total = Math.ceil(book_total / page_size);
     return {
       booksList: { content: book_list_content, pageTotal: page_total },
       ...(await this.templateUtils.getTemplateUtils()),

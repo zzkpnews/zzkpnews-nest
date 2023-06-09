@@ -1,6 +1,7 @@
 import { PageTemplateUtils } from './utils';
 
 export interface BookReaderPageTemplate extends PageTemplateUtils {
+  bookId: string;
   bookTitle: string;
   bookKeywords: string | null;
   bookCoverImage: string;
