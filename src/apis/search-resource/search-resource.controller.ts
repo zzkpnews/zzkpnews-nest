@@ -1,17 +1,27 @@
-import { Controller, Get, Header, Query } from '@nestjs/common';
+import { APIInterceptor } from '@/pipes/api-interceptor.pipe';
+import { ValidationPipe } from '@/pipes/vaildation.pipe';
+import {
+  Controller,
+  Get,
+  Header,
+  Query,
+  UseInterceptors,
+} from '@nestjs/common';
 import { SearchQueries } from './search-resource.dto';
 import { SearchResourceService } from './search-resource.service';
+import { SearchResourceItem } from '@/interface/api/search-resource';
 
 @Controller('api/search-resource')
 export class SearchResourceController {
   constructor(private readonly searchResourceService: SearchResourceService) {}
 
   @Get()
+  @UseInterceptors(APIInterceptor<SearchResourceItem[]>)
   @Header('Access-Control-Allow-Origin', '*')
   async search(
-    @Query()
+    @Query(new ValidationPipe())
     searchQueries: SearchQueries,
-  ) {
+  ): Promise<SearchResourceItem[]> {
     return await this.searchResourceService.makeSearch(
       searchQueries.search_word,
       searchQueries.page_size,

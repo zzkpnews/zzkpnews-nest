@@ -1,6 +1,5 @@
-export const STATUS_CODE = {
+export const API_STATUS_CODE = {
   RequestOK: 20000,
-  RequestPartialOK: 24000,
 
   UserUnauthorized: 34010,
   UserBlocked: 34030,

@@ -1,6 +1,7 @@
 import { PageTemplateUtils } from './utils';
 
 export interface SectionContentPageTemplate extends PageTemplateUtils {
+  sectionId: string;
   sectionTitle: string;
 
   hotList: {

@@ -63,7 +63,8 @@ export class TemplateUtilsService {
       infoSecurityLicense: site_meta?.info_security_license,
       infoInstitution: site_meta?.info_institution,
       settingEnableMemoryMode: site_meta?.setting_enable_memory_mode ?? false,
-      settingEnableMaintainingMode: false,
+      settingEnableMaintainingMode:
+        site_meta?.setting_maintaining_mode ?? false,
       navigation: navigation,
     };
   }

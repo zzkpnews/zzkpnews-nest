@@ -4,7 +4,7 @@ import { BookIndexPageTemplate } from '@/interface/template/BookIndexPageTemplat
 import { BookIndexPageTemplateService } from './book-index-page/book-index-page-template.service';
 import { BookReaderPageTemplate } from '@/interface/template/BookReaderPageTemplate';
 import { BookReaderPageTemplateService } from './book-reader-page/book-reader-page-template.service';
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, UseFilters } from '@nestjs/common';
 import { CreatorProfilePageTemplate } from '@/interface/template/CreatorProfilePageTemplate';
 import { CreatorProfilePageTemplateService } from './creator-profile-page/creator-profile-page-template.service';
 import { Error403PageTemplate } from '@/interface/template/Error403PageTemplate';
@@ -31,7 +31,9 @@ import { TopicIndexPageTemplate } from '@/interface/template/TopicIndexPageTempl
 import { TopicIndexPageTemplateService } from './topic-index-page/topic-index-page.service';
 import { VideoReaderPageTemplate } from '@/interface/template/VideoReaderPageTemplate';
 import { VideoReaderPageTemplateService } from './video-reader-page/video-reader-page-template.service';
+import { HttpExceptionFilter } from '@/pipes/exception.pipe';
 
+// @UseFilters(HttpExceptionFilter)
 @Controller('templates')
 export class TemplatesController {
   constructor(

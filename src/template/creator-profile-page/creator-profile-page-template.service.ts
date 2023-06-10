@@ -3,7 +3,7 @@ import { CreatorProfilePageTemplate } from '@/interface/template/CreatorProfileP
 import { CreatorRepository } from '@/model/entity/creator/creator.repository';
 import { BookListItemRepository } from '@/model/view/book-list-item/book-list-item.repository';
 import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { TemplateUtilsService } from '../utils/template-utils.service';
 
 @Injectable()
@@ -19,6 +19,10 @@ export class CreatorProfilePageTemplateService {
   ) {}
   async get(creator_id: string): Promise<CreatorProfilePageTemplate> {
     const creator = await this.creatorRepository.findById(creator_id);
+
+    if (creator == null) {
+      throw new HttpException('This creator does not exist', 404);
+    }
 
     const recent_list_page_size = 10;
     const articles_list_page_size = 10;

@@ -1,6 +1,13 @@
 import { GetNewsListQueries } from '@/apis/get-news-list/get-news-list.dto';
 import { GetNewsListItem } from '@/interface/api/get-news-list';
-import { Controller, Get, Header, Query } from '@nestjs/common';
+import { APIInterceptor } from '@/pipes/api-interceptor.pipe';
+import {
+  Controller,
+  Get,
+  Header,
+  Query,
+  UseInterceptors,
+} from '@nestjs/common';
 import { GetNewsListService } from './get-news-list.service';
 
 @Controller('api/get-news-list')
@@ -8,6 +15,7 @@ export class GetNewsListAPIController {
   constructor(private readonly getNewsListService: GetNewsListService) {}
 
   @Get()
+  @UseInterceptors(APIInterceptor<GetNewsListItem[]>)
   @Header('Access-Control-Allow-Origin', '*')
   async getNewsList(
     @Query() newsListQueries: GetNewsListQueries,

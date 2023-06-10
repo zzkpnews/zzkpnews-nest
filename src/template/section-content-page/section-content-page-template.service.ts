@@ -17,15 +17,15 @@ export class SectionContentPageTemplateService {
   async get(section_id: string): Promise<SectionContentPageTemplate> {
     const section = await this.sectionRepository.findById(section_id);
 
-    const hot_list_news_count = 10;
-    const articles_list_size = 10;
-    const videos_list_size = 10;
+    const hot_list_page_size = 8;
+    const article_list_page_size = 8;
+    const video_list_page_size = 8;
 
     const hot_list = (
       await this.newsListItemRepository.find({
         onlySectionHot: true,
         sectionId: section_id,
-        pageSize: hot_list_news_count,
+        pageSize: hot_list_page_size,
       })
     ).map((item) => ({
       newsId: item.newsId,
@@ -45,7 +45,7 @@ export class SectionContentPageTemplateService {
       await this.newsListItemRepository.find({
         type: 'article',
         sectionId: section_id,
-        pageSize: articles_list_size,
+        pageSize: article_list_page_size,
       })
     ).map((item) => ({
       newsId: item.newsId,
@@ -64,7 +64,7 @@ export class SectionContentPageTemplateService {
       await this.newsListItemRepository.find({
         type: 'video',
         sectionId: section_id,
-        pageSize: videos_list_size,
+        pageSize: video_list_page_size,
       })
     ).map((item) => ({
       newsId: item.newsId,
@@ -74,6 +74,7 @@ export class SectionContentPageTemplateService {
     }));
 
     return {
+      sectionId: section.id,
       sectionTitle: section.title,
       hotList: hot_list,
       articleList: {

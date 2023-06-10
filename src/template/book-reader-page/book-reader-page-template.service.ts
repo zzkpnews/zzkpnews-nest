@@ -2,7 +2,7 @@ import { DependenceFlags } from '@/constant/dep-flags';
 import { BookReaderPageTemplate } from '@/interface/template/BookReaderPageTemplate';
 import { BookRepository } from '@/model/entity/book/book.repository';
 import { CreatorRepository } from '@/model/entity/creator/creator.repository';
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { TemplateUtilsService } from '../utils/template-utils.service';
 
 @Injectable()
@@ -16,6 +16,11 @@ export class BookReaderPageTemplateService {
   ) {}
   async get(book_id: string): Promise<BookReaderPageTemplate> {
     const book = await this.bookRepository.findById(book_id);
+
+    if (book == null) {
+      throw new HttpException('This Book Resource Not Found', 404);
+    }
+
     const creator = await this.creatorRepository.findById(book.creatorId);
     return {
       bookId: book.id,

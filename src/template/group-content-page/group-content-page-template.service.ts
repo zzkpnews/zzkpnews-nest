@@ -17,12 +17,13 @@ export class GroupContentPageTemplateService {
   async get(group_id: string): Promise<GroupContentPageTemplate> {
     const group = await this.groupRepository.findById(group_id);
     const hot_list_news_count = 8;
-    const articles_list_page_size = 8;
-    const videos_list_page_size = 8;
-
+    const article_list_page_size = 8;
+    const video_list_page_size = 8;
+    console.log('trigged', Date.now());
     const hot_list = (
       await this.newsListItemRepository.find({
         groupId: group_id,
+        onlySectionHot: true,
         pageSize: hot_list_news_count,
       })
     ).map((item) => ({
@@ -38,7 +39,7 @@ export class GroupContentPageTemplateService {
       await this.newsListItemRepository.find({
         type: 'article',
         groupId: group_id,
-        pageSize: articles_list_page_size,
+        pageSize: article_list_page_size,
       })
     ).map((item) => ({
       newsId: item.newsId,
@@ -56,7 +57,7 @@ export class GroupContentPageTemplateService {
       await this.newsListItemRepository.find({
         type: 'video',
         groupId: group_id,
-        pageSize: videos_list_page_size,
+        pageSize: video_list_page_size,
       })
     ).map((item) => ({
       newsId: item.newsId,

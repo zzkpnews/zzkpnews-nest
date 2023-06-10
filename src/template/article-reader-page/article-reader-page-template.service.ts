@@ -2,7 +2,7 @@ import { DependenceFlags } from '@/constant/dep-flags';
 import { ArticleReaderPageTemplate } from '@/interface/template/ArticleReaderPageTemplate';
 import { ArticleRepository } from '@/model/entity/article/article.repository';
 import { CreatorRepository } from '@/model/entity/creator/creator.repository';
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { TemplateUtilsService } from '../utils/template-utils.service';
 import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
 import * as fs from 'fs';
@@ -20,6 +20,10 @@ export class ArticleReaderPageTemplateService {
   ) {}
   async get(news_id: string): Promise<ArticleReaderPageTemplate> {
     const article = await this.articleRepository.findById(news_id);
+
+    if (article == null) {
+      throw new HttpException('This Article Resource Not Found', 404);
+    }
 
     const creator = await this.creatorRepository.findById(article.creatorId);
 
