@@ -36,13 +36,18 @@ export class TopicContentPageTemplateService {
       newsCitation: item.citation,
     }));
 
+    const total = await this.newsListItemRepository.count({
+      topicId: topic_id,
+    });
+
     return {
+      topicId: topic.id,
       topicLogo: topic.logo,
       topicDescription: topic.description,
       topicTitle: topic.title,
       topicCoverImage: topic.coverImage,
 
-      newsList: news_list,
+      newsList: { initialList: news_list, total: total },
       ...(await this.templateUtils.getTemplateUtils()),
     };
   }
