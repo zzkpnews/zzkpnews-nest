@@ -71,7 +71,6 @@ export class SearchListItemRepository {
       .limit(options.pageSize)
       .offset(((options.pageNum ?? 1) - 1) * (options.pageSize ?? 10));
 
-    console.log(query.toSQL());
     const result_fields = await query;
     return result_fields.map((item) => ({
       id: item.id,

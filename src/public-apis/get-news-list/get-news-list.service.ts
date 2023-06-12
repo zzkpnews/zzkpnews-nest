@@ -1,5 +1,5 @@
 import { DependenceFlags } from '@/constant/dep-flags';
-import { GetNewsListItem } from '@/interface/api/get-news-list';
+import { GetNewsListAPIContent } from '@/interface/api/get-news-list';
 import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -23,7 +23,7 @@ export class GetNewsListService {
     timestampEnd?: number;
     pageSize?: number;
     pageNum?: number;
-  }): Promise<GetNewsListItem[]> {
+  }): Promise<GetNewsListAPIContent> {
     const news_items = await this.newsListRepository.find({
       sectionId: options.sectionId,
       creatorId: options.creatorId,
@@ -39,7 +39,7 @@ export class GetNewsListService {
       onlySectionHot: options.onlySectionHot,
       onlyCreatorHot: options.onlyCreatorHot,
     });
-    return news_items.map<GetNewsListItem>((item) => ({
+    return news_items.map<ArrayElement<GetNewsListAPIContent>>((item) => ({
       newsId: item.newsId,
       newsCitation: item.citation,
       newsCoverImage: item.coverImage,

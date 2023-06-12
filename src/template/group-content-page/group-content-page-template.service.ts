@@ -19,7 +19,7 @@ export class GroupContentPageTemplateService {
     const hot_list_news_count = 8;
     const article_list_page_size = 8;
     const video_list_page_size = 8;
-    console.log('trigged', Date.now());
+
     const hot_list = (
       await this.newsListItemRepository.find({
         groupId: group_id,

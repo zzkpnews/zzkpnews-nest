@@ -12,4 +12,4 @@ import { SearchResourceModule } from './search-resource/search-resource.module';
     GetBooksListAPIModule,
   ],
 })
-export class ApisModule {}
+export class PublicApisModule {}

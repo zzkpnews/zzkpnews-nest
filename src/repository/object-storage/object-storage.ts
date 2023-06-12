@@ -64,7 +64,7 @@ class ObjectStorage {
    * @returns The object is exist or not.
    */
   exist(name: string): boolean {
-    fs.access(this.generateStoragePath(name), (err) => console.log(err));
+    fs.access(this.generateStoragePath(name), (err) => {});
     return fs.existsSync(this.generateStoragePath(name));
   }
 

@@ -1,5 +1,5 @@
 import { DependenceFlags } from '@/constant/dep-flags';
-import { SearchResourceItem } from '@/interface/api/search-resource';
+import { SearchResourceAPI } from '@/interface/api/search-resource';
 import { SearchListItemRepository } from '@/model/view/search-list-item/search-list-item.repository';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -16,7 +16,7 @@ export class SearchResourceService {
     pageNum?: number,
     timestampStart?: number,
     timestampEnd?: number,
-  ): Promise<SearchResourceItem[]> {
+  ): Promise<SearchResourceAPI> {
     return await this.searchListItemRepository.find({
       searchWord: searchWord,
       pageSize: pageSize && pageSize < 11 ? pageSize : 10,

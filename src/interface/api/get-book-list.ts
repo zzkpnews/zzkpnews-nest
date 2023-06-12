@@ -1,4 +1,4 @@
-export type GetBookListItem = {
+export type GetBookListAPIContent = {
   bookId: string;
   bookTitle: string;
   bookCoverImage: string | null;
@@ -6,4 +6,4 @@ export type GetBookListItem = {
   bookTimestamp: number;
   creatorId: string;
   creatorTitle: string;
-};
+}[];

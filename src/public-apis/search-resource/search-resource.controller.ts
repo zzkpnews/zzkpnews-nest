@@ -9,19 +9,19 @@ import {
 } from '@nestjs/common';
 import { SearchQueries } from './search-resource.dto';
 import { SearchResourceService } from './search-resource.service';
-import { SearchResourceItem } from '@/interface/api/search-resource';
+import { SearchResourceAPI } from '@/interface/api/search-resource';
 
 @Controller('api/search-resource')
 export class SearchResourceController {
   constructor(private readonly searchResourceService: SearchResourceService) {}
 
   @Get()
-  @UseInterceptors(APIInterceptor<SearchResourceItem[]>)
+  @UseInterceptors(APIInterceptor<SearchResourceAPI[]>)
   @Header('Access-Control-Allow-Origin', '*')
   async search(
     @Query(new ValidationPipe())
     searchQueries: SearchQueries,
-  ): Promise<SearchResourceItem[]> {
+  ): Promise<SearchResourceAPI> {
     return await this.searchResourceService.makeSearch(
       searchQueries.search_word,
       searchQueries.page_size,

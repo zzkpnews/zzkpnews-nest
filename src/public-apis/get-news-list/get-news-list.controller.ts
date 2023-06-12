@@ -1,5 +1,5 @@
-import { GetNewsListQueries } from '@/apis/get-news-list/get-news-list.dto';
-import { GetNewsListItem } from '@/interface/api/get-news-list';
+import { GetNewsListQueries } from '@/public-apis/get-news-list/get-news-list.dto';
+import { GetNewsListAPIContent } from '@/interface/api/get-news-list';
 import { APIInterceptor } from '@/pipes/api-interceptor.pipe';
 import {
   Controller,
@@ -15,11 +15,11 @@ export class GetNewsListAPIController {
   constructor(private readonly getNewsListService: GetNewsListService) {}
 
   @Get()
-  @UseInterceptors(APIInterceptor<GetNewsListItem[]>)
+  @UseInterceptors(APIInterceptor<GetNewsListAPIContent>)
   @Header('Access-Control-Allow-Origin', '*')
   async getNewsList(
     @Query() newsListQueries: GetNewsListQueries,
-  ): Promise<GetNewsListItem[]> {
+  ): Promise<GetNewsListAPIContent> {
     const news_list = await this.getNewsListService.getList({
       sectionId: newsListQueries.section_id,
       creatorId: newsListQueries.creator_id,

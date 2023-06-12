@@ -1,4 +1,4 @@
-export type GetNewsListItem = {
+export type GetNewsListAPIContent = {
   newsId: string;
   newsType: 'article' | 'video';
   newsTitle: string;
@@ -16,4 +16,4 @@ export type GetNewsListItem = {
   topicTitle: string;
   newsCoverImage: string | null;
   newsKeywords: string | null;
-};
+}[];

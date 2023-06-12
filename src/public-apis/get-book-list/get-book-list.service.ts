@@ -1,5 +1,5 @@
 import { DependenceFlags } from '@/constant/dep-flags';
-import { GetBookListItem } from '@/interface/api/get-book-list';
+import { GetBookListAPIContent } from '@/interface/api/get-book-list';
 import { BookListItemRepository } from '@/model/view/book-list-item/book-list-item.repository';
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -16,7 +16,7 @@ export class GetBooksListService {
     timestampEnd?: number;
     pageSize?: number;
     pageNum?: number;
-  }): Promise<GetBookListItem[]> {
+  }): Promise<GetBookListAPIContent> {
     const book_items = await this.booksListItemRepository.find({
       creatorId: options.creatorId,
       timestampStart: options.timestampStart,
@@ -25,7 +25,7 @@ export class GetBooksListService {
         options.pageSize && options.pageSize < 11 ? options.pageSize : 10,
       pageNum: options.pageNum,
     });
-    return book_items.map<GetBookListItem>((book) => ({
+    return book_items.map<ArrayElement<GetBookListAPIContent>>((book) => ({
       bookId: book.bookId,
       bookTitle: book.title,
       bookCoverImage: book.coverImage,

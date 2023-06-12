@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ApisModule } from './apis/apis.module';
+import { PublicApisModule } from './public-apis/public-apis.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TemplatesModule } from './template/templates.module';
@@ -8,7 +8,7 @@ import * as path from 'path';
 @Module({
   imports: [
     TemplatesModule,
-    ApisModule,
+    PublicApisModule,
     ServeStaticModule.forRoot({
       rootPath: path.resolve('./data/static'),
       serveRoot: '/static',

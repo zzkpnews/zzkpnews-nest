@@ -1,8 +1,8 @@
-export type SearchResourceItem = {
+export type SearchResourceAPI = {
   type: 'article' | 'video' | 'book';
   id: string;
   title: string;
   coverImage: string | null;
   description: string | null;
   timestamp: number;
-};
+}[];
