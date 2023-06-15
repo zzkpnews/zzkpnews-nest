@@ -1,5 +1,5 @@
 import { GroupContentPageTemplate } from '@/interface/template/GroupContentPageTemplate';
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { TemplateUtilsService } from '../utils/template-utils.service';
 import { DependenceFlags } from '@/constant/dep-flags';
 import { GroupRepository } from '@/model/entity/group/group.repository';
@@ -16,6 +16,11 @@ export class GroupContentPageTemplateService {
   ) {}
   async get(group_id: string): Promise<GroupContentPageTemplate> {
     const group = await this.groupRepository.findById(group_id);
+
+    if (group == null) {
+      throw new HttpException('This Resource Not Found', 404);
+    }
+
     const hot_list_news_count = 8;
     const article_list_page_size = 8;
     const video_list_page_size = 8;

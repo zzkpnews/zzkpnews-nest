@@ -2,7 +2,7 @@ import { DependenceFlags } from '@/constant/dep-flags';
 import { SectionContentPageTemplate } from '@/interface/template/SectionContentPageTemplate';
 import { SectionRepository } from '@/model/entity/section/section.repository';
 import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { TemplateUtilsService } from '../utils/template-utils.service';
 
 @Injectable()
@@ -16,6 +16,10 @@ export class SectionContentPageTemplateService {
   ) {}
   async get(section_id: string): Promise<SectionContentPageTemplate> {
     const section = await this.sectionRepository.findById(section_id);
+
+    if (section == null) {
+      throw new HttpException('This Resource Not Found', 404);
+    }
 
     const hot_list_page_size = 8;
     const article_list_page_size = 8;

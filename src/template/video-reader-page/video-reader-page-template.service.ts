@@ -2,7 +2,7 @@ import { DependenceFlags } from '@/constant/dep-flags';
 import { VideoReaderPageTemplate } from '@/interface/template/VideoReaderPageTemplate';
 import { CreatorRepository } from '@/model/entity/creator/creator.repository';
 import { VideoRepository } from '@/model/entity/video/video.repository';
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { TemplateUtilsService } from '../utils/template-utils.service';
 import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
 
@@ -19,6 +19,10 @@ export class VideoReaderPageTemplateService {
   ) {}
   async get(news_id: string): Promise<VideoReaderPageTemplate> {
     const video = await this.videoRepository.findById(news_id);
+
+    if (video == null) {
+      throw new HttpException('This Resource Not Found', 404);
+    }
 
     const creator = await this.creatorRepository.findById(video.creatorId);
 
