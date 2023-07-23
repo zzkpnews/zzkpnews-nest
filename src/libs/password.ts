@@ -35,11 +35,7 @@ export function getPasswordHash(password: string): {
  * @param targetHash
  * @returns
  */
-export function verifyPasswordHash(
-  password: string,
-  salt: string,
-  targetHash: string,
-): boolean {
+export function verifyPasswordHash(password: string, salt: string, targetHash: string): boolean {
   const current_hash = _generatePasswordHash(password, salt);
   return current_hash === targetHash;
 }

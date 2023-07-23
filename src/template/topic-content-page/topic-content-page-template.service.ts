@@ -1,8 +1,11 @@
+import { API_STATUS_CODE } from '@/constant/api-status-code';
 import { DependenceFlags } from '@/constant/dep-flags';
+import { APIException } from '@/exception/api.exception';
 import { TopicContentPageTemplate } from '@/interface/template/TopicContentPageTemplate';
 import { TopicRepository } from '@/model/entity/topic/topic.repository';
 import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
-import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import to from 'await-to-js';
 import { TemplateUtilsService } from '../utils/template-utils.service';
 
 @Injectable()
@@ -17,18 +20,18 @@ export class TopicContentPageTemplateService {
   async get(topic_id: string): Promise<TopicContentPageTemplate> {
     const topic = await this.topicRepository.findById(topic_id);
 
-    if (topic == null) {
-      throw new HttpException('This Resource Not Found', 404);
-    }
+    if (topic == null) throw new APIException(API_STATUS_CODE.ResourceNotFound, 404);
 
-    const news_list_size = 10;
+    const newsListSize = 10;
 
-    const news_list = (
-      await this.newsListItemRepository.find({
+    const [errNewsItems, newsItems] = await to(
+      this.newsListItemRepository.find({
         topicId: topic_id,
-        pageSize: news_list_size,
-      })
-    ).map((item) => ({
+        pageSize: newsListSize,
+      }),
+    );
+    if (errNewsItems) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    const newsList = newsItems.map((item) => ({
       newsId: item.newsId,
       newsTimestamp: item.timestamp,
       newsType: item.type,
@@ -40,9 +43,12 @@ export class TopicContentPageTemplateService {
       newsCitation: item.citation,
     }));
 
-    const total = await this.newsListItemRepository.count({
-      topicId: topic_id,
-    });
+    const [errNewsTotal, newsTotal] = await to(
+      this.newsListItemRepository.count({
+        topicId: topic_id,
+      }),
+    );
+    if (errNewsTotal) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
 
     return {
       topicId: topic.id,
@@ -51,7 +57,7 @@ export class TopicContentPageTemplateService {
       topicTitle: topic.title,
       topicCoverImage: topic.coverImage,
 
-      newsList: { initialList: news_list, total: total },
+      newsList: { initialList: newsList, total: newsTotal },
       ...(await this.templateUtils.getTemplateUtils()),
     };
   }

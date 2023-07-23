@@ -40,14 +40,12 @@ export class TemplateUtilsService {
       ),
     };
 
-    const friend_links = (await this.friendRepository.findAll()).map(
-      (item) => ({
-        friendId: item.id,
-        friendTitle: item.title,
-        friendUrl: item.url,
-        friendDescription: item.description,
-      }),
-    );
+    const friend_links = (await this.friendRepository.findAll()).map((item) => ({
+      friendId: item.id,
+      friendTitle: item.title,
+      friendUrl: item.url,
+      friendDescription: item.description,
+    }));
 
     return {
       siteTitle: site_meta?.site_title,
@@ -63,8 +61,7 @@ export class TemplateUtilsService {
       infoSecurityLicense: site_meta?.info_security_license,
       infoInstitution: site_meta?.info_institution,
       settingEnableMemoryMode: site_meta?.setting_enable_memory_mode ?? false,
-      settingEnableMaintainingMode:
-        site_meta?.setting_maintaining_mode ?? false,
+      settingEnableMaintainingMode: site_meta?.setting_maintaining_mode ?? false,
       navigation: navigation,
     };
   }

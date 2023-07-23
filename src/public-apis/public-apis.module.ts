@@ -5,11 +5,6 @@ import { GetNewsListAPIModule } from './get-news-list/get-news-list.module';
 import { SearchResourceModule } from './search-resource/search-resource.module';
 
 @Module({
-  imports: [
-    ViewsModule,
-    SearchResourceModule,
-    GetNewsListAPIModule,
-    GetBooksListAPIModule,
-  ],
+  imports: [ViewsModule, SearchResourceModule, GetNewsListAPIModule, GetBooksListAPIModule],
 })
 export class PublicApisModule {}

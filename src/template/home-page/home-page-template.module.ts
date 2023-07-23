@@ -6,12 +6,7 @@ import { TemplateUtilsModule } from '../utils/template-utils.module';
 import { HomePageTemplateService } from './home-page-template.service';
 
 @Module({
-  imports: [
-    EntityModule,
-    TemplateUtilsModule,
-    ObjectStorageModule,
-    ViewsModule,
-  ],
+  imports: [EntityModule, TemplateUtilsModule, ObjectStorageModule, ViewsModule],
   providers: [HomePageTemplateService],
   exports: [HomePageTemplateService],
 })

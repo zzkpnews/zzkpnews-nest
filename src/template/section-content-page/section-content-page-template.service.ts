@@ -1,8 +1,11 @@
+import { API_STATUS_CODE } from '@/constant/api-status-code';
 import { DependenceFlags } from '@/constant/dep-flags';
+import { APIException } from '@/exception/api.exception';
 import { SectionContentPageTemplate } from '@/interface/template/SectionContentPageTemplate';
 import { SectionRepository } from '@/model/entity/section/section.repository';
 import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
-import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import to from 'await-to-js';
 import { TemplateUtilsService } from '../utils/template-utils.service';
 
 @Injectable()
@@ -17,21 +20,21 @@ export class SectionContentPageTemplateService {
   async get(section_id: string): Promise<SectionContentPageTemplate> {
     const section = await this.sectionRepository.findById(section_id);
 
-    if (section == null) {
-      throw new HttpException('This Resource Not Found', 404);
-    }
+    if (section == null) throw new APIException(API_STATUS_CODE.ResourceNotFound, 404);
 
-    const hot_list_page_size = 8;
-    const article_list_page_size = 8;
-    const video_list_page_size = 8;
+    const hotListPageSize = 8;
+    const articleListPageSize = 8;
+    const videoListPageSize = 8;
 
-    const hot_list = (
-      await this.newsListItemRepository.find({
+    const [errHotItems, hotItems] = await to(
+      this.newsListItemRepository.find({
         onlySectionHot: true,
         sectionId: section_id,
-        pageSize: hot_list_page_size,
-      })
-    ).map((item) => ({
+        pageSize: hotListPageSize,
+      }),
+    );
+    if (errHotItems) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    const hotList = hotItems.map((item) => ({
       newsId: item.newsId,
       newsType: item.type,
       newsTitle: item.title,
@@ -41,17 +44,23 @@ export class SectionContentPageTemplateService {
       newsCoverImage: item.coverImage,
     }));
 
-    const articles_total_by_section = await this.newsListItemRepository.count({
-      type: 'article',
-      sectionId: section_id,
-    });
-    const articles_list_content = (
-      await this.newsListItemRepository.find({
+    const [errArticleTotal, articlesTotal] = await to(
+      this.newsListItemRepository.count({
         type: 'article',
         sectionId: section_id,
-        pageSize: article_list_page_size,
-      })
-    ).map((item) => ({
+      }),
+    );
+    if (errArticleTotal) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+
+    const [errArticleItems, articlesItems] = await to(
+      this.newsListItemRepository.find({
+        type: 'article',
+        sectionId: section_id,
+        pageSize: articleListPageSize,
+      }),
+    );
+    if (errArticleItems) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    const articleListContent = articlesItems.map((item) => ({
       newsId: item.newsId,
       articleTitle: item.title,
       articleLeadTitle: item.leadTitle,
@@ -60,17 +69,23 @@ export class SectionContentPageTemplateService {
       articleCoverImage: item.coverImage,
     }));
 
-    const videos_total_by_section = await this.newsListItemRepository.count({
-      type: 'video',
-      sectionId: section_id,
-    });
-    const videos_list_content = (
-      await this.newsListItemRepository.find({
+    const [errVideoTotal, videosTotal] = await to(
+      this.newsListItemRepository.count({
         type: 'video',
         sectionId: section_id,
-        pageSize: video_list_page_size,
-      })
-    ).map((item) => ({
+      }),
+    );
+    if (errVideoTotal) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+
+    const [errVideoItems, videoItems] = await to(
+      this.newsListItemRepository.find({
+        type: 'video',
+        sectionId: section_id,
+        pageSize: videoListPageSize,
+      }),
+    );
+    if (errVideoItems) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    const videoListContent = videoItems.map((item) => ({
       newsId: item.newsId,
       videoTitle: item.title,
       videoCitation: item.citation,
@@ -80,14 +95,14 @@ export class SectionContentPageTemplateService {
     return {
       sectionId: section.id,
       sectionTitle: section.title,
-      hotList: hot_list,
+      hotList: hotList,
       articleList: {
-        content: articles_list_content,
-        total: articles_total_by_section,
+        content: articleListContent,
+        total: articlesTotal,
       },
       videoList: {
-        content: videos_list_content,
-        total: videos_total_by_section,
+        content: videoListContent,
+        total: videosTotal,
       },
       ...(await this.templateUtils.getTemplateUtils()),
     };

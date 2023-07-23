@@ -1,13 +1,7 @@
 import { GetNewsListQueries } from '@/public-apis/get-news-list/get-news-list.dto';
 import { GetNewsListAPIContent } from '@/interface/api/get-news-list';
-import { APIInterceptor } from '@/pipes/api-interceptor.pipe';
-import {
-  Controller,
-  Get,
-  Header,
-  Query,
-  UseInterceptors,
-} from '@nestjs/common';
+import { APIInterceptor } from '@/rc/interceptor/api-response.interceptor';
+import { Controller, Get, Header, Query, UseInterceptors } from '@nestjs/common';
 import { GetNewsListService } from './get-news-list.service';
 
 @Controller('api/get-news-list')
@@ -17,9 +11,7 @@ export class GetNewsListAPIController {
   @Get()
   @UseInterceptors(APIInterceptor<GetNewsListAPIContent>)
   @Header('Access-Control-Allow-Origin', '*')
-  async getNewsList(
-    @Query() newsListQueries: GetNewsListQueries,
-  ): Promise<GetNewsListAPIContent> {
+  async getNewsList(@Query() newsListQueries: GetNewsListQueries): Promise<GetNewsListAPIContent> {
     const news_list = await this.getNewsListService.getList({
       sectionId: newsListQueries.section_id,
       creatorId: newsListQueries.creator_id,

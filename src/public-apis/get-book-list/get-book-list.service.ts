@@ -21,8 +21,7 @@ export class GetBooksListService {
       creatorId: options.creatorId,
       timestampStart: options.timestampStart,
       timestampEnd: options.timestampEnd,
-      pageSize:
-        options.pageSize && options.pageSize < 11 ? options.pageSize : 10,
+      pageSize: options.pageSize && options.pageSize < 11 ? options.pageSize : 10,
       pageNum: options.pageNum,
     });
     return book_items.map<ArrayElement<GetBookListAPIContent>>((book) => ({

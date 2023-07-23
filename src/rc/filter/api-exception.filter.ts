@@ -1,22 +1,17 @@
-import { API_STATUS_CODE } from '@/constant/api-status-code';
+import { APIException } from '@/exception/api.exception';
 import { APIResponse } from '@/interface/api/utils';
-import {
-  ExceptionFilter,
-  Catch,
-  ArgumentsHost,
-  HttpException,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { Response } from 'express';
 
-@Catch(HttpException)
-export class HttpExceptionFilter implements ExceptionFilter {
-  catch(exception: HttpException, host: ArgumentsHost) {
+@Catch(APIException)
+export class APIExceptionFilter implements ExceptionFilter {
+  catch(exception: APIException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const status = exception.getStatus();
+    const status = exception.httpStatusCode;
     response.header('Access-Control-Allow-Origin', '*');
     const response_json: APIResponse<null> = {
-      code: API_STATUS_CODE.ResourceNotFound,
+      code: exception.apiStatusCode,
       timestamp: Date.now(),
       message: exception.message,
       content: null,

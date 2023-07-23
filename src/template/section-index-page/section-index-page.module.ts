@@ -6,12 +6,7 @@ import { TemplateUtilsModule } from '../utils/template-utils.module';
 import { SectionIndexPageTemplateService } from './section-index-page.service';
 
 @Module({
-  imports: [
-    EntityModule,
-    TemplateUtilsModule,
-    ObjectStorageModule,
-    ViewsModule,
-  ],
+  imports: [EntityModule, TemplateUtilsModule, ObjectStorageModule, ViewsModule],
   providers: [SectionIndexPageTemplateService],
   exports: [SectionIndexPageTemplateService],
 })

@@ -1,9 +1,5 @@
 export class Group {
-  constructor(
-    private readonly _id: string,
-    private _title: string,
-    private _order: number,
-  ) {
+  constructor(private readonly _id: string, private _title: string, private _order: number) {
     this._id = _id;
     this._title = _title;
     this._order = _order;

@@ -7,9 +7,7 @@ import uuid from 'uuid';
 
 @Injectable()
 export class ArticleRepository {
-  constructor(
-    @Inject(DependenceFlags.DataSource) private readonly dataSource: Knex,
-  ) {}
+  constructor(@Inject(DependenceFlags.DataSource) private readonly dataSource: Knex) {}
 
   async create(
     title: string,
@@ -87,9 +85,7 @@ export class ArticleRepository {
   }
 
   async findById(newsId: string): Promise<Article | null> {
-    const result_fields = await this.dataSource<ArticleView>(
-      'article_view',
-    ).where({ newsId });
+    const result_fields = await this.dataSource<ArticleView>('article_view').where({ newsId });
     if (result_fields.length === 0) return null;
     return new Article(
       result_fields[0].newsId,

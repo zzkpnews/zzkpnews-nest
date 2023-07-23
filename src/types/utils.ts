@@ -1,3 +1,1 @@
-type ArrayElement<ArrType> = ArrType extends readonly (infer ElementType)[]
-  ? ElementType
-  : never;
+type ArrayElement<ArrType> = ArrType extends readonly (infer ElementType)[] ? ElementType : never;

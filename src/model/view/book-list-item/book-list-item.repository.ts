@@ -6,9 +6,7 @@ import { BookListItem } from './book-list-item.view';
 
 @Injectable()
 export class BookListItemRepository {
-  constructor(
-    @Inject(DependenceFlags.DataSource) private readonly dataSource: Knex,
-  ) {}
+  constructor(@Inject(DependenceFlags.DataSource) private readonly dataSource: Knex) {}
 
   async find(filterOptions: {
     pageSize?: number;
@@ -19,14 +17,7 @@ export class BookListItemRepository {
     closed?: boolean;
   }): Promise<BookListItem[]> {
     const query = this.dataSource<BooksListTable>('books_list');
-    const {
-      timestampEnd,
-      timestampStart,
-      creatorId,
-      closed,
-      pageNum,
-      pageSize,
-    } = filterOptions;
+    const { timestampEnd, timestampStart, creatorId, closed, pageNum, pageSize } = filterOptions;
     if (timestampEnd) query.where('timestamp', '<', timestampEnd);
     if (timestampStart) query.where('timestamp', '>', timestampStart);
     if (creatorId) query.where({ creatorId });

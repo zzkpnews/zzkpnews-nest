@@ -6,9 +6,7 @@ import { SearchListItem } from './search-list-item.view';
 
 @Injectable()
 export class SearchListItemRepository {
-  constructor(
-    @Inject(DependenceFlags.DataSource) private readonly dataSource: Knex,
-  ) {}
+  constructor(@Inject(DependenceFlags.DataSource) private readonly dataSource: Knex) {}
 
   async find(options: {
     searchWord: string;
@@ -17,10 +15,7 @@ export class SearchListItemRepository {
     timestampStart?: number;
     timestampEnd?: number;
   }): Promise<SearchListItem[]> {
-    const search_words = `%${mysql
-      .escape(options.searchWord)
-      .replace(/'/g, '')
-      .replace(/ /g, '%')}%`;
+    const search_words = `%${mysql.escape(options.searchWord).replace(/'/g, '').replace(/ /g, '%')}%`;
     const query = this.dataSource
       .select('*')
       .from((unx) =>
@@ -34,10 +29,9 @@ export class SearchListItemRepository {
             'timestamp',
           )
           .from('newsbase')
-          .whereRaw(
-            "CONCAT_WS('', newsbase.title, newsbase.subtitle, newsbase.leadTitle, newsbase.citation) LIKE ?",
-            [search_words],
-          )
+          .whereRaw("CONCAT_WS('', newsbase.title, newsbase.subtitle, newsbase.leadTitle, newsbase.citation) LIKE ?", [
+            search_words,
+          ])
           .union((trx) => {
             trx
               .select(
@@ -49,9 +43,7 @@ export class SearchListItemRepository {
                 'timestamp',
               )
               .from('book')
-              .whereRaw("CONCAT_WS('', book.title, book.citation) LIKE ?", [
-                search_words,
-              ]);
+              .whereRaw("CONCAT_WS('', book.title, book.citation) LIKE ?", [search_words]);
           })
           .as('books'),
       )

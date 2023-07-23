@@ -26,7 +26,7 @@ export class VideoReaderPageTemplateService {
 
     const creator = await this.creatorRepository.findById(video.creatorId);
 
-    const play_list_size = 7;
+    const play_list_size = 5;
 
     const play_list = (
       await this.newsListItemRepository.find({

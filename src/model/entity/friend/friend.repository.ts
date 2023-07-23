@@ -13,8 +13,6 @@ export class FriendRepository {
 
   async findAll(): Promise<Friend[]> {
     const result_fields = await this.dataSource<FriendTable>('friend');
-    return result_fields.map(
-      (item) => new Friend(item.id, item.title, item.url, item.description),
-    );
+    return result_fields.map((item) => new Friend(item.id, item.title, item.url, item.description));
   }
 }

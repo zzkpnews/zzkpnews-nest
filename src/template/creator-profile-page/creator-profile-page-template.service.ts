@@ -1,9 +1,12 @@
+import { API_STATUS_CODE } from '@/constant/api-status-code';
 import { DependenceFlags } from '@/constant/dep-flags';
+import { APIException } from '@/exception/api.exception';
 import { CreatorProfilePageTemplate } from '@/interface/template/CreatorProfilePageTemplate';
 import { CreatorRepository } from '@/model/entity/creator/creator.repository';
 import { BookListItemRepository } from '@/model/view/book-list-item/book-list-item.repository';
 import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
-import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import to from 'await-to-js';
 import { TemplateUtilsService } from '../utils/template-utils.service';
 
 @Injectable()
@@ -18,24 +21,24 @@ export class CreatorProfilePageTemplateService {
     private readonly templateUtils: TemplateUtilsService,
   ) {}
   async get(creator_id: string): Promise<CreatorProfilePageTemplate> {
-    const creator = await this.creatorRepository.findById(creator_id);
+    const [errCreator, creator] = await to(this.creatorRepository.findById(creator_id));
+    if (creator == null) throw new APIException(API_STATUS_CODE.ResourceNotFound, 404);
+    if (errCreator) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
 
-    if (creator == null) {
-      throw new HttpException('This creator does not exist', 404);
-    }
+    const recentListPageSize = 10;
+    const articlesListPageSize = 10;
+    const videosListPageSize = 10;
+    const booksListPageSize = 5;
+    const hotListSize = 10;
 
-    const recent_list_page_size = 10;
-    const articles_list_page_size = 10;
-    const videos_list_page_size = 10;
-    const books_list_page_size = 5;
-    const hot_list_news_size = 10;
-
-    const recent_list_content = (
-      await this.newsListItemRepository.find({
+    const [errRecentItems, recentItems] = await to(
+      this.newsListItemRepository.find({
         creatorId: creator_id,
-        pageSize: recent_list_page_size,
-      })
-    ).map((news_item) => ({
+        pageSize: recentListPageSize,
+      }),
+    );
+    if (errRecentItems) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    const recentListContent = recentItems.map((news_item) => ({
       newsId: news_item.newsId,
       newsTimestamp: news_item.timestamp,
       newsType: news_item.type,
@@ -47,13 +50,15 @@ export class CreatorProfilePageTemplateService {
       newsCitation: news_item.citation,
     }));
 
-    const article_list_content = (
-      await this.newsListItemRepository.find({
+    const [errArticleItems, articleItems] = await to(
+      this.newsListItemRepository.find({
         type: 'article' as 'article' | 'video' | 'all',
         creatorId: creator_id,
-        pageSize: articles_list_page_size,
-      })
-    ).map((news_item) => ({
+        pageSize: articlesListPageSize,
+      }),
+    );
+    if (errArticleItems) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    const articleListContent = articleItems.map((news_item) => ({
       newsId: news_item.newsId,
       articleTimestamp: news_item.timestamp,
       articleType: news_item.type,
@@ -65,13 +70,15 @@ export class CreatorProfilePageTemplateService {
       articleCitation: news_item.citation,
     }));
 
-    const video_list_content = (
-      await this.newsListItemRepository.find({
+    const [errVideoItems, videoItems] = await to(
+      this.newsListItemRepository.find({
         type: 'video' as 'article' | 'video' | 'all',
         creatorId: creator_id,
-        pageSize: videos_list_page_size,
-      })
-    ).map((news_item) => ({
+        pageSize: videosListPageSize,
+      }),
+    );
+    if (errVideoItems) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    const videoListContent = videoItems.map((news_item) => ({
       newsId: news_item.newsId,
       videoTimestamp: news_item.timestamp,
       videoType: news_item.type,
@@ -83,12 +90,14 @@ export class CreatorProfilePageTemplateService {
       videoCitation: news_item.citation,
     }));
 
-    const book_list_content = (
-      await this.booksListItemRepository.find({
+    const [errBookItems, bookItems] = await to(
+      this.booksListItemRepository.find({
         creatorId: creator_id,
-        pageSize: books_list_page_size,
-      })
-    ).map((book) => ({
+        pageSize: booksListPageSize,
+      }),
+    );
+    if (errBookItems) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    const bookListContent = bookItems.map((book) => ({
       bookTitle: book.title,
       bookCoverImage: book.coverImage,
       bookId: book.bookId,
@@ -96,34 +105,50 @@ export class CreatorProfilePageTemplateService {
       bookTimestamp: book.timestamp,
     }));
 
-    const hot_list = (
-      await this.newsListItemRepository.find({
+    const [errHotItems, hotItems] = await to(
+      this.newsListItemRepository.find({
         creatorId: creator_id,
-        pageSize: hot_list_news_size,
+        pageSize: hotListSize,
         onlyCreatorHot: true,
-      })
-    ).map((item) => ({
+      }),
+    );
+    if (errHotItems) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    const hotList = hotItems.map((item) => ({
       newsId: item.newsId,
       newsType: item.type,
       newsTitle: item.title,
       newsSubtitle: item.subtitle,
     }));
 
-    const news_total_by_creator = await this.newsListItemRepository.count({
-      creatorId: creator_id,
-    });
-    const article_total_by_creator = await this.newsListItemRepository.count({
-      creatorId: creator_id,
-      type: 'article',
-    });
+    const [errNewsTotal, newsTotal] = await to(
+      this.newsListItemRepository.count({
+        creatorId: creator_id,
+      }),
+    );
+    if (errNewsTotal) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
 
-    const video_total_by_creator = await this.newsListItemRepository.count({
-      creatorId: creator_id,
-      type: 'video',
-    });
-    const book_total_by_creator = await this.booksListItemRepository.count({
-      creatorId: creator_id,
-    });
+    const [errArticleTotal, articleTotal] = await to(
+      this.newsListItemRepository.count({
+        creatorId: creator_id,
+        type: 'article',
+      }),
+    );
+    if (errArticleTotal) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+
+    const [errVideoTotal, videoTotal] = await to(
+      this.newsListItemRepository.count({
+        creatorId: creator_id,
+        type: 'video',
+      }),
+    );
+    if (errVideoTotal) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+
+    const [errBookTotal, bookTotal] = await to(
+      this.booksListItemRepository.count({
+        creatorId: creator_id,
+      }),
+    );
+    if (errBookTotal) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
 
     return {
       creatorId: creator.id,
@@ -139,22 +164,22 @@ export class CreatorProfilePageTemplateService {
       creatorAddress: creator.address,
 
       recentList: {
-        content: recent_list_content,
-        total: news_total_by_creator,
+        content: recentListContent,
+        total: newsTotal,
       },
       articleList: {
-        content: article_list_content,
-        total: article_total_by_creator,
+        content: articleListContent,
+        total: articleTotal,
       },
       videoList: {
-        content: video_list_content,
-        total: video_total_by_creator,
+        content: videoListContent,
+        total: videoTotal,
       },
       bookList: {
-        content: book_list_content,
-        total: book_total_by_creator,
+        content: bookListContent,
+        total: bookTotal,
       },
-      hotList: hot_list,
+      hotList: hotList,
 
       ...(await this.templateUtils.getTemplateUtils()),
     };

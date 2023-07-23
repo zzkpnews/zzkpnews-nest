@@ -12,9 +12,7 @@ export class CarouselRepository {
   ) {}
 
   async findAll(): Promise<Carousel[]> {
-    const result_fields = await this.dataSource<CarouselTable>(
-      'carousel',
-    ).orderBy('order');
+    const result_fields = await this.dataSource<CarouselTable>('carousel').orderBy('order');
     return result_fields.map((item) => new Carousel(item.newsId, item.order));
   }
 }

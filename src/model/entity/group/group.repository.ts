@@ -13,22 +13,14 @@ export class GroupRepository {
   }
 
   async findById(id: string): Promise<Group | null> {
-    const result_fields = await this.dataSource('group')
-      .select('id', 'title', 'order')
-      .where({ id });
+    const result_fields = await this.dataSource('group').select('id', 'title', 'order').where({ id });
     if (result_fields.length === 0) return null;
-    return new Group(
-      result_fields[0].id,
-      result_fields[0].title,
-      result_fields[0].order,
-    );
+    return new Group(result_fields[0].id, result_fields[0].title, result_fields[0].order);
   }
 
   async findAll(): Promise<Group[]> {
     const result_fields = await this.dataSource<GroupTable>('group');
-    const result: Group[] = result_fields.map(
-      (item) => new Group(item.id, item.title, item.order),
-    );
+    const result: Group[] = result_fields.map((item) => new Group(item.id, item.title, item.order));
     return result;
   }
 
@@ -36,10 +28,7 @@ export class GroupRepository {
     const result_fields = await this.dataSource<SectionTable>('section').where({
       belongingGroupId: groupId,
     });
-    return result_fields.map(
-      (item) =>
-        new Section(item.id, item.title, item.order, item.belongingGroupId),
-    );
+    return result_fields.map((item) => new Section(item.id, item.title, item.order, item.belongingGroupId));
   }
 
   async save(group: Group) {

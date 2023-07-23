@@ -32,8 +32,7 @@ export class GetNewsListService {
       type: options.type,
       timestampStart: options.timestampStart,
       timestampEnd: options.timestampEnd,
-      pageSize:
-        options.pageSize && options.pageSize < 11 ? options.pageSize : 10,
+      pageSize: options.pageSize && options.pageSize < 11 ? options.pageSize : 10,
       pageNum: options.pageNum,
       onlyHomeHot: options.onlyHomeHot,
       onlySectionHot: options.onlySectionHot,

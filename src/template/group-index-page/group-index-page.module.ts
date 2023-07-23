@@ -6,12 +6,7 @@ import { TemplateUtilsModule } from '../utils/template-utils.module';
 import { GroupIndexPageTemplateService } from './group-index-page.service';
 
 @Module({
-  imports: [
-    EntityModule,
-    TemplateUtilsModule,
-    ObjectStorageModule,
-    ViewsModule,
-  ],
+  imports: [EntityModule, TemplateUtilsModule, ObjectStorageModule, ViewsModule],
 
   providers: [GroupIndexPageTemplateService],
   exports: [GroupIndexPageTemplateService],

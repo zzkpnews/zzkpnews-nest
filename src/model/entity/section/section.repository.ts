@@ -5,16 +5,9 @@ import { DependenceFlags } from '@/constant/dep-flags';
 import { Inject } from '@nestjs/common';
 
 export class SectionRepository {
-  constructor(
-    @Inject(DependenceFlags.DataSource) private readonly dataSource: Knex,
-  ) {}
+  constructor(@Inject(DependenceFlags.DataSource) private readonly dataSource: Knex) {}
 
-  async create(
-    id: string,
-    title: string,
-    order: number,
-    belongingGroupId: string,
-  ) {
+  async create(id: string, title: string, order: number, belongingGroupId: string) {
     return new Section(id, title, order, belongingGroupId);
   }
 
@@ -32,20 +25,14 @@ export class SectionRepository {
 
   async findAll(): Promise<Section[]> {
     const result_fields = await this.dataSource<SectionTable>('section');
-    return result_fields.map(
-      (item) =>
-        new Section(item.id, item.title, item.order, item.belongingGroupId),
-    );
+    return result_fields.map((item) => new Section(item.id, item.title, item.order, item.belongingGroupId));
   }
 
   async findByGroupId(groupId: string): Promise<Section[]> {
     const result_fields = await this.dataSource<SectionTable>('section').where({
       belongingGroupId: groupId,
     });
-    return result_fields.map(
-      (item) =>
-        new Section(item.id, item.title, item.order, item.belongingGroupId),
-    );
+    return result_fields.map((item) => new Section(item.id, item.title, item.order, item.belongingGroupId));
   }
 
   async findById(id: string): Promise<Section | null> {
@@ -62,9 +49,7 @@ export class SectionRepository {
   }
 
   async deleteByGroupId(groupId: string) {
-    await this.dataSource<SectionTable>('section')
-      .where({ belongingGroupId: groupId })
-      .del();
+    await this.dataSource<SectionTable>('section').where({ belongingGroupId: groupId }).del();
   }
 
   async deleteById(id: string) {

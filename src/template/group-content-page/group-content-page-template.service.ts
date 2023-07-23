@@ -1,9 +1,12 @@
-import { GroupContentPageTemplate } from '@/interface/template/GroupContentPageTemplate';
-import { HttpException, Inject, Injectable } from '@nestjs/common';
-import { TemplateUtilsService } from '../utils/template-utils.service';
+import { API_STATUS_CODE } from '@/constant/api-status-code';
 import { DependenceFlags } from '@/constant/dep-flags';
+import { APIException } from '@/exception/api.exception';
+import { GroupContentPageTemplate } from '@/interface/template/GroupContentPageTemplate';
 import { GroupRepository } from '@/model/entity/group/group.repository';
 import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
+import { Inject, Injectable } from '@nestjs/common';
+import to from 'await-to-js';
+import { TemplateUtilsService } from '../utils/template-utils.service';
 
 @Injectable()
 export class GroupContentPageTemplateService {
@@ -15,23 +18,23 @@ export class GroupContentPageTemplateService {
     private readonly templateUtils: TemplateUtilsService,
   ) {}
   async get(group_id: string): Promise<GroupContentPageTemplate> {
-    const group = await this.groupRepository.findById(group_id);
+    const [errGroup, group] = await to(this.groupRepository.findById(group_id));
+    if (errGroup) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    if (group == null) throw new APIException(API_STATUS_CODE.ResourceNotFound, 404);
 
-    if (group == null) {
-      throw new HttpException('This Resource Not Found', 404);
-    }
+    const hotListSize = 8;
+    const articleListPageSize = 8;
+    const videoListPageSize = 8;
 
-    const hot_list_news_count = 8;
-    const article_list_page_size = 8;
-    const video_list_page_size = 8;
-
-    const hot_list = (
-      await this.newsListItemRepository.find({
+    const [errHotItems, hotItems] = await to(
+      this.newsListItemRepository.find({
         groupId: group_id,
         onlySectionHot: true,
-        pageSize: hot_list_news_count,
-      })
-    ).map((item) => ({
+        pageSize: hotListSize,
+      }),
+    );
+    if (errHotItems) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    const hotList = hotItems.map((item) => ({
       newsId: item.newsId,
       newsType: item.type,
       newsTitle: item.title,
@@ -40,53 +43,65 @@ export class GroupContentPageTemplateService {
       newsCitation: item.citation,
     }));
 
-    const article_list_content = (
-      await this.newsListItemRepository.find({
+    const [errArticleItems, articleItems] = await to(
+      this.newsListItemRepository.find({
         type: 'article',
         groupId: group_id,
-        pageSize: article_list_page_size,
-      })
-    ).map((item) => ({
+        pageSize: articleListPageSize,
+      }),
+    );
+    if (errArticleItems) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    const articleListContent = articleItems.map((item) => ({
       newsId: item.newsId,
       articleTitle: item.title,
       articleSubtitle: item.subtitle,
       articleCoverImage: item.coverImage,
       articleCitation: item.citation,
     }));
-    const article_total_by_group = await this.newsListItemRepository.count({
-      type: 'article',
-      groupId: group_id,
-    });
 
-    const video_list_content = (
-      await this.newsListItemRepository.find({
+    const [errArticleTotal, articleTotal] = await to(
+      this.newsListItemRepository.count({
+        type: 'article',
+        groupId: group_id,
+      }),
+    );
+    if (errArticleTotal) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+
+    const [errVideoItems, videoItems] = await to(
+      this.newsListItemRepository.find({
         type: 'video',
         groupId: group_id,
-        pageSize: video_list_page_size,
-      })
-    ).map((item) => ({
+        pageSize: videoListPageSize,
+      }),
+    );
+    if (errVideoItems) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    const videoListContent = videoItems.map((item) => ({
       newsId: item.newsId,
       videoTitle: item.title,
       videoSubtitle: item.subtitle,
       videoCoverImage: item.coverImage,
       videoCitation: item.citation,
     }));
-    const video_total_by_group = await this.newsListItemRepository.count({
-      type: 'video',
-      groupId: group_id,
-    });
+
+    const [errVideoTotal, videoTotal] = await to(
+      this.newsListItemRepository.count({
+        type: 'video',
+        groupId: group_id,
+      }),
+    );
+    if (errVideoTotal) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
 
     return {
       groupId: group.id,
       groupTitle: group.title,
-      hotList: hot_list,
+      hotList: hotList,
       articleList: {
-        content: article_list_content,
-        total: article_total_by_group,
+        content: articleListContent,
+        total: articleTotal,
       },
       videoList: {
-        content: video_list_content,
-        total: video_total_by_group,
+        content: videoListContent,
+        total: videoTotal,
       },
       ...(await this.templateUtils.getTemplateUtils()),
     };

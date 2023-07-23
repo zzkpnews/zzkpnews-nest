@@ -1,12 +1,6 @@
 import { GetBookListAPIContent } from '@/interface/api/get-book-list';
-import { APIInterceptor } from '@/pipes/api-interceptor.pipe';
-import {
-  Controller,
-  Get,
-  Header,
-  Query,
-  UseInterceptors,
-} from '@nestjs/common';
+import { APIInterceptor } from '@/rc/interceptor/api-response.interceptor';
+import { Controller, Get, Header, Query, UseInterceptors } from '@nestjs/common';
 import { GetBooksListQueries } from './get-book-list.dto';
 import { GetBooksListService } from './get-book-list.service';
 
@@ -17,9 +11,7 @@ export class GetBooksListAPIController {
   @Get()
   @UseInterceptors(APIInterceptor<GetBookListAPIContent>)
   @Header('Access-Control-Allow-Origin', '*')
-  async getBooksList(
-    @Query() booksListQueries: GetBooksListQueries,
-  ): Promise<GetBookListAPIContent> {
+  async getBooksList(@Query() booksListQueries: GetBooksListQueries): Promise<GetBookListAPIContent> {
     return await this.getBooksListService.getList({
       creatorId: booksListQueries.creator_id,
       timestampStart: booksListQueries.timestamp_start,

@@ -5,9 +5,7 @@ import { NewsListItem } from './news-list-item.view';
 
 @Injectable()
 export class NewsListItemRepository {
-  constructor(
-    @Inject(DependenceFlags.DataSource) private readonly dataSource: Knex,
-  ) {}
+  constructor(@Inject(DependenceFlags.DataSource) private readonly dataSource: Knex) {}
 
   async find(filterOptions: {
     type?: 'article' | 'video' | 'all';
@@ -109,9 +107,7 @@ export class NewsListItemRepository {
   }
 
   async findById(newsId: string): Promise<NewsListItem | null> {
-    const result_fields = await this.dataSource<NewsListItem>(
-      'news_list',
-    ).where({ newsId });
+    const result_fields = await this.dataSource<NewsListItem>('news_list').where({ newsId });
     return result_fields.length === 0 ? null : result_fields[0];
   }
 }

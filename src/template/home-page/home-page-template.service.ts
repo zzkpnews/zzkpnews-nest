@@ -42,9 +42,7 @@ export class HomePageTemplateService {
         (
           await this.carouselRepository.findAll()
         ).map(async (item) => {
-          const news_list_item = await this.newsListRepository.findById(
-            item.id,
-          );
+          const news_list_item = await this.newsListRepository.findById(item.id);
           return {
             newsId: item.id,
             newsTimestamp: news_list_item.timestamp,
@@ -64,9 +62,7 @@ export class HomePageTemplateService {
         topicLogo: item.logo,
       })),
 
-      recentBooks: (
-        await this.booksListItemRepository.find({ pageSize: 5 })
-      ).map((book) => ({
+      recentBooks: (await this.booksListItemRepository.find({ pageSize: 5 })).map((book) => ({
         bookId: book.bookId,
         bookTitle: book.title,
         bookCoverImage: book.coverImage,

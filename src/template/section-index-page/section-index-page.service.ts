@@ -4,6 +4,9 @@ import { SectionRepository } from '@/model/entity/section/section.repository';
 import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
 import { Inject, Injectable } from '@nestjs/common';
 import { TemplateUtilsService } from '../utils/template-utils.service';
+import to from 'await-to-js';
+import { API_STATUS_CODE } from '@/constant/api-status-code';
+import { APIException } from '@/exception/api.exception';
 
 @Injectable()
 export class SectionIndexPageTemplateService {
@@ -17,32 +20,38 @@ export class SectionIndexPageTemplateService {
   async get(): Promise<SectionIndexPageTemplate> {
     const sections = await this.sectionRepository.findAll();
 
-    const recent_list_size = 10;
-    const hot_list_size = 10;
+    const recentListSize = 10;
+    const hotListSize = 10;
 
-    const recent_lists = await Promise.all(
-      sections.map((section) =>
-        this.newsListRepository.find({
-          sectionId: section.id,
-          pageSize: recent_list_size,
-        }),
+    const [errRecentLists, recentLists] = await to(
+      Promise.all(
+        sections.map((section) =>
+          this.newsListRepository.find({
+            sectionId: section.id,
+            pageSize: recentListSize,
+          }),
+        ),
       ),
     );
+    if (errRecentLists) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
 
-    const hot_lists = await Promise.all(
-      sections.map((section) =>
-        this.newsListRepository.find({
-          onlySectionHot: true,
-          sectionId: section.id,
-          pageSize: hot_list_size,
-        }),
+    const [errHotLists, hotLists] = await to(
+      Promise.all(
+        sections.map((section) =>
+          this.newsListRepository.find({
+            onlySectionHot: true,
+            sectionId: section.id,
+            pageSize: hotListSize,
+          }),
+        ),
       ),
     );
+    if (errHotLists) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
 
     const index = sections.map((section, index) => ({
       sectionId: section.id,
       sectionTitle: section.title,
-      recentList: recent_lists[index].map((item) => ({
+      recentList: recentLists[index].map((item) => ({
         newsId: item.newsId,
         newsTimestamp: item.timestamp,
         newsKeywords: item.keywords,
@@ -54,7 +63,7 @@ export class SectionIndexPageTemplateService {
         newsCoverImage: item.coverImage,
         newsCitation: item.citation,
       })),
-      hotList: hot_lists[index].map((item) => ({
+      hotList: hotLists[index].map((item) => ({
         newsId: item.newsId,
         newsTimestamp: item.timestamp,
         newsKeywords: item.keywords,

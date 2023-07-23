@@ -20,16 +20,7 @@ export class BookRepository {
   ): Promise<Book> {
     const id = uuid.v4();
     const timestamp = Date.now();
-    return new Book(
-      id,
-      creatorId,
-      title,
-      citation,
-      keywords,
-      coverImage,
-      timestamp,
-      false,
-    );
+    return new Book(id, creatorId, title, citation, keywords, coverImage, timestamp, false);
   }
 
   async save(book: Book) {

@@ -11,14 +11,7 @@ export class TopicRepository {
     private readonly dataSource: Knex,
   ) {}
 
-  async create(
-    id: string,
-    title: string,
-    logo: string,
-    coverImage: string,
-    description: string,
-    order: number,
-  ) {
+  async create(id: string, title: string, logo: string, coverImage: string, description: string, order: number) {
     return new Topic(id, title, logo, coverImage, description, order);
   }
 
@@ -49,19 +42,9 @@ export class TopicRepository {
   }
 
   async findAll(): Promise<Topic[]> {
-    const result_fields = await this.dataSource<TopicTable>('topic').orderBy(
-      'order',
-    );
+    const result_fields = await this.dataSource<TopicTable>('topic').orderBy('order');
     return result_fields.map(
-      (item) =>
-        new Topic(
-          item.id,
-          item.title,
-          item.logo,
-          item.coverImage,
-          item.description,
-          item.order,
-        ),
+      (item) => new Topic(item.id, item.title, item.logo, item.coverImage, item.description, item.order),
     );
   }
 

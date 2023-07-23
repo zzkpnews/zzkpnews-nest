@@ -34,21 +34,14 @@ export class NotificationRepository {
     const result_fields = await this.dataSource('notification')
       .select('id', 'timestamp', 'receiver', 'read')
       .where({ receiver: creatorId });
-    return result_fields.map(
-      (item) =>
-        new Notification(item.id, item.timestamp, item.receiver, item.read),
-    );
+    return result_fields.map((item) => new Notification(item.id, item.timestamp, item.receiver, item.read));
   }
 
   async deleteById(id: string) {
-    await this.dataSource<NotificationTable>('notification')
-      .where({ id })
-      .del();
+    await this.dataSource<NotificationTable>('notification').where({ id }).del();
   }
 
   async deleteByCreatorId(creatorId: string) {
-    await this.dataSource<NotificationTable>('notification')
-      .where({ receiverId: creatorId })
-      .del();
+    await this.dataSource<NotificationTable>('notification').where({ receiverId: creatorId }).del();
   }
 }

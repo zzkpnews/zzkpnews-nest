@@ -7,9 +7,7 @@ import { Video } from './video.entity';
 
 @Injectable()
 export class VideoRepository {
-  constructor(
-    @Inject(DependenceFlags.DataSource) private readonly dataSource: Knex,
-  ) {}
+  constructor(@Inject(DependenceFlags.DataSource) private readonly dataSource: Knex) {}
 
   async create(
     title: string,
