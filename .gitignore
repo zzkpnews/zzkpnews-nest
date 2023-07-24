@@ -34,7 +34,10 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# data
-data/*
+# data and log
+/data
+/log
 
 .VSCodeCounter
+
+*.env

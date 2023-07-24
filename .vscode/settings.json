@@ -5,6 +5,7 @@
     "newsbases",
     "newsitem",
     "typeorm",
-    "wechat"
+    "wechat",
+    "ZZKPNEWS"
   ]
 }

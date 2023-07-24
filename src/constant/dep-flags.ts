@@ -1,3 +1,6 @@
+/**
+ * The dependency flag for making inject.
+ */
 export const DependenceFlags = {
   DataSource: Symbol('data source'),
   ObjectStorage: Symbol('object storage'),
