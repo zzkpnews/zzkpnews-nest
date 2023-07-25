@@ -1,19 +1,23 @@
 import { DependenceFlags } from '@/constant/dep-flags';
+import { ConfigService } from '@nestjs/config';
 import Knex from 'knex';
 
 export const DatabaseProviders = [
   {
     provide: DependenceFlags.DataSource,
-    useValue: Knex({
-      client: 'mysql2',
-      connection: {
-        host: 'localhost',
-        port: 3306,
-        user: 'zzkpnews',
-        password: 'zzkpnews',
-        database: 'zzkpnews_data',
-        charset: 'utf8mb4',
-      },
-    }),
+    inject: [ConfigService],
+    useFactory: (config: ConfigService) => {
+      return Knex({
+        client: 'mysql2',
+        connection: {
+          host: config.get('mysql.hostname'),
+          port: config.get('mysql.port'),
+          user: config.get('mysql.username'),
+          password: config.get('mysql.password'),
+          database: config.get('mysql.database'),
+          charset: 'utf8mb4',
+        },
+      });
+    },
   },
 ];

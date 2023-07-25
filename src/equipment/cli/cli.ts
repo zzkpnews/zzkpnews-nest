@@ -1,6 +1,6 @@
 import { CurrentVersion } from '@/constant/config';
 import cli from 'commander';
-import { red, bold, cyan } from 'colors';
+import { red, bold, cyan, underline } from 'colors';
 
 export function printLOGO() {
   console.log(
@@ -12,8 +12,12 @@ export function printLOGO() {
    /___|/___||_|\\_\\| .__/ |_| |_| \\___|  \\_/\\_/  |___/
                    |_|
   
-   ${bold(cyan('zzkpnews-website Backend Server'))} ${bold(CurrentVersion)}
-   Copyright © 中原科技网 All Rights Reserved.
+   ${bold(cyan('zzkpnews-website Backend Server'))} -version ${bold(CurrentVersion)}
+   Copyright © zzkpnews All Rights Reserved.
+   Powered By ${underline('terminels.com')}
+  
+   ${process.env.NODE_ENV === 'dev' && bold('NOTE: YOU ARE RUNNING IN DEVELOPMENT MODE.')}
+  
     `,
   );
 }

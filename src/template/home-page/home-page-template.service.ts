@@ -10,6 +10,7 @@ import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-it
 import { ObjectStorage } from '@/repository/object-storage/object-storage';
 import { Inject, Injectable } from '@nestjs/common';
 import { TemplateUtilsService } from '../utils/template-utils.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class HomePageTemplateService {
@@ -25,6 +26,7 @@ export class HomePageTemplateService {
     @Inject(DependenceFlags.BooksListItemRepository)
     private readonly booksListItemRepository: BookListItemRepository,
     private readonly templateUtils: TemplateUtilsService,
+    private readonly configure: ConfigService,
   ) {}
   async get(): Promise<HomePageTemplate> {
     return {
