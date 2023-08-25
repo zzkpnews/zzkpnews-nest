@@ -48,20 +48,20 @@ export class TemplateUtilsService {
     }));
 
     return {
-      siteTitle: site_meta?.site_title,
-      siteDescription: site_meta?.site_description,
-      siteKeywords: site_meta?.site_keywords,
-      contactAddress: site_meta?.contact_address ?? null,
-      contactEmail: site_meta?.contact_email,
-      contactPhone: site_meta?.contact_phone,
-      contactWechat: site_meta?.contact_wechat,
+      siteTitle: site_meta?.siteTitle,
+      siteDescription: site_meta?.siteDescription,
+      siteKeywords: site_meta?.siteKeywords,
+      contactAddress: site_meta?.contactAddress ?? null,
+      contactEmail: site_meta?.contactEmail,
+      contactPhone: site_meta?.contactPhone,
+      contactWechat: site_meta?.contactWechat,
       friendLinks: friend_links,
-      infoTechnologySupport: site_meta?.info_technology_support,
-      infoIcpLicense: site_meta?.info_icp_license,
-      infoSecurityLicense: site_meta?.info_security_license,
-      infoInstitution: site_meta?.info_institution,
-      settingEnableMemoryMode: site_meta?.setting_enable_memory_mode ?? false,
-      settingEnableMaintainingMode: site_meta?.setting_maintaining_mode ?? false,
+      infoTechnologySupport: site_meta?.infoTechnologySupport,
+      infoIcpLicense: site_meta?.infoIcpLicense,
+      infoSecurityLicense: site_meta?.infoSecurityLicense,
+      infoInstitution: site_meta?.infoInstitution,
+      settingEnableMemoryMode: site_meta?.settingEnableMemoryMode ?? false,
+      settingEnableMaintainingMode: site_meta?.settingMaintainingMode ?? false,
       navigation: navigation,
     };
   }
