@@ -1,4 +1,4 @@
-export type GetBookAPI = {
+export type GetBookAPIContent = {
   id: string;
   creatorId: string;
   title: string;

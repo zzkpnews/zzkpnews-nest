@@ -1,4 +1,4 @@
-export type GetSiteMetaAPI = {
+export type GetSiteMetaAPIContent = {
   siteTitle: string;
   siteDescription: string | null;
   siteKeywords: string | null;

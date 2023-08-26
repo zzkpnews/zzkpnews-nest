@@ -1,7 +1,7 @@
 import { API_STATUS_CODE } from '@/constant/api-status-code';
 import { DependenceFlags } from '@/constant/dep-flags';
 import { ArticleContentFilePath } from '@/constant/paths';
-import { GetArticleAPI } from '@/interface/api/get-article';
+import { GetArticleAPIContent } from '@/interface/api/get-article';
 import { ArticleRepository } from '@/model/entity/article/article.repository';
 import { APIException } from '@/rc/exception/api.exception';
 import { Inject, Injectable } from '@nestjs/common';
@@ -14,7 +14,7 @@ export class GetArticleAPIService {
     @Inject(DependenceFlags.ArticleRepository)
     private readonly articleRepository: ArticleRepository,
   ) {}
-  async get(newsId: string): Promise<GetArticleAPI | null> {
+  async get(newsId: string): Promise<GetArticleAPIContent | null> {
     const [errArticle, article] = await to(this.articleRepository.findById(newsId));
     if (errArticle) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
     if (article == null) throw new APIException(API_STATUS_CODE.ResourceNotFound, 404);

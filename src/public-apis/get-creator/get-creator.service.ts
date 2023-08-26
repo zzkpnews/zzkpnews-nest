@@ -1,6 +1,6 @@
 import { API_STATUS_CODE } from '@/constant/api-status-code';
 import { DependenceFlags } from '@/constant/dep-flags';
-import { GetCreatorAPI } from '@/interface/api/get-creator';
+import { GetCreatorAPIContent } from '@/interface/api/get-creator';
 import { CreatorRepository } from '@/model/entity/creator/creator.repository';
 import { APIException } from '@/rc/exception/api.exception';
 import { Inject, Injectable } from '@nestjs/common';
@@ -12,7 +12,7 @@ export class GetCreatorAPIService {
     @Inject(DependenceFlags.CreatorRepository)
     private readonly creatorRepository: CreatorRepository,
   ) {}
-  async get(creatorId: string): Promise<GetCreatorAPI | null> {
+  async get(creatorId: string): Promise<GetCreatorAPIContent | null> {
     const [errCreator, creator] = await to(this.creatorRepository.findById(creatorId));
     if (errCreator) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
     if (creator == null) throw new APIException(API_STATUS_CODE.ResourceNotFound, 404);

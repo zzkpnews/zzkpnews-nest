@@ -1,4 +1,4 @@
-export type GetCreatorAPI = {
+export type GetCreatorAPIContent = {
   id: string;
   title: string;
   phone: string;

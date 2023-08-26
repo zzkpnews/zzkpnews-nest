@@ -1,4 +1,4 @@
-export type GetArticleAPI = {
+export type GetArticleAPIContent = {
   id: string;
   timestamp: number;
   title: string;

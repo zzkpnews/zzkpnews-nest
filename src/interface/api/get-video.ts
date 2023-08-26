@@ -1,4 +1,4 @@
-export type GetVideoAPI = {
+export type GetVideoAPIContent = {
   id: string;
   timestamp: number;
   title: string;

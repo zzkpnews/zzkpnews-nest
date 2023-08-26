@@ -4,7 +4,7 @@ import { APIInterceptor } from '@/rc/interceptor/api-response.interceptor';
 import { Controller, Get, Header, Query, UseInterceptors } from '@nestjs/common';
 import { GetNewsListService } from './get-news-list.service';
 
-@Controller('api/get-news-list')
+@Controller('public-api/get-news-list')
 export class GetNewsListAPIController {
   constructor(private readonly getNewsListService: GetNewsListService) {}
 

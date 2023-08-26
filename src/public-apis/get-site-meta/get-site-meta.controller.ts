@@ -1,6 +1,6 @@
-import { GetSiteMetaAPI } from '@/interface/api/get-site-meta';
+import { GetSiteMetaAPIContent } from '@/interface/api/get-site-meta';
 import { APIInterceptor } from '@/rc/interceptor/api-response.interceptor';
-import { Controller, Get, Header, Param, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Header, UseInterceptors } from '@nestjs/common';
 import { GetSiteMetaAPIService } from './get-site-meta.service';
 
 @Controller('public-api/get-site-meta')
@@ -8,9 +8,9 @@ export class GetSiteMetaAPIController {
   constructor(private readonly getSiteMetaAPIService: GetSiteMetaAPIService) {}
 
   @Get()
-  @UseInterceptors(APIInterceptor<GetSiteMetaAPI>)
+  @UseInterceptors(APIInterceptor<GetSiteMetaAPIContent>)
   @Header('Access-Control-Allow-Origin', '*')
-  async getArticle(): Promise<GetSiteMetaAPI> {
+  async getArticle(): Promise<GetSiteMetaAPIContent> {
     return await this.getSiteMetaAPIService.get();
   }
 }

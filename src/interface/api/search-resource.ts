@@ -1,4 +1,4 @@
-export type SearchResourceAPI = {
+export type SearchResourceAPIContent = {
   type: 'article' | 'video' | 'book';
   id: string;
   title: string;

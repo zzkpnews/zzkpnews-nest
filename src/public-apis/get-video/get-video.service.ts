@@ -1,6 +1,6 @@
 import { API_STATUS_CODE } from '@/constant/api-status-code';
 import { DependenceFlags } from '@/constant/dep-flags';
-import { GetVideoAPI } from '@/interface/api/get-video';
+import { GetVideoAPIContent } from '@/interface/api/get-video';
 import { VideoRepository } from '@/model/entity/video/video.repository';
 import { APIException } from '@/rc/exception/api.exception';
 import { Inject, Injectable } from '@nestjs/common';
@@ -12,7 +12,7 @@ export class GetVideoAPIService {
     @Inject(DependenceFlags.VideoRepository)
     private readonly videoRepository: VideoRepository,
   ) {}
-  async get(newsId: string): Promise<GetVideoAPI | null> {
+  async get(newsId: string): Promise<GetVideoAPIContent | null> {
     const [errVideo, video] = await to(this.videoRepository.findById(newsId));
     if (errVideo) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
     if (video == null) throw new APIException(API_STATUS_CODE.ResourceNotFound, 404);

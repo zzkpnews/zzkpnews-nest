@@ -1,6 +1,6 @@
 import { API_STATUS_CODE } from '@/constant/api-status-code';
 import { DependenceFlags } from '@/constant/dep-flags';
-import { GetBookAPI } from '@/interface/api/get-book';
+import { GetBookAPIContent } from '@/interface/api/get-book';
 import { BookRepository } from '@/model/entity/book/book.repository';
 import { APIException } from '@/rc/exception/api.exception';
 import { Inject, Injectable } from '@nestjs/common';
@@ -12,7 +12,7 @@ export class GetBookAPIService {
     @Inject(DependenceFlags.BookRepository)
     private readonly bookRepository: BookRepository,
   ) {}
-  async get(newsId: string): Promise<GetBookAPI | null> {
+  async get(newsId: string): Promise<GetBookAPIContent | null> {
     const [errBook, book] = await to(this.bookRepository.findById(newsId));
     if (errBook) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
     if (book == null) throw new APIException(API_STATUS_CODE.ResourceNotFound, 404);
