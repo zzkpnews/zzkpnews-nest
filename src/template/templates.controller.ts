@@ -8,6 +8,7 @@ import { Error500PageTemplate } from '@/interface/template/Error500PageTemplate'
 import { GroupContentPageTemplate } from '@/interface/template/GroupContentPageTemplate';
 import { GroupIndexPageTemplate } from '@/interface/template/GroupIndexPageTemplate';
 import { HomePageTemplate } from '@/interface/template/HomePageTemplate';
+import { PaperPageTemplate } from '@/interface/template/PaperPageTemplate';
 import { SearchPageTemplate } from '@/interface/template/SearchPageTemplate';
 import { SectionContentPageTemplate } from '@/interface/template/SectionContentPageTemplate';
 import { SectionIndexPageTemplate } from '@/interface/template/SectionIndexPageTemplate';
@@ -26,6 +27,7 @@ import { Error500PageTemplateService } from './error-500-page/error-500-page-tem
 import { GroupContentPageTemplateService } from './group-content-page/group-content-page-template.service';
 import { GroupIndexPageTemplateService } from './group-index-page/group-index-page.service';
 import { HomePageTemplateService } from './home-page/home-page-template.service';
+import { PaperPageTemplateService } from './paper-page/paper-page-template.service';
 import { SearchPageTemplateService } from './search-page/search-page-template.service';
 import { SectionContentPageTemplateService } from './section-content-page/section-content-page-template.service';
 import { SectionIndexPageTemplateService } from './section-index-page/section-index-page.service';
@@ -41,18 +43,19 @@ export class TemplatesController {
     private readonly bookIndexPageTemplateService: BookIndexPageTemplateService,
     private readonly bookReaderPageTemplateService: BookReaderPageTemplateService,
     private readonly creatorProfilePageTemplateService: CreatorProfilePageTemplateService,
+    private readonly error403PageTemplateService: Error403PageTemplateService,
+    private readonly error404PageTemplateService: Error404PageTemplateService,
+    private readonly error500PageTemplateService: Error500PageTemplateService,
     private readonly groupContentPageTemplateService: GroupContentPageTemplateService,
     private readonly groupIndexPageTemplateService: GroupIndexPageTemplateService,
     private readonly homePageTemplateService: HomePageTemplateService,
+    private readonly paperPageTemplateService: PaperPageTemplateService,
     private readonly searchPageTemplateService: SearchPageTemplateService,
     private readonly sectionContentPageTemplateService: SectionContentPageTemplateService,
     private readonly sectionIndexPageTemplateService: SectionIndexPageTemplateService,
     private readonly topicContentPageTemplateService: TopicContentPageTemplateService,
     private readonly topicIndexPageTemplateService: TopicIndexPageTemplateService,
     private readonly videoReaderPageTemplateService: VideoReaderPageTemplateService,
-    private readonly error403PageTemplateService: Error403PageTemplateService,
-    private readonly error404PageTemplateService: Error404PageTemplateService,
-    private readonly error500PageTemplateService: Error500PageTemplateService,
   ) {}
 
   @Get('/article-reader/:news_id')
@@ -118,6 +121,11 @@ export class TemplatesController {
   @Get('/video-reader/:news_id')
   async getVideoReaderPage(@Param('news_id') news_id: string): Promise<VideoReaderPageTemplate> {
     return await this.videoReaderPageTemplateService.get(news_id);
+  }
+
+  @Get('paper/:paper_id')
+  async getPaperPage(@Param('paper_id') paper_id: string): Promise<PaperPageTemplate> {
+    return await this.paperPageTemplateService.get(paper_id);
   }
 
   @Get('error-403')

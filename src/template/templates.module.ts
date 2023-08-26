@@ -19,6 +19,7 @@ import { VideoReaderPageTemplateModule } from './video-reader-page/video-reader-
 import { TemplatesController } from './templates.controller';
 import { GroupIndexPageTemplateModule } from './group-index-page/group-index-page.module';
 import { Error403PageTemplateModule } from './error-403-page/error-403-page-template.module';
+import { PaperPageTemplateModule } from './paper-page/paper-page-template.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { Error403PageTemplateModule } from './error-403-page/error-403-page-temp
     TopicIndexPageTemplateModule,
     ViewsModule,
     VideoReaderPageTemplateModule,
+    PaperPageTemplateModule,
     Error403PageTemplateModule,
     Error404PageTemplateModule,
     Error500PageTemplateModule,
