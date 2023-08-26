@@ -7,6 +7,7 @@ import { GetNewsListAPIModule } from './get-news-list/get-news-list.module';
 import { GetVideoAPIModule } from './get-video/get-video.module';
 import { SearchResourceModule } from './search-resource/search-resource.module';
 import { GetCreatorAPIModule } from './get-creator/get-creator.module';
+import { GetSiteMetaAPIModule } from './get-site-meta/get-site-meta.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { GetCreatorAPIModule } from './get-creator/get-creator.module';
     GetVideoAPIModule,
     GetCreatorAPIModule,
     GetBookAPIModule,
+    GetSiteMetaAPIModule,
   ],
 })
 export class PublicApisModule {}
