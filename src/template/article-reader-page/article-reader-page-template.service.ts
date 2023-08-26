@@ -1,7 +1,7 @@
 import * as fsp from 'fs/promises';
 import to from 'await-to-js';
 import { API_STATUS_CODE } from '@/constant/api-status-code';
-import { APIException } from '@/exception/api.exception';
+import { APIException } from '@/rc/exception/api.exception';
 import { ArticleContentFilePath } from '@/constant/paths';
 import { ArticleReaderPageTemplate } from '@/interface/template/ArticleReaderPageTemplate';
 import { ArticleRepository } from '@/model/entity/article/article.repository';

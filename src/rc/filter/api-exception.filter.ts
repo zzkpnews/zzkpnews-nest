@@ -1,4 +1,4 @@
-import { APIException } from '@/exception/api.exception';
+import { APIException } from '@/rc/exception/api.exception';
 import { APIResponse } from '@/interface/api/utils';
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { Response } from 'express';

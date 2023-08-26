@@ -6,7 +6,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { TemplateUtilsService } from '../utils/template-utils.service';
 import to from 'await-to-js';
 import { API_STATUS_CODE } from '@/constant/api-status-code';
-import { APIException } from '@/exception/api.exception';
+import { APIException } from '@/rc/exception/api.exception';
 
 @Injectable()
 export class SectionIndexPageTemplateService {

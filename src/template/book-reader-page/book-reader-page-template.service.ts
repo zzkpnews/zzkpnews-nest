@@ -1,6 +1,6 @@
 import { API_STATUS_CODE } from '@/constant/api-status-code';
 import { DependenceFlags } from '@/constant/dep-flags';
-import { APIException } from '@/exception/api.exception';
+import { APIException } from '@/rc/exception/api.exception';
 import { BookReaderPageTemplate } from '@/interface/template/BookReaderPageTemplate';
 import { BookRepository } from '@/model/entity/book/book.repository';
 import { CreatorRepository } from '@/model/entity/creator/creator.repository';

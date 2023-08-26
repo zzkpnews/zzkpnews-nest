@@ -1,6 +1,6 @@
 import to from 'await-to-js';
 import { API_STATUS_CODE } from '@/constant/api-status-code';
-import { APIException } from '@/exception/api.exception';
+import { APIException } from '@/rc/exception/api.exception';
 import { BookIndexPageTemplate } from '@/interface/template/BookIndexPageTemplate';
 import { BookListItemRepository } from '@/model/view/book-list-item/book-list-item.repository';
 import { DependenceFlags } from '@/constant/dep-flags';

@@ -1,6 +1,6 @@
 import { API_STATUS_CODE } from '@/constant/api-status-code';
 import { DependenceFlags } from '@/constant/dep-flags';
-import { APIException } from '@/exception/api.exception';
+import { APIException } from '@/rc/exception/api.exception';
 import { TopicContentPageTemplate } from '@/interface/template/TopicContentPageTemplate';
 import { TopicRepository } from '@/model/entity/topic/topic.repository';
 import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';

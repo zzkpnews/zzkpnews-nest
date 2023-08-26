@@ -5,7 +5,7 @@ import { SearchQueries } from './search-resource.dto';
 import { SearchResourceService } from './search-resource.service';
 import { SearchResourceAPI } from '@/interface/api/search-resource';
 
-@Controller('api/search-resource')
+@Controller('public-api/search-resource')
 export class SearchResourceController {
   constructor(private readonly searchResourceService: SearchResourceService) {}
 
