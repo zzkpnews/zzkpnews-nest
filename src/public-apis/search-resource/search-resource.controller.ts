@@ -3,7 +3,7 @@ import { ParamsValidationPipe } from '@/rc/pipe/vaildation.pipe';
 import { Controller, Get, Header, Query, UseInterceptors } from '@nestjs/common';
 import { SearchQueries } from './search-resource.dto';
 import { SearchResourceService } from './search-resource.service';
-import { SearchResourceAPIContent } from '@/interface/api/search-resource';
+import { SearchResourceAPIContent } from '@/interface/public-api/search-resource';
 
 @Controller('public-api/search-resource')
 export class SearchResourceController {

@@ -1,6 +1,6 @@
 import { API_STATUS_CODE } from '@/constant/api-status-code';
 import { DependenceFlags } from '@/constant/dep-flags';
-import { GetCreatorAPIContent } from '@/interface/api/get-creator';
+import { GetCreatorAPIContent } from '@/interface/public-api/get-creator';
 import { CreatorRepository } from '@/model/entity/creator/creator.repository';
 import { APIException } from '@/rc/exception/api.exception';
 import { Inject, Injectable } from '@nestjs/common';

@@ -1,4 +1,4 @@
-import { GetSiteMetaAPIContent } from '@/interface/api/get-site-meta';
+import { GetSiteMetaAPIContent } from '@/interface/public-api/get-site-meta';
 import { APIInterceptor } from '@/rc/interceptor/api-response.interceptor';
 import { Controller, Get, Header, UseInterceptors } from '@nestjs/common';
 import { GetSiteMetaAPIService } from './get-site-meta.service';

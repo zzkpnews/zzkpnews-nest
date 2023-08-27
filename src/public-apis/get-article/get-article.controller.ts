@@ -1,4 +1,4 @@
-import { GetArticleAPIContent } from '@/interface/api/get-article';
+import { GetArticleAPIContent } from '@/interface/public-api/get-article';
 import { APIInterceptor } from '@/rc/interceptor/api-response.interceptor';
 import { Controller, Get, Header, Param, UseInterceptors } from '@nestjs/common';
 import { GetArticleAPIService } from './get-article.service';

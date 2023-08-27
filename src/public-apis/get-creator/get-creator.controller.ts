@@ -1,4 +1,4 @@
-import { GetCreatorAPIContent } from '@/interface/api/get-creator';
+import { GetCreatorAPIContent } from '@/interface/public-api/get-creator';
 import { APIInterceptor } from '@/rc/interceptor/api-response.interceptor';
 import { Controller, Get, Header, Param, UseInterceptors } from '@nestjs/common';
 import { GetCreatorAPIService } from './get-creator.service';

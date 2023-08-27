@@ -1,7 +1,7 @@
 import { API_STATUS_CODE } from '@/constant/api-status-code';
 import { DependenceFlags } from '@/constant/dep-flags';
 import { ArticleContentFilePath } from '@/constant/paths';
-import { GetArticleAPIContent } from '@/interface/api/get-article';
+import { GetArticleAPIContent } from '@/interface/public-api/get-article';
 import { ArticleRepository } from '@/model/entity/article/article.repository';
 import { APIException } from '@/rc/exception/api.exception';
 import { Inject, Injectable } from '@nestjs/common';
@@ -18,6 +18,8 @@ export class GetArticleAPIService {
     const [errArticle, article] = await to(this.articleRepository.findById(newsId));
     if (errArticle) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
     if (article == null) throw new APIException(API_STATUS_CODE.ResourceNotFound, 404);
+
+    if (article.closed) throw new APIException(API_STATUS_CODE.ResourceBlocked, 403);
 
     const [errArticleContent, articleContent] = await to(fsp.readFile(ArticleContentFilePath(article.id), 'utf-8'));
     if (errArticleContent) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);

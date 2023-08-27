@@ -1,5 +1,5 @@
 import { API_STATUS_CODE } from '@/constant/api-status-code';
-import { APIResponse } from '@/interface/api/utils';
+import { APIResponse } from '@/interface/utils';
 import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

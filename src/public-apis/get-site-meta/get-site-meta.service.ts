@@ -1,5 +1,5 @@
 import { DependenceFlags } from '@/constant/dep-flags';
-import { GetSiteMetaAPIContent } from '@/interface/api/get-site-meta';
+import { GetSiteMetaAPIContent } from '@/interface/public-api/get-site-meta';
 import { ObjectStorage } from '@/repository/object-storage/object-storage';
 import { Inject, Injectable } from '@nestjs/common';
 

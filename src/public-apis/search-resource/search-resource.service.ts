@@ -1,5 +1,5 @@
 import { DependenceFlags } from '@/constant/dep-flags';
-import { SearchResourceAPIContent } from '@/interface/api/search-resource';
+import { SearchResourceAPIContent } from '@/interface/public-api/search-resource';
 import { SearchListItemRepository } from '@/model/view/search-list-item/search-list-item.repository';
 import { Inject, Injectable } from '@nestjs/common';
 

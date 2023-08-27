@@ -1,4 +1,4 @@
-import { GetBookAPIContent } from '@/interface/api/get-book';
+import { GetBookAPIContent } from '@/interface/public-api/get-book';
 import { APIInterceptor } from '@/rc/interceptor/api-response.interceptor';
 import { Controller, Get, Header, Param, UseInterceptors } from '@nestjs/common';
 import { GetBookAPIService } from './get-book.service';

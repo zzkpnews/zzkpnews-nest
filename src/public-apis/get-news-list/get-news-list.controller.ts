@@ -1,5 +1,5 @@
 import { GetNewsListQueries } from '@/public-apis/get-news-list/get-news-list.dto';
-import { GetNewsListAPIContent } from '@/interface/api/get-news-list';
+import { GetNewsListAPIContent } from '@/interface/public-api/get-news-list';
 import { APIInterceptor } from '@/rc/interceptor/api-response.interceptor';
 import { Controller, Get, Header, Query, UseInterceptors } from '@nestjs/common';
 import { GetNewsListService } from './get-news-list.service';

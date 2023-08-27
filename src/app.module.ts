@@ -6,8 +6,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import conf from './configure/config';
 import { ConfigValidate } from './configure/config.validation';
+import { PrivateApisModule } from './private-apis/private-apis.module';
 import { PublicApisModule } from './public-apis/public-apis.module';
 import { TemplatesModule } from './template/templates.module';
+import { JWTKey } from './constant/key';
+import { JwtModule } from '@nestjs/jwt';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -16,8 +19,14 @@ import { TemplatesModule } from './template/templates.module';
       load: [conf],
       isGlobal: true,
     }),
+    JwtModule.register({
+      global: true,
+      secret: JWTKey,
+      signOptions: { expiresIn: 10 },
+    }),
     TemplatesModule,
     PublicApisModule,
+    PrivateApisModule,
     ServeStaticModule.forRoot({
       rootPath: path.resolve('./data/static'),
       serveRoot: '/static',

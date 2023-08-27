@@ -1,4 +1,4 @@
-import { GetVideoAPIContent } from '@/interface/api/get-video';
+import { GetVideoAPIContent } from '@/interface/public-api/get-video';
 import { APIInterceptor } from '@/rc/interceptor/api-response.interceptor';
 import { Controller, Get, Header, Param, UseInterceptors } from '@nestjs/common';
 import { GetVideoAPIService } from './get-video.service';

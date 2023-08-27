@@ -1,5 +1,5 @@
 import { APIException } from '@/rc/exception/api.exception';
-import { APIResponse } from '@/interface/api/utils';
+import { APIResponse } from '@/interface/utils';
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { Response } from 'express';
 

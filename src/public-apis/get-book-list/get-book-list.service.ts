@@ -1,5 +1,5 @@
 import { DependenceFlags } from '@/constant/dep-flags';
-import { GetBookListAPIContent } from '@/interface/api/get-book-list';
+import { GetBookListAPIContent } from '@/interface/public-api/get-book-list';
 import { BookListItemRepository } from '@/model/view/book-list-item/book-list-item.repository';
 import { Inject, Injectable } from '@nestjs/common';
 

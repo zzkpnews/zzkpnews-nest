@@ -1,5 +1,5 @@
 import { DependenceFlags } from '@/constant/dep-flags';
-import { GetNewsListAPIContent } from '@/interface/api/get-news-list';
+import { GetNewsListAPIContent } from '@/interface/public-api/get-news-list';
 import { NewsListItemRepository } from '@/model/view/news-list-item/news-list-item.repository';
 import { Inject, Injectable } from '@nestjs/common';
 
