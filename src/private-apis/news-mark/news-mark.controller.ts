@@ -1,28 +1,42 @@
 import { GetArticleAPIContent } from '@/interface/public-api/get-article';
 import { APIInterceptor } from '@/rc/interceptor/api-response.interceptor';
 import { Controller, Get, Header, Param, Post, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
-import { ArticleManageAPIService } from './maintain.service';
+import { ArticleManageAPIService } from './news-mark.service';
 import { AuthGuard } from '@/rc/guard/user-auth.guard';
 import { APIExceptionFilter } from '@/rc/filter/api-exception.filter';
 
-@Controller('private-api/maintain')
+@Controller('private-api/article-manage')
 @UseFilters(APIExceptionFilter)
 export class ArticleManageAPIController {
   constructor(private readonly articleManageAPIService: ArticleManageAPIService) {}
 
-  @Get('change-super-password')
+  @Get(':news_id')
   @UseInterceptors(APIInterceptor<GetArticleAPIContent[]>)
   @Header('Access-Control-Allow-Origin', '*')
-  async changeSuperPassword(@Param('news_id') news_id: string): Promise<GetArticleAPIContent> {
+  async newArticle(@Param('news_id') news_id: string): Promise<GetArticleAPIContent> {
     return await this.articleManageAPIService.get(news_id);
   }
 
-  @Post('/recover')
+  @Post('/read')
   @UseGuards(AuthGuard)
   @UseInterceptors(APIInterceptor<GetArticleAPIContent>)
   @Header('Access-Control-Allow-Origin', '*')
-  async recover(@Param('news_id') news_id: string): Promise<string> {
+  async readArticle(@Param('news_id') news_id: string): Promise<string> {
     console.log('ui');
     return 'hi';
+  }
+
+  @Get(':news_id')
+  @UseInterceptors(APIInterceptor<GetArticleAPIContent[]>)
+  @Header('Access-Control-Allow-Origin', '*')
+  async updateArticle(@Param('news_id') news_id: string): Promise<GetArticleAPIContent> {
+    return await this.articleManageAPIService.get(news_id);
+  }
+
+  @Get(':news_id')
+  @UseInterceptors(APIInterceptor<GetArticleAPIContent[]>)
+  @Header('Access-Control-Allow-Origin', '*')
+  async deleteArticle(@Param('news_id') news_id: string): Promise<GetArticleAPIContent> {
+    return await this.articleManageAPIService.get(news_id);
   }
 }

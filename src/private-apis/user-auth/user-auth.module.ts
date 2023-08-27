@@ -1,12 +1,12 @@
 import { CreatorModule } from '@/model/entity/creator/creator.module';
 import { Module } from '@nestjs/common';
 import { UserAuthAPIController } from './user-auth.controller';
-import { CreatorAuthAPIService } from './user-auth.service';
+import { UserAuthAPIService } from './user-auth.service';
 
 @Module({
   imports: [CreatorModule],
-  providers: [CreatorAuthAPIService],
+  providers: [UserAuthAPIService],
   controllers: [UserAuthAPIController],
-  exports: [CreatorAuthAPIService],
+  exports: [UserAuthAPIService],
 })
-export class CreatorAuthAPIModule {}
+export class UserAuthAPIModule {}

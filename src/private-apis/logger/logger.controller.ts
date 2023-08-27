@@ -5,7 +5,7 @@ import { ArticleManageAPIService } from './logger.service';
 import { AuthGuard } from '@/rc/guard/user-auth.guard';
 import { APIExceptionFilter } from '@/rc/filter/api-exception.filter';
 
-@Controller('private-api/article-manage')
+@Controller('private-api/logger')
 @UseFilters(APIExceptionFilter)
 export class ArticleManageAPIController {
   constructor(private readonly articleManageAPIService: ArticleManageAPIService) {}
@@ -13,7 +13,7 @@ export class ArticleManageAPIController {
   @Get(':news_id')
   @UseInterceptors(APIInterceptor<GetArticleAPIContent[]>)
   @Header('Access-Control-Allow-Origin', '*')
-  async newArticle(@Param('news_id') news_id: string): Promise<GetArticleAPIContent> {
+  async getLogsList(@Param('news_id') news_id: string): Promise<GetArticleAPIContent> {
     return await this.articleManageAPIService.get(news_id);
   }
 
@@ -21,22 +21,8 @@ export class ArticleManageAPIController {
   @UseGuards(AuthGuard)
   @UseInterceptors(APIInterceptor<GetArticleAPIContent>)
   @Header('Access-Control-Allow-Origin', '*')
-  async readArticle(@Param('news_id') news_id: string): Promise<string> {
+  async deleteLogs(@Param('news_id') news_id: string): Promise<string> {
     console.log('ui');
     return 'hi';
-  }
-
-  @Get(':news_id')
-  @UseInterceptors(APIInterceptor<GetArticleAPIContent[]>)
-  @Header('Access-Control-Allow-Origin', '*')
-  async updateArticle(@Param('news_id') news_id: string): Promise<GetArticleAPIContent> {
-    return await this.articleManageAPIService.get(news_id);
-  }
-
-  @Get(':news_id')
-  @UseInterceptors(APIInterceptor<GetArticleAPIContent[]>)
-  @Header('Access-Control-Allow-Origin', '*')
-  async deleteArticle(@Param('news_id') news_id: string): Promise<GetArticleAPIContent> {
-    return await this.articleManageAPIService.get(news_id);
   }
 }

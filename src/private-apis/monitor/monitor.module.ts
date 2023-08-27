@@ -1,7 +1,7 @@
 import { ArticleModule } from '@/model/entity/article/article.module';
 import { Module } from '@nestjs/common';
-import { ArticleManageAPIController } from './maintain.controller';
-import { ArticleManageAPIService } from './maintain-manage.service';
+import { ArticleManageAPIController } from './monitor.controller';
+import { ArticleManageAPIService } from './monitor.service';
 import { JwtModule } from '@nestjs/jwt';
 import { JWTKey, JWTExpired } from '@/constant/key';
 

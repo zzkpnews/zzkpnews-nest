@@ -1,7 +1,7 @@
 import { GetArticleAPIContent } from '@/interface/public-api/get-article';
 import { APIInterceptor } from '@/rc/interceptor/api-response.interceptor';
 import { Controller, Get, Header, Param, Post, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
-import { ArticleManageAPIService } from './article-manage.service';
+import { ArticleManageAPIService } from './monitor.service';
 import { AuthGuard } from '@/rc/guard/user-auth.guard';
 import { APIExceptionFilter } from '@/rc/filter/api-exception.filter';
 

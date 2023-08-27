@@ -1,15 +1,16 @@
 import { API_STATUS_CODE } from '@/constant/api-status-code';
 import { DependenceFlags } from '@/constant/dep-flags';
 import { JWTExpired } from '@/constant/key';
-import { UserLoginAuthAPIContent } from '@/interface/private-api/user-auth';
+import { UserLoginAuthAPIContent, UserRefreshTokenAPIContent } from '@/interface/private-api/user-auth';
 import { verifyPasswordHash } from '@/libs/password';
 import { CreatorRepository } from '@/model/entity/creator/creator.repository';
 import { APIException } from '@/rc/exception/api.exception';
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import to from 'await-to-js';
+
 @Injectable()
-export class CreatorAuthAPIService {
+export class UserAuthAPIService {
   constructor(
     @Inject(DependenceFlags.CreatorRepository)
     private readonly creatorRepository: CreatorRepository,
@@ -37,7 +38,7 @@ export class CreatorAuthAPIService {
     };
   }
 
-  async creatorRefreshToken(creatorId: string) {
+  async creatorRefreshToken(creatorId: string): Promise<UserRefreshTokenAPIContent | null> {
     const [errCreator, creator] = await to(this.creatorRepository.findById(creatorId));
     if (errCreator) {
       throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
@@ -49,6 +50,24 @@ export class CreatorAuthAPIService {
       throw new APIException(API_STATUS_CODE.UserBlocked, 403);
     }
     const [errToken, token] = await to(this.jwtService.signAsync({ creatorId: creator.id }));
+    if (errToken) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    return {
+      token: token,
+      expiredAt: JWTExpired * 1000 + Date.now(),
+    };
+  }
+
+  async superLogin(password: string): Promise<UserLoginAuthAPIContent | null> {
+    const [errToken, token] = await to(this.jwtService.signAsync('super'));
+    if (errToken) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    return {
+      token: token,
+      expiredAt: JWTExpired * 1000 + Date.now(),
+    };
+  }
+
+  async superRefreshToken(): Promise<UserRefreshTokenAPIContent | null> {
+    const [errToken, token] = await to(this.jwtService.signAsync('super'));
     if (errToken) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
     return {
       token: token,
