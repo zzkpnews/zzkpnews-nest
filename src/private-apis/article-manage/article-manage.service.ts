@@ -4,7 +4,9 @@ import { ArticleContentFilePath } from '@/constant/paths';
 import { AddArticleAPIContent, ArticleLockerAPIContent } from '@/interface/private-api/article-manage';
 import { deleteFileIfExists } from '@/libs/file';
 import { ArticleRepository } from '@/model/entity/article/article.repository';
+import { CreatorRepository } from '@/model/entity/creator/creator.repository';
 import { APIException } from '@/rc/exception/api.exception';
+import { CreatorAuthTokenPayload } from '@/types/token-payload';
 import { Inject, Injectable } from '@nestjs/common';
 import to from 'await-to-js';
 import * as fsp from 'fs/promises';
@@ -14,15 +16,17 @@ export class ArticleManageAPIService {
   constructor(
     @Inject(DependenceFlags.ArticleRepository)
     private readonly articleRepository: ArticleRepository,
+    @Inject(DependenceFlags.CreatorRepository)
+    private readonly creatorRepository: CreatorRepository,
   ) {}
   async add(
+    authTokenPayload: CreatorAuthTokenPayload,
     title: string,
     subtitle: string | null,
     leadTitle: string | null,
     citation: string | null,
     coverImage: string | null,
     keywords: string | null,
-    creatorId: string,
     belongingSectionId: string,
     belongingTopicId: string | null,
     author: string | null,
@@ -31,6 +35,18 @@ export class ArticleManageAPIService {
     originUrl: string | null,
     content: string,
   ): Promise<AddArticleAPIContent | null> {
+    const creatorId = authTokenPayload.id;
+    const [errCreator, creator] = await to(this.creatorRepository.findById(creatorId));
+    if (errCreator) {
+      throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    }
+    if (creator == null) {
+      throw new APIException(API_STATUS_CODE.UserNotFound, 404);
+    }
+    if (creator.closed) {
+      throw new APIException(API_STATUS_CODE.UserBlocked, 403);
+    }
+
     const [errNewArticle, newArticle] = await to(
       this.articleRepository.create(
         title,
@@ -64,6 +80,7 @@ export class ArticleManageAPIService {
   }
 
   async update(
+    authTokenPayload: CreatorAuthTokenPayload,
     newsId: string,
     title: string,
     subtitle: string | null,
@@ -85,6 +102,17 @@ export class ArticleManageAPIService {
     }
     if (targetArticle == null) {
       throw new APIException(API_STATUS_CODE.ResourceNotFound, 404);
+    }
+    const creatorId = authTokenPayload.id;
+    const [errCreator, creator] = await to(this.creatorRepository.findById(targetArticle.creatorId));
+    if (errCreator) {
+      throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    }
+    if (creator == null) {
+      throw new APIException(API_STATUS_CODE.UserNotFound, 404);
+    }
+    if (creator.closed) {
+      throw new APIException(API_STATUS_CODE.UserBlocked, 403);
     }
 
     targetArticle.title = title;
@@ -136,6 +164,17 @@ export class ArticleManageAPIService {
     const [errDeleteArticle] = await to(this.articleRepository.deleteById(newsId));
     if (errDeleteArticle) {
       throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    }
+    return true;
+  }
+
+  async checkCreator(newsId: string, creatorIdToValidate: string): Promise<boolean> {
+    const [errArticle, article] = await to(this.articleRepository.findById(newsId));
+    if (errArticle) {
+      throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    }
+    if (article == null || article.creatorId !== creatorIdToValidate) {
+      return false;
     }
     return true;
   }

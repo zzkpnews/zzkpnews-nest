@@ -1,9 +1,10 @@
 import { UserLoginAuthAPIContent, UserRefreshTokenAPIContent } from '@/interface/private-api/user-auth';
 import { APIExceptionFilter } from '@/rc/filter/api-exception.filter';
-import { AuthGuard } from '@/rc/guard/user-auth.guard';
+import { CreatorAuthGuard, SuperAuthGuard } from '@/rc/guard/user-auth.guard';
 import { APIInterceptor } from '@/rc/interceptor/api-response.interceptor';
-import { Body, Controller, Header, Post, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
-import { CreatorLoginAuthDTO, CreatorRefreshTokenDTO, SuperLoginAuthDTO } from './user-auth.dto';
+import { CreatorAuthTokenPayload } from '@/types/token-payload';
+import { Body, Controller, Header, Post, Req, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
+import { CreatorLoginAuthDTO, SuperLoginAuthDTO } from './user-auth.dto';
 import { UserAuthAPIService } from './user-auth.service';
 
 @Controller('private-api/user-auth')
@@ -26,15 +27,17 @@ export class UserAuthAPIController {
   }
 
   @Post('creator-refresh-token')
-  @UseGuards(AuthGuard)
+  @UseGuards(CreatorAuthGuard)
   @UseInterceptors(APIInterceptor<UserRefreshTokenAPIContent>)
   @Header('Access-Control-Allow-Origin', '*')
-  async creatorRefreshToken(@Body() target: CreatorRefreshTokenDTO): Promise<UserRefreshTokenAPIContent> {
-    return await this.userAuthAPIService.creatorRefreshToken(target.creatorId);
+  async creatorRefreshToken(@Req() request: Request): Promise<UserRefreshTokenAPIContent> {
+    const tokenPayload: CreatorAuthTokenPayload = request['payload'];
+    const creatorId: string | undefined = tokenPayload['id'];
+    return await this.userAuthAPIService.creatorRefreshToken(creatorId);
   }
 
   @Post('super-refresh-token')
-  @UseGuards(AuthGuard)
+  @UseGuards(SuperAuthGuard)
   @UseInterceptors(APIInterceptor<UserRefreshTokenAPIContent>)
   @Header('Access-Control-Allow-Origin', '*')
   async superRefreshToken(): Promise<UserRefreshTokenAPIContent> {

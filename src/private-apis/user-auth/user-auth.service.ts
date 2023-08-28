@@ -5,6 +5,7 @@ import { UserLoginAuthAPIContent, UserRefreshTokenAPIContent } from '@/interface
 import { verifyPasswordHash } from '@/libs/password';
 import { CreatorRepository } from '@/model/entity/creator/creator.repository';
 import { APIException } from '@/rc/exception/api.exception';
+import { CreatorAuthTokenPayload, SuperAuthTokenPayload } from '@/types/token-payload';
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import to from 'await-to-js';
@@ -30,7 +31,8 @@ export class UserAuthAPIService {
     if (!verifyPasswordHash(password, creator.salt, creator.passwordHash)) {
       throw new APIException(API_STATUS_CODE.UserAuthFailed, 403);
     }
-    const [errToken, token] = await to(this.jwtService.signAsync({ creatorId: creator.id }));
+    const tokenPayload: CreatorAuthTokenPayload = { type: 'creator', id: creator.id };
+    const [errToken, token] = await to(this.jwtService.signAsync(tokenPayload));
     if (errToken) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
     return {
       token: token,
@@ -49,7 +51,8 @@ export class UserAuthAPIService {
     if (creator.closed) {
       throw new APIException(API_STATUS_CODE.UserBlocked, 403);
     }
-    const [errToken, token] = await to(this.jwtService.signAsync({ creatorId: creator.id }));
+    const tokenPayload: CreatorAuthTokenPayload = { type: 'creator', id: creator.id };
+    const [errToken, token] = await to(this.jwtService.signAsync(tokenPayload));
     if (errToken) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
     return {
       token: token,
@@ -58,7 +61,8 @@ export class UserAuthAPIService {
   }
 
   async superLogin(password: string): Promise<UserLoginAuthAPIContent | null> {
-    const [errToken, token] = await to(this.jwtService.signAsync('super'));
+    const tokenPayload: SuperAuthTokenPayload = { type: 'super' };
+    const [errToken, token] = await to(this.jwtService.signAsync(tokenPayload));
     if (errToken) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
     return {
       token: token,
@@ -67,7 +71,8 @@ export class UserAuthAPIService {
   }
 
   async superRefreshToken(): Promise<UserRefreshTokenAPIContent | null> {
-    const [errToken, token] = await to(this.jwtService.signAsync('super'));
+    const tokenPayload: SuperAuthTokenPayload = { type: 'super' };
+    const [errToken, token] = await to(this.jwtService.signAsync(tokenPayload));
     if (errToken) throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
     return {
       token: token,
