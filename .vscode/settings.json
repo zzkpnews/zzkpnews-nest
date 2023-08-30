@@ -5,6 +5,7 @@
     "newsbases",
     "newsitem",
     "typeorm",
+    "unmark",
     "wechat",
     "ZZKPNEWS"
   ]

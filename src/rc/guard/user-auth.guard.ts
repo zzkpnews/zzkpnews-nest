@@ -33,7 +33,7 @@ export class CreatorAuthGuard implements CanActivate {
           throw new APIException(API_STATUS_CODE.UserAuthFailed, 400);
       }
     }
-    if (payload.type !== 'creator') {
+    if (payload.role !== 'creator') {
       throw new APIException(API_STATUS_CODE.UserPermissionDenied, 403);
     }
     request['payload'] = payload;
@@ -62,7 +62,7 @@ export class SuperAuthGuard implements CanActivate {
           throw new APIException(API_STATUS_CODE.UserAuthFailed, 400);
       }
     }
-    if (payload.type !== 'super') {
+    if (payload.role !== 'super') {
       throw new APIException(API_STATUS_CODE.UserPermissionDenied, 403);
     }
     request['payload'] = payload;

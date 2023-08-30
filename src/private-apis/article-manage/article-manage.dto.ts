@@ -14,8 +14,6 @@ export class SubmitArticleDTO {
   @IsString()
   keywords: string | null;
   @IsString()
-  creatorId: string;
-  @IsString()
   belongingSectionId: string;
   @IsString()
   belongingTopicId: string | null;

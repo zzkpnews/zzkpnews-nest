@@ -1,6 +1,6 @@
 import { CreatorChangePasswordAPIContent } from '@/interface/private-api/creator-manage';
 import { APIExceptionFilter } from '@/rc/filter/api-exception.filter';
-import { AuthGuard } from '@/rc/guard/user-auth.guard';
+import { CreatorAuthGuard } from '@/rc/guard/user-auth.guard';
 import { APIInterceptor } from '@/rc/interceptor/api-response.interceptor';
 import { Body, Controller, Header, Post, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { CreatorChangePasswordDTO } from './creator-manage.dto';
@@ -12,7 +12,7 @@ export class CreatorManageAPIController {
   constructor(private readonly creatorManageAPIService: CreatorManageAPIService) {}
 
   @Post('change-password')
-  @UseGuards(AuthGuard)
+  @UseGuards(CreatorAuthGuard)
   @UseInterceptors(APIInterceptor<CreatorChangePasswordAPIContent>)
   @Header('Access-Control-Allow-Origin', '*')
   async changePassword(@Body() task: CreatorChangePasswordDTO): Promise<CreatorChangePasswordAPIContent> {

@@ -1,5 +1,5 @@
 type AuthTokenPayload = {
-  type: 'super' | 'creator';
+  role: 'super' | 'creator';
 };
 
 export type CreatorAuthTokenPayload = {

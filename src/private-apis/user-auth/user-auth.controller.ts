@@ -16,14 +16,14 @@ export class UserAuthAPIController {
   @UseInterceptors(APIInterceptor<UserLoginAuthAPIContent>)
   @Header('Access-Control-Allow-Origin', '*')
   async creatorLogin(@Body() target: CreatorLoginAuthDTO): Promise<UserLoginAuthAPIContent> {
-    return await this.userAuthAPIService.creatorLogin(target.creatorId, target.password);
+    return await this.userAuthAPIService.creatorLogin(target);
   }
 
   @Post('super-login')
   @UseInterceptors(APIInterceptor<UserLoginAuthAPIContent>)
   @Header('Access-Control-Allow-Origin', '*')
   async superLogin(@Body() target: SuperLoginAuthDTO): Promise<UserLoginAuthAPIContent> {
-    return await this.userAuthAPIService.superLogin(target.password);
+    return await this.userAuthAPIService.superLogin(target);
   }
 
   @Post('creator-refresh-token')
@@ -31,9 +31,8 @@ export class UserAuthAPIController {
   @UseInterceptors(APIInterceptor<UserRefreshTokenAPIContent>)
   @Header('Access-Control-Allow-Origin', '*')
   async creatorRefreshToken(@Req() request: Request): Promise<UserRefreshTokenAPIContent> {
-    const tokenPayload: CreatorAuthTokenPayload = request['payload'];
-    const creatorId: string | undefined = tokenPayload['id'];
-    return await this.userAuthAPIService.creatorRefreshToken(creatorId);
+    const authTokenPayload: CreatorAuthTokenPayload = request['payload'];
+    return await this.userAuthAPIService.creatorRefreshToken(authTokenPayload);
   }
 
   @Post('super-refresh-token')

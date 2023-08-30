@@ -1,15 +1,15 @@
 import { API_STATUS_CODE } from '@/constant/api-status-code';
 import { DependenceFlags } from '@/constant/dep-flags';
 import { ArticleContentFilePath } from '@/constant/paths';
-import { AddArticleAPIContent, ArticleLockerAPIContent } from '@/interface/private-api/article-manage';
 import { deleteFileIfExists } from '@/libs/file';
 import { ArticleRepository } from '@/model/entity/article/article.repository';
 import { CreatorRepository } from '@/model/entity/creator/creator.repository';
 import { APIException } from '@/rc/exception/api.exception';
-import { CreatorAuthTokenPayload } from '@/types/token-payload';
+import { CreatorAuthTokenPayload, SuperAuthTokenPayload } from '@/types/token-payload';
 import { Inject, Injectable } from '@nestjs/common';
 import to from 'await-to-js';
 import * as fsp from 'fs/promises';
+import { SubmitArticleDTO } from './article-manage.dto';
 
 @Injectable()
 export class ArticleManageAPIService {
@@ -19,22 +19,7 @@ export class ArticleManageAPIService {
     @Inject(DependenceFlags.CreatorRepository)
     private readonly creatorRepository: CreatorRepository,
   ) {}
-  async add(
-    authTokenPayload: CreatorAuthTokenPayload,
-    title: string,
-    subtitle: string | null,
-    leadTitle: string | null,
-    citation: string | null,
-    coverImage: string | null,
-    keywords: string | null,
-    belongingSectionId: string,
-    belongingTopicId: string | null,
-    author: string | null,
-    editor: string | null,
-    origin: string | null,
-    originUrl: string | null,
-    content: string,
-  ): Promise<AddArticleAPIContent | null> {
+  async addByCreator(authTokenPayload: CreatorAuthTokenPayload, input: SubmitArticleDTO): Promise<void> {
     const creatorId = authTokenPayload.id;
     const [errCreator, creator] = await to(this.creatorRepository.findById(creatorId));
     if (errCreator) {
@@ -49,25 +34,27 @@ export class ArticleManageAPIService {
 
     const [errNewArticle, newArticle] = await to(
       this.articleRepository.create(
-        title,
-        subtitle,
-        leadTitle,
-        citation,
-        coverImage,
-        keywords,
+        input.title,
+        input.subtitle,
+        input.leadTitle,
+        input.citation,
+        input.coverImage,
+        input.keywords,
         creatorId,
-        belongingSectionId,
-        belongingTopicId,
-        author,
-        editor,
-        origin,
-        originUrl,
+        input.belongingSectionId,
+        input.belongingTopicId,
+        input.author,
+        input.editor,
+        input.origin,
+        input.originUrl,
       ),
     );
     if (errNewArticle) {
       throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
     }
-    const [errSaveArticleContent] = await to(fsp.writeFile(ArticleContentFilePath(newArticle.id), content, 'utf-8'));
+    const [errSaveArticleContent] = await to(
+      fsp.writeFile(ArticleContentFilePath(newArticle.id), input.content, 'utf-8'),
+    );
     if (errSaveArticleContent) {
       throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
     }
@@ -76,26 +63,13 @@ export class ArticleManageAPIService {
       deleteFileIfExists(ArticleContentFilePath(newArticle.id));
       throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
     }
-    return true;
   }
 
-  async update(
+  async updateByCreator(
     authTokenPayload: CreatorAuthTokenPayload,
     newsId: string,
-    title: string,
-    subtitle: string | null,
-    leadTitle: string | null,
-    citation: string | null,
-    coverImage: string | null,
-    keywords: string | null,
-    belongingSectionId: string,
-    belongingTopicId: string | null,
-    author: string | null,
-    editor: string | null,
-    origin: string | null,
-    originUrl: string | null,
-    content: string,
-  ): Promise<AddArticleAPIContent | null> {
+    input: SubmitArticleDTO,
+  ): Promise<void> {
     const [errTargetArticle, targetArticle] = await to(this.articleRepository.findById(newsId));
     if (errTargetArticle) {
       throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
@@ -103,7 +77,8 @@ export class ArticleManageAPIService {
     if (targetArticle == null) {
       throw new APIException(API_STATUS_CODE.ResourceNotFound, 404);
     }
-    const creatorId = authTokenPayload.id;
+
+    const creatorIdToValidate = authTokenPayload.id;
     const [errCreator, creator] = await to(this.creatorRepository.findById(targetArticle.creatorId));
     if (errCreator) {
       throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
@@ -111,24 +86,29 @@ export class ArticleManageAPIService {
     if (creator == null) {
       throw new APIException(API_STATUS_CODE.UserNotFound, 404);
     }
+    if (creator.id !== creatorIdToValidate) {
+      throw new APIException(API_STATUS_CODE.UserPermissionDenied, 403);
+    }
     if (creator.closed) {
       throw new APIException(API_STATUS_CODE.UserBlocked, 403);
     }
 
-    targetArticle.title = title;
-    targetArticle.subtitle = subtitle;
-    targetArticle.leadTitle = leadTitle;
-    targetArticle.citation = citation;
-    targetArticle.coverImage = coverImage;
-    targetArticle.keywords = keywords;
-    targetArticle.belongingSectionId = belongingSectionId;
-    targetArticle.belongingTopicId = belongingTopicId;
-    targetArticle.author = author;
-    targetArticle.editor = editor;
-    targetArticle.origin = origin;
-    targetArticle.originUrl = originUrl;
+    targetArticle.title = input.title;
+    targetArticle.subtitle = input.subtitle;
+    targetArticle.leadTitle = input.leadTitle;
+    targetArticle.citation = input.citation;
+    targetArticle.coverImage = input.coverImage;
+    targetArticle.keywords = input.keywords;
+    targetArticle.belongingSectionId = input.belongingSectionId;
+    targetArticle.belongingTopicId = input.belongingTopicId;
+    targetArticle.author = input.author;
+    targetArticle.editor = input.editor;
+    targetArticle.origin = input.origin;
+    targetArticle.originUrl = input.originUrl;
 
-    const [errSaveArticleContent] = await to(fsp.writeFile(ArticleContentFilePath(targetArticle.id), content, 'utf-8'));
+    const [errSaveArticleContent] = await to(
+      fsp.writeFile(ArticleContentFilePath(targetArticle.id), input.content, 'utf-8'),
+    );
     if (errSaveArticleContent) {
       throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
     }
@@ -137,10 +117,13 @@ export class ArticleManageAPIService {
       deleteFileIfExists(ArticleContentFilePath(targetArticle.id));
       throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
     }
-    return true;
   }
 
-  async locker(newsId: string, type: 'close' | 'unclose'): Promise<ArticleLockerAPIContent> {
+  async CreatorLocker(
+    authTokenPayload: CreatorAuthTokenPayload,
+    newsId: string,
+    type: 'close' | 'unclose',
+  ): Promise<void> {
     const [errArticle, article] = await to(this.articleRepository.findById(newsId));
     if (errArticle) {
       throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
@@ -148,6 +131,12 @@ export class ArticleManageAPIService {
     if (article == null) {
       throw new APIException(API_STATUS_CODE.ResourceNotFound, 404);
     }
+
+    const creatorIdToValidate = authTokenPayload.id;
+    if (article.creatorId !== creatorIdToValidate) {
+      throw new APIException(API_STATUS_CODE.UserPermissionDenied, 403);
+    }
+
     if (type === 'close') {
       article.closed = true;
     } else {
@@ -157,25 +146,75 @@ export class ArticleManageAPIService {
     if (errSaveArticleEntity) {
       throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
     }
-    return true;
   }
 
-  async delete(newsId: string) {
-    const [errDeleteArticle] = await to(this.articleRepository.deleteById(newsId));
-    if (errDeleteArticle) {
-      throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
-    }
-    return true;
-  }
-
-  async checkCreator(newsId: string, creatorIdToValidate: string): Promise<boolean> {
+  async deleteByCreator(authTokenPayload: CreatorAuthTokenPayload, newsId: string): Promise<void> {
     const [errArticle, article] = await to(this.articleRepository.findById(newsId));
     if (errArticle) {
       throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
     }
-    if (article == null || article.creatorId !== creatorIdToValidate) {
-      return false;
+    if (article == null) {
+      throw new APIException(API_STATUS_CODE.ResourceNotFound, 404);
     }
-    return true;
+
+    const creatorIdToValidate = authTokenPayload.id;
+    if (article.creatorId !== creatorIdToValidate) {
+      throw new APIException(API_STATUS_CODE.UserPermissionDenied, 403);
+    }
+
+    const [errDeleteArticle] = await to(this.articleRepository.deleteById(newsId));
+    if (errDeleteArticle) {
+      throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    }
+  }
+
+  async setupSectionHotBySuper(
+    authTokenPayload: SuperAuthTokenPayload,
+    newsId: string,
+    action: 'mark' | 'unmark',
+  ): Promise<void> {
+    const [errArticle, article] = await to(this.articleRepository.findById(newsId));
+    if (errArticle) {
+      throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    }
+    if (article == null) {
+      throw new APIException(API_STATUS_CODE.ResourceNotFound, 404);
+    }
+
+    if (action === 'mark') {
+      article.sectionHotMark = true;
+    } else {
+      article.sectionHotMark = false;
+    }
+
+    const [errSaveArticleEntity] = await to(this.articleRepository.save(article));
+    if (errSaveArticleEntity) {
+      throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    }
+  }
+
+  async setupHomeHotBySuper(
+    authTokenPayload: SuperAuthTokenPayload,
+    newsId: string,
+    action: 'mark' | 'unmark',
+  ): Promise<void> {
+    const [errArticle, article] = await to(this.articleRepository.findById(newsId));
+    if (errArticle) {
+      throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    }
+    if (article == null) {
+      throw new APIException(API_STATUS_CODE.ResourceNotFound, 404);
+    }
+
+    if (action === 'mark') {
+      article.sectionHotMark = true;
+    } else {
+      article.sectionHotMark = false;
+    }
+
+    const [errSaveArticleEntity] = await to(this.articleRepository.save(article));
+    if (errSaveArticleEntity) {
+      throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    }
   }
 }

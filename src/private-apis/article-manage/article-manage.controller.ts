@@ -1,15 +1,7 @@
-import { API_STATUS_CODE } from '@/constant/api-status-code';
-import {
-  AddArticleAPIContent,
-  ArticleLockerAPIContent,
-  DeleteArticleAPIContent,
-  UpdateArticleAPIContent,
-} from '@/interface/private-api/article-manage';
-import { APIException } from '@/rc/exception/api.exception';
 import { APIExceptionFilter } from '@/rc/filter/api-exception.filter';
-import { CreatorAuthGuard } from '@/rc/guard/user-auth.guard';
+import { CreatorAuthGuard, SuperAuthGuard } from '@/rc/guard/user-auth.guard';
 import { APIInterceptor } from '@/rc/interceptor/api-response.interceptor';
-import { CreatorAuthTokenPayload } from '@/types/token-payload';
+import { CreatorAuthTokenPayload, SuperAuthTokenPayload } from '@/types/token-payload';
 import { Body, Controller, Header, Param, Post, Req, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { SubmitArticleDTO } from './article-manage.dto';
 import { ArticleManageAPIService } from './article-manage.service';
@@ -19,105 +11,97 @@ import { ArticleManageAPIService } from './article-manage.service';
 export class ArticleManageAPIController {
   constructor(private readonly articleManageAPIService: ArticleManageAPIService) {}
 
-  @Post('/add')
+  @Post('/creator/add')
   @UseGuards(CreatorAuthGuard)
-  @UseInterceptors(APIInterceptor<AddArticleAPIContent>)
+  @UseInterceptors(APIInterceptor<void>)
   @Header('Access-Control-Allow-Origin', '*')
-  async add(@Body() target: SubmitArticleDTO, @Req() request: Request): Promise<AddArticleAPIContent> {
+  async addByCreator(@Body() target: SubmitArticleDTO, @Req() request: Request): Promise<void> {
     const tokenPayload: CreatorAuthTokenPayload = request['payload'];
-    const creatorId = tokenPayload.id;
-    return await this.articleManageAPIService.add(
-      tokenPayload,
-      target.title,
-      target.subtitle,
-      target.leadTitle,
-      target.citation,
-      target.coverImage,
-      target.keywords,
-      target.belongingSectionId,
-      target.belongingTopicId,
-      target.author,
-      target.editor,
-      target.origin,
-      target.originUrl,
-      target.content,
-    );
+    return await this.articleManageAPIService.addByCreator(tokenPayload, target);
   }
 
-  @Post('/update/:news_id')
+  @Post('/creator/update/:news_id')
   @UseGuards(CreatorAuthGuard)
-  @UseInterceptors(APIInterceptor<AddArticleAPIContent>)
+  @UseInterceptors(APIInterceptor<void>)
   @Header('Access-Control-Allow-Origin', '*')
-  async update(
+  async updateByCreator(
     @Param() newsId: string,
     @Body() target: SubmitArticleDTO,
     @Req() request: Request,
-  ): Promise<UpdateArticleAPIContent> {
+  ): Promise<void> {
     const tokenPayload: CreatorAuthTokenPayload = request['payload'];
-    return await this.articleManageAPIService.update(
-      tokenPayload,
-      newsId,
-      target.title,
-      target.subtitle,
-      target.leadTitle,
-      target.citation,
-      target.coverImage,
-      target.keywords,
-      target.belongingSectionId,
-      target.belongingTopicId,
-      target.author,
-      target.editor,
-      target.origin,
-      target.originUrl,
-      target.content,
-    );
+    return await this.articleManageAPIService.updateByCreator(tokenPayload, newsId, target);
   }
 
-  @Post('/close/:news_id')
+  @Post('/creator/close/:news_id')
   @UseGuards(CreatorAuthGuard)
-  @UseInterceptors(APIInterceptor<ArticleLockerAPIContent>)
+  @UseInterceptors(APIInterceptor<void>)
   @Header('Access-Control-Allow-Origin', '*')
-  async close(@Param('news_id') newsId: string): Promise<ArticleLockerAPIContent> {
-    return await this.articleManageAPIService.locker(newsId, 'close');
+  async closeByCreator(@Param('news_id') newsId: string, @Req() request: Request): Promise<void> {
+    const authTokenPayload: CreatorAuthTokenPayload = request['payload'];
+    return await this.articleManageAPIService.CreatorLocker(authTokenPayload, newsId, 'close');
   }
 
-  @Post('/unclose/:news_id')
+  @Post('/creator/unclose/:news_id')
   @UseGuards(CreatorAuthGuard)
-  @UseInterceptors(APIInterceptor<ArticleLockerAPIContent>)
+  @UseInterceptors(APIInterceptor<void>)
   @Header('Access-Control-Allow-Origin', '*')
-  async unclose(@Param('news_id') newsId: string): Promise<ArticleLockerAPIContent> {
-    return await this.articleManageAPIService.locker(newsId, 'unclose');
+  async uncloseByCreator(@Param('news_id') newsId: string, @Req() request: Request): Promise<void> {
+    const authTokenPayload: CreatorAuthTokenPayload = request['payload'];
+    return await this.articleManageAPIService.CreatorLocker(authTokenPayload, newsId, 'unclose');
   }
 
-  @Post('/delete/:news_id')
+  @Post('/creator/delete/:news_id')
   @UseGuards(CreatorAuthGuard)
-  @UseInterceptors(APIInterceptor<DeleteArticleAPIContent>)
+  @UseInterceptors(APIInterceptor<void>)
   @Header('Access-Control-Allow-Origin', '*')
-  async delete(@Param('news_id') newsId: string): Promise<DeleteArticleAPIContent> {
-    return await this.articleManageAPIService.delete(newsId);
+  async deleteByCreator(@Param('news_id') newsId: string, @Req() request: Request): Promise<void> {
+    const authTokenPayload: CreatorAuthTokenPayload = request['payload'];
+    return await this.articleManageAPIService.deleteByCreator(authTokenPayload, newsId);
   }
 
-  @Post('/mark/home-hot/:news_id')
+  @Post('/creator/mark/creator-hot/:news_id')
   @UseGuards(CreatorAuthGuard)
-  @UseInterceptors(APIInterceptor<DeleteArticleAPIContent>)
+  @UseInterceptors(APIInterceptor<void>)
   @Header('Access-Control-Allow-Origin', '*')
-  async markToHomeHot(@Param('news_id') newsId: string): Promise<DeleteArticleAPIContent> {
-    return await this.articleManageAPIService.delete(newsId);
+  async markToCreatorHotByCreator(@Param('news_id') newsId: string, @Req() request: Request): Promise<void> {
+    const authTokenPayload: CreatorAuthTokenPayload = request['payload'];
+    return await this.articleManageAPIService.deleteByCreator(authTokenPayload, newsId);
   }
 
-  @Post('/mark/section-hot/:news_id')
-  @UseGuards(CreatorAuthGuard)
-  @UseInterceptors(APIInterceptor<DeleteArticleAPIContent>)
+  @Post('/super/mark/home-hot/:news_id')
+  @UseGuards(SuperAuthGuard)
+  @UseInterceptors(APIInterceptor<void>)
   @Header('Access-Control-Allow-Origin', '*')
-  async markToSectionHot(@Param('news_id') newsId: string): Promise<DeleteArticleAPIContent> {
-    return await this.articleManageAPIService.delete(newsId);
+  async markToHomeHotBySuper(@Param('news_id') newsId: string, @Req() request: Request): Promise<void> {
+    const authTokenPayload: SuperAuthTokenPayload = request['payload'];
+    return await this.articleManageAPIService.setupHomeHotBySuper(authTokenPayload, newsId, 'mark');
   }
 
-  @Post('/mark/creator-hot/:news_id')
-  @UseGuards(CreatorAuthGuard)
-  @UseInterceptors(APIInterceptor<DeleteArticleAPIContent>)
+  @Post('/super/unmark/home-hot/:news_id')
+  @UseGuards(SuperAuthGuard)
+  @UseInterceptors(APIInterceptor<void>)
   @Header('Access-Control-Allow-Origin', '*')
-  async markToCreatorHot(@Param('news_id') newsId: string): Promise<DeleteArticleAPIContent> {
-    return await this.articleManageAPIService.delete(newsId);
+  async unmarkOutHomeHotBySuper(@Param('news_id') newsId: string, @Req() request: Request): Promise<void> {
+    const authTokenPayload: SuperAuthTokenPayload = request['payload'];
+    return await this.articleManageAPIService.setupHomeHotBySuper(authTokenPayload, newsId, 'unmark');
+  }
+
+  @Post('/super/mark/section-hot/:news_id')
+  @UseGuards(SuperAuthGuard)
+  @UseInterceptors(APIInterceptor<void>)
+  @Header('Access-Control-Allow-Origin', '*')
+  async markToSectionHotBySuper(@Param('news_id') newsId: string, @Req() request: Request): Promise<void> {
+    const authTokenPayload: SuperAuthTokenPayload = request['payload'];
+    return await this.articleManageAPIService.setupSectionHotBySuper(authTokenPayload, newsId, 'mark');
+  }
+
+  @Post('/super/unmark/section-hot/:news_id')
+  @UseGuards(SuperAuthGuard)
+  @UseInterceptors(APIInterceptor<void>)
+  @Header('Access-Control-Allow-Origin', '*')
+  async unmarkOutSectionHotBySuper(@Param('news_id') newsId: string, @Req() request: Request): Promise<void> {
+    const authTokenPayload: SuperAuthTokenPayload = request['payload'];
+    return await this.articleManageAPIService.setupSectionHotBySuper(authTokenPayload, newsId, 'unmark');
   }
 }
