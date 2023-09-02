@@ -2,7 +2,7 @@ import { GetArticleAPIContent } from '@/interface/public-api/get-article';
 import { APIInterceptor } from '@/rc/interceptor/api-response.interceptor';
 import { Controller, Get, Header, Param, Post, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ArticleManageAPIService } from './monitor.service';
-import { AuthGuard } from '@/rc/guard/user-auth.guard';
+import { CreatorAuthGuard } from '@/rc/guard/user-auth.guard';
 import { APIExceptionFilter } from '@/rc/filter/api-exception.filter';
 
 @Controller('private-api/article-manage')
@@ -18,7 +18,7 @@ export class ArticleManageAPIController {
   }
 
   @Post('/read')
-  @UseGuards(AuthGuard)
+  @UseGuards(CreatorAuthGuard)
   @UseInterceptors(APIInterceptor<GetArticleAPIContent>)
   @Header('Access-Control-Allow-Origin', '*')
   async readArticle(@Param('news_id') news_id: string): Promise<string> {
