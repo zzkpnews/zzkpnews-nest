@@ -41,3 +41,6 @@ lerna-debug.log*
 .VSCodeCounter
 
 *.env
+
+# The script files of husky.
+.husky
