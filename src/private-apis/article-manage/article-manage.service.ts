@@ -10,6 +10,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import to from 'await-to-js';
 import * as fsp from 'fs/promises';
 import { SubmitArticleDTO } from './article-manage.dto';
+import { CreatorAllocationRepository } from '@/model/view/creator-allocation/creator-allocation.repository';
 
 @Injectable()
 export class ArticleManageAPIService {
@@ -18,6 +19,8 @@ export class ArticleManageAPIService {
     private readonly articleRepository: ArticleRepository,
     @Inject(DependenceFlags.CreatorRepository)
     private readonly creatorRepository: CreatorRepository,
+    @Inject(DependenceFlags.CreatorAllocationRepository)
+    private readonly creatorAllocationRepository: CreatorAllocationRepository,
   ) {}
   async addByCreator(authTokenPayload: CreatorAuthTokenPayload, input: SubmitArticleDTO): Promise<void> {
     const creatorId = authTokenPayload.id;
@@ -30,6 +33,26 @@ export class ArticleManageAPIService {
     }
     if (creator.closed) {
       throw new APIException(API_STATUS_CODE.UserBlocked, 403);
+    }
+
+    const [errPermittedSections, permittedSections] = await to(
+      this.creatorAllocationRepository.getSectionAllocation(creatorId),
+    );
+    if (errPermittedSections) {
+      throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    }
+    if (!permittedSections.includes(input.belongingSectionId)) {
+      throw new APIException(API_STATUS_CODE.UserPermissionDenied, 403);
+    }
+
+    const [errPermittedTopics, permittedTopics] = await to(
+      this.creatorAllocationRepository.getTopicAllocation(creatorId),
+    );
+    if (errPermittedTopics) {
+      throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    }
+    if (!permittedTopics.includes(input.belongingSectionId)) {
+      throw new APIException(API_STATUS_CODE.UserPermissionDenied, 403);
     }
 
     const [errNewArticle, newArticle] = await to(
@@ -119,7 +142,7 @@ export class ArticleManageAPIService {
     }
   }
 
-  async CreatorLocker(
+  async setupLockByCreator(
     authTokenPayload: CreatorAuthTokenPayload,
     newsId: string,
     type: 'close' | 'unclose',
@@ -164,6 +187,36 @@ export class ArticleManageAPIService {
 
     const [errDeleteArticle] = await to(this.articleRepository.deleteById(newsId));
     if (errDeleteArticle) {
+      throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    }
+  }
+
+  async setupCreatorHotByCreator(
+    authTokenPayload: CreatorAuthTokenPayload,
+    newsId: string,
+    action: 'mark' | 'unmark',
+  ): Promise<void> {
+    const [errArticle, article] = await to(this.articleRepository.findById(newsId));
+    if (errArticle) {
+      throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
+    }
+    if (article == null) {
+      throw new APIException(API_STATUS_CODE.ResourceNotFound, 404);
+    }
+
+    const creatorIdToValidate = authTokenPayload.id;
+    if (article.creatorId !== creatorIdToValidate) {
+      throw new APIException(API_STATUS_CODE.UserPermissionDenied, 403);
+    }
+
+    if (action === 'mark') {
+      article.sectionHotMark = true;
+    } else {
+      article.sectionHotMark = false;
+    }
+
+    const [errSaveArticleEntity] = await to(this.articleRepository.save(article));
+    if (errSaveArticleEntity) {
       throw new APIException(API_STATUS_CODE.ServerInternalError, 500);
     }
   }

@@ -1,11 +1,11 @@
-import { ArticleModule } from '@/model/entity/article/article.module';
+import { EntityModule } from '@/model/entity/entities.module';
+import { ViewsModule } from '@/model/view/views.module';
 import { Module } from '@nestjs/common';
 import { ArticleManageAPIController } from './article-manage.controller';
 import { ArticleManageAPIService } from './article-manage.service';
-import { EntityModule } from '@/model/entity/entities.module';
 
 @Module({
-  imports: [EntityModule],
+  imports: [EntityModule, ViewsModule],
   providers: [ArticleManageAPIService],
   controllers: [ArticleManageAPIController],
   exports: [ArticleManageAPIService],

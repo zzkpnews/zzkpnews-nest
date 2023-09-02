@@ -39,7 +39,7 @@ export class ArticleManageAPIController {
   @Header('Access-Control-Allow-Origin', '*')
   async closeByCreator(@Param('news_id') newsId: string, @Req() request: Request): Promise<void> {
     const authTokenPayload: CreatorAuthTokenPayload = request['payload'];
-    return await this.articleManageAPIService.CreatorLocker(authTokenPayload, newsId, 'close');
+    return await this.articleManageAPIService.setupLockByCreator(authTokenPayload, newsId, 'close');
   }
 
   @Post('/creator/unclose/:news_id')
@@ -48,7 +48,7 @@ export class ArticleManageAPIController {
   @Header('Access-Control-Allow-Origin', '*')
   async uncloseByCreator(@Param('news_id') newsId: string, @Req() request: Request): Promise<void> {
     const authTokenPayload: CreatorAuthTokenPayload = request['payload'];
-    return await this.articleManageAPIService.CreatorLocker(authTokenPayload, newsId, 'unclose');
+    return await this.articleManageAPIService.setupLockByCreator(authTokenPayload, newsId, 'unclose');
   }
 
   @Post('/creator/delete/:news_id')
@@ -66,7 +66,16 @@ export class ArticleManageAPIController {
   @Header('Access-Control-Allow-Origin', '*')
   async markToCreatorHotByCreator(@Param('news_id') newsId: string, @Req() request: Request): Promise<void> {
     const authTokenPayload: CreatorAuthTokenPayload = request['payload'];
-    return await this.articleManageAPIService.deleteByCreator(authTokenPayload, newsId);
+    return await this.articleManageAPIService.setupCreatorHotByCreator(authTokenPayload, newsId, 'mark');
+  }
+
+  @Post('/creator/unmark/creator-hot/:news_id')
+  @UseGuards(CreatorAuthGuard)
+  @UseInterceptors(APIInterceptor<void>)
+  @Header('Access-Control-Allow-Origin', '*')
+  async unmarkOutCreatorHotByCreator(@Param('news_id') newsId: string, @Req() request: Request): Promise<void> {
+    const authTokenPayload: CreatorAuthTokenPayload = request['payload'];
+    return await this.articleManageAPIService.setupCreatorHotByCreator(authTokenPayload, newsId, 'unmark');
   }
 
   @Post('/super/mark/home-hot/:news_id')
